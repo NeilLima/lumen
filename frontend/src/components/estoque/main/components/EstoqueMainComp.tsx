@@ -8,7 +8,7 @@ import EstoqueTermometroComp from '../../EstoqueTermometro/components/EstoqueTer
 import EstoqueListComp from '../../EstoqueList/components/EstoqueListComp';
 import EstoqueModalComp from '../../EstoqueModal/components/EstoqueModalComp';
 import EstoqueConfirmComp from '../../EstoqueConfirm/components/EstoqueConfirmComp';
-import { useEstoqueUtils } from './utils/EstoqueUtils';
+import { useEstoqueUtils } from '../utils/EstoqueUtils';
 import {
   StyledEstoqueLayout,
   StyledEstoqueMainContent,
