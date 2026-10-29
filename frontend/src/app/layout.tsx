@@ -1,6 +1,5 @@
 export const dynamic = 'force-dynamic';
 
-"
 import type { Metadata } from "next";
 import "./globals.css";
 import AuthGuard from "@/components/auth/AuthGuard";
