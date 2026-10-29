@@ -16,8 +16,8 @@ import {
   StyledOverlay,
   StyledEstoqueContainer,
 } from '../styles/EstoqueMainStyles';
-import EstoqueDetalheComp from '../../EstoqueDetalhe/components/EstoqueDetalheComp';
-import EstoqueInfoComp from '../../EstoqueInfo/components/EstoqueInfoComp';
+import { EstoqueDetalheComp } from '../../EstoqueDetalhe/components/EstoqueDetalheComp';
+import { EstoqueInfoComp } from '../../EstoqueInfo/components/EstoqueInfoComp';
 
 export default function EstoqueMainComp() {
   const { state, actions, helpers } = useEstoqueUtils();
