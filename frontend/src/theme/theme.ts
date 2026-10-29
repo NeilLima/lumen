@@ -4,6 +4,7 @@ export const theme = {
   bgSecondary: '#1a1a2e',
   bgTertiary: '#252542',
   bgCard: 'rgba(26, 26, 46, 0.8)',
+  cardBg: 'rgba(26, 26, 46, 0.8)',
   bgNavbar: '#0a0a14',
   bgSidebar: '#12121f',
   bgHover: 'rgba(139, 92, 246, 0.1)',
@@ -28,6 +29,7 @@ export const theme = {
   
   danger: '#ef4444',
   dangerLight: '#f87171',
+  dangerHover: '#dc2626',
   dangerBg: 'rgba(239, 68, 68, 0.1)',
   
   warning: '#f59e0b',
@@ -102,6 +104,7 @@ export const dashboardTheme: Theme = {
   bgSecondary: '#12121f',
   bgTertiary: '#1a1a2e',
   bgCard: 'rgba(26, 26, 46, 0.8)',
+  cardBg: 'rgba(26, 26, 46, 0.8)',
   bgNavbar: '#0a0a14',
   bgSidebar: '#12121f',
   bgHover: 'rgba(139, 92, 246, 0.1)',
@@ -127,6 +130,8 @@ export const dashboardTheme: Theme = {
   danger: '#ef4444',
   dangerLight: '#f87171',
   dangerBg: 'rgba(239, 68, 68, 0.1)',
+  dangerHover: '#dc2626',
+  dangerHover: '#dc2626',
 
   warning: '#f59e0b',
   warningLight: '#fbbf24',
