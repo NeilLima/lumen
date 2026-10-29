@@ -1,0 +1,14 @@
+import styled from 'styled-components';
+export const StyledOverlay = styled.div<{ $visible: boolean }>`display: ${props => props.$visible ? 'flex' : 'none'}; position: fixed; top: 0; left: 0; width: 100vw; height: 100vh; background: rgba(0,0,0,0.6); backdrop-filter: blur(4px); z-index: 1000; align-items: center; justify-content: center; padding: 16px;`;
+export const StyledModal = styled.div`background: #1a1a2e; border: 1px solid rgba(255,255,255,0.1); border-radius: 20px; width: 100%; max-width: 480px; max-height: 90vh; overflow-y: auto; box-shadow: 0 20px 25px -5px rgba(0,0,0,0.5);`;
+export const StyledHeader = styled.div`display: flex; align-items: center; justify-content: space-between; padding: 20px 24px; border-bottom: 1px solid rgba(255,255,255,0.05);`;
+export const StyledTitle = styled.h3`font-size: 18px; font-weight: 700; color: #fff; margin: 0;`;
+export const StyledClose = styled.button`background: none; border: none; color: #a0a0b0; font-size: 18px; cursor: pointer; padding: 4px 8px; border-radius: 6px; &:hover { background: rgba(255,255,255,0.05); color: #fff; }`;
+export const StyledForm = styled.div`padding: 24px; display: flex; flex-direction: column; gap: 16px;`;
+export const StyledGroup = styled.div`display: flex; flex-direction: column; gap: 6px;`;
+export const StyledRow = styled.div`display: flex; gap: 16px; @media (max-width: 480px) { flex-direction: column; }`;
+export const StyledLabel = styled.label`font-size: 13px; font-weight: 600; color: #a0a0b0;`;
+export const StyledInput = styled.input`padding: 10px 14px; background: rgba(37,37,66,0.6); border: 1px solid rgba(255,255,255,0.1); border-radius: 8px; color: #fff; font-size: 14px; &:focus { outline: none; border-color: #8b5cf6; }`;
+export const StyledSelect = styled.select`padding: 10px 14px; background: rgba(37,37,66,0.6); border: 1px solid rgba(255,255,255,0.1); border-radius: 8px; color: #fff; font-size: 14px; cursor: pointer; &:focus { outline: none; border-color: #8b5cf6; } option { background: #1a1a2e; }`;
+export const StyledActions = styled.div`display: flex; gap: 12px; justify-content: flex-end; padding-top: 8px;`;
+export const StyledButton = styled.button<{ $variant?: 'primary' | 'secondary' }>`padding: 10px 20px; border-radius: 8px; font-size: 14px; font-weight: 600; cursor: pointer; transition: all 200ms ease; border: none; ${props => props.$variant === 'secondary' ? `background: rgba(26,26,46,0.8); color: #fff; border: 1px solid rgba(255,255,255,0.1);` : `background: linear-gradient(135deg, #8b5cf6 0%, #6366f1 100%); color: #fff;`}`;

@@ -1,0 +1,1 @@
+export function metasConfirmService() { return { pendente: null }; }

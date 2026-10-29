@@ -1,0 +1,1 @@
+export const orcamentoModalRoutes = { create: '/orcamento/create' };

@@ -1,0 +1,1 @@
+export function orcamentoHeaderService() { return { titulo: 'Orçamento', subtitulo: 'Gerencie seus limites de gastos por categoria' }; }

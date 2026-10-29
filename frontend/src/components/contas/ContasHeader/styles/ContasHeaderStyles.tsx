@@ -1,0 +1,6 @@
+import styled from 'styled-components';
+export const StyledHeader = styled.div`display: flex; align-items: center; justify-content: space-between; flex-wrap: wrap; gap: 16px;`;
+export const StyledTitle = styled.h1`font-size: 24px; font-weight: 700; color: #fff; margin: 0; display: flex; align-items: center;`;
+export const StyledSubtitle = styled.p`font-size: 14px; color: #a0a0b0; margin: 4px 0 0 0;`;
+export const StyledButton = styled.button<{ $variant?: 'primary' | 'secondary' }>`display: inline-flex; align-items: center; gap: 8px; padding: 10px 20px; border-radius: 8px; font-size: 14px; font-weight: 600; cursor: pointer; transition: all 200ms ease; border: none; ${p => p.$variant === 'secondary' ? 'background: rgba(26,26,46,0.8); color: #fff; border: 1px solid rgba(255,255,255,0.1);' : 'background: linear-gradient(135deg, #8b5cf6 0%, #6366f1 100%); color: #fff;'} &:hover { transform: translateY(-1px); }`;
+export const StyledInfoButton = styled.button`display: inline-flex; align-items: center; justify-content: center; width: 28px; height: 28px; border-radius: 50%; border: none; background: rgba(139,92,246,0.1); color: #8b5cf6; cursor: pointer; font-size: 14px; margin-left: 8px; &:hover { background: rgba(139,92,246,0.2); }`;

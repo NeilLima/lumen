@@ -1,0 +1,7 @@
+import styled from 'styled-components';
+export const StyledGrid = styled.div`display: grid; grid-template-columns: repeat(auto-fit, minmax(200px, 1fr)); gap: 16px; @media (max-width: 480px) { grid-template-columns: 1fr 1fr; }`;
+export const StyledCard = styled.div<{ $accentColor: string }>`background: rgba(26,26,46,0.6); backdrop-filter: blur(12px); border: 1px solid rgba(255,255,255,0.05); border-radius: 16px; padding: 20px; display: flex; flex-direction: column; gap: 8px; transition: all 200ms ease; box-shadow: 0 4px 6px -1px rgba(0,0,0,0.3); &:hover { transform: translateY(-2px); border-color: ${props => props.$accentColor}44; }`;
+export const StyledIcon = styled.div<{ $color: string; $bg: string }>`width: 40px; height: 40px; border-radius: 10px; background: ${props => props.$bg}; display: flex; align-items: center; justify-content: center; font-size: 20px; color: ${props => props.$color};`;
+export const StyledLabel = styled.span`font-size: 12px; color: #a0a0b0; font-weight: 500;`;
+export const StyledValue = styled.span`font-size: 20px; font-weight: 700; color: #fff;`;
+export const StyledBar = styled.div<{ $percentual: number; $color: string }>`width: 100%; height: 6px; background: rgba(255,255,255,0.05); border-radius: 3px; overflow: hidden; &::after { content: ''; display: block; width: ${props => Math.min(props.$percentual, 100)}%; height: 100%; background: ${props => props.$color}; border-radius: 3px; transition: width 0.5s ease; }`;

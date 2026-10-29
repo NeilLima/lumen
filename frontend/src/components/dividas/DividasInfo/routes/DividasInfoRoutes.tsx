@@ -1,0 +1,1 @@
+export const dividasInfoRoutes = { info: '/dividas/info' };

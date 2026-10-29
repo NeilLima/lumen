@@ -1,0 +1,1 @@
+export const orcamentoConfirmRoutes = { confirm: '/orcamento/confirm' };

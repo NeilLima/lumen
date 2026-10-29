@@ -1,0 +1,1 @@
+export const metasDetalheRoutes = { view: (id: string) => `/metas/${id}` };

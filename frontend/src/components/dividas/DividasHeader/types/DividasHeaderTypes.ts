@@ -1,0 +1,1 @@
+export interface DividasHeaderProps { onAbrirInfo: () => void; onAbrirModalNovo: () => void; }

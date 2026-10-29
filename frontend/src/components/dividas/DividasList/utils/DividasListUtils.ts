@@ -1,0 +1,1 @@
+export function useDividasList() { return { state: {}, actions: {} }; }

@@ -1,0 +1,18 @@
+import styled from 'styled-components';
+export const StyledOverlay = styled.div<{ $visible: boolean }>`display: ${props => props.$visible ? 'flex' : 'none'}; position: fixed; top: 0; left: 0; width: 100vw; height: 100vh; background: rgba(0,0,0,0.6); backdrop-filter: blur(4px); z-index: 1000; align-items: center; justify-content: center; padding: 16px;`;
+export const StyledModal = styled.div`background: #1a1a2e; border: 1px solid rgba(255,255,255,0.1); border-radius: 20px; width: 100%; max-width: 440px; max-height: 90vh; overflow-y: auto; box-shadow: 0 20px 25px -5px rgba(0,0,0,0.5);`;
+export const StyledHeader = styled.div`display: flex; align-items: center; justify-content: space-between; padding: 20px 24px; border-bottom: 1px solid rgba(255,255,255,0.05);`;
+export const StyledTitle = styled.h3`font-size: 18px; font-weight: 700; color: #fff; margin: 0;`;
+export const StyledClose = styled.button`background: none; border: none; color: #a0a0b0; font-size: 18px; cursor: pointer; padding: 4px 8px; border-radius: 6px; &:hover { background: rgba(255,255,255,0.05); color: #fff; }`;
+export const StyledContent = styled.div`padding: 24px; display: flex; flex-direction: column; gap: 20px;`;
+export const StyledIcon = styled.div<{ $color: string }>`width: 56px; height: 56px; border-radius: 14px; background: ${props => props.$color}1A; display: flex; align-items: center; justify-content: center; font-size: 28px; color: ${props => props.$color};`;
+export const StyledNome = styled.h2`font-size: 20px; font-weight: 700; color: #fff; margin: 0;`;
+export const StyledBar = styled.div`width: 100%; height: 12px; background: rgba(255,255,255,0.05); border-radius: 6px; overflow: hidden;`;
+export const StyledFill = styled.div<{ $pct: number; $color: string }>`width: ${props => Math.min(props.$pct, 100)}%; height: 100%; background: linear-gradient(90deg, ${props => props.$color}, ${props => props.$color}dd); border-radius: 6px; transition: width 0.5s ease;`;
+export const StyledGrid = styled.div`display: grid; grid-template-columns: 1fr 1fr; gap: 16px;`;
+export const StyledItem = styled.div`display: flex; flex-direction: column; gap: 4px;`;
+export const StyledLabel = styled.span`font-size: 12px; color: #6b6b7b; font-weight: 500;`;
+export const StyledValue = styled.span`font-size: 14px; font-weight: 600; color: #fff;`;
+export const StyledBadge = styled.span<{ $color: string }>`display: inline-flex; align-items: center; padding: 4px 10px; border-radius: 9999px; font-size: 12px; font-weight: 600; color: ${props => props.$color}; background: ${props => props.$color}1A; border: 1px solid ${props => props.$color}33;`;
+export const StyledActions = styled.div`display: flex; gap: 12px; justify-content: flex-end; padding: 16px 24px; border-top: 1px solid rgba(255,255,255,0.05);`;
+export const StyledButton = styled.button<{ $variant?: 'primary' | 'secondary' }>`padding: 10px 20px; border-radius: 8px; font-size: 14px; font-weight: 600; cursor: pointer; border: none; ${props => props.$variant === 'secondary' ? `background: rgba(26,26,46,0.8); color: #fff; border: 1px solid rgba(255,255,255,0.1);` : `background: linear-gradient(135deg, #8b5cf6 0%, #6366f1 100%); color: #fff;`}`;

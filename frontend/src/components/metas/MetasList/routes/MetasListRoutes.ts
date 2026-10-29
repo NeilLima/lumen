@@ -1,0 +1,1 @@
+export const metasListRoutes = { view: '/metas', edit: (id: string) => `/metas/${id}/edit` };

@@ -1,0 +1,1 @@
+export interface ContasConfirmProps { exclusaoPendente: import('../../main/types/ContasTypes').Conta | null; formatarValor: (v: number) => string; onCancelarExclusao: () => void; onConfirmarEExcluir: () => void }

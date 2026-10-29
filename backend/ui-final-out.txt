@@ -1,0 +1,18 @@
+
+Probe: UI de Receitas (fluxo completo)
+  ✅ conta de teste criada (status 201)
+  ✅ tela /receitas abriu e renderizou o header
+  ✅ estado vazio exibido para usuario novo
+  ✅ modal de nova receita abriu
+  ✅ formulario preenchido (categoria "Salário" vinda da API)
+  ✅ modal de feedback de SUCESSO apareceu
+  ✅ receita criada existe na API
+  ✅ receita criada existe no BANCO REAL
+  ✅ item da receita visivel na lista
+  ✅ detalhe mostra a receita criada
+  ✅ modal de confirmacao abriu (sem window.confirm)
+  ✅ feedback de exclusao apareceu
+  ✅ item removido da lista
+  ✅ receita removida do BANCO REAL
+
+Resultado: 14 passaram, 0 falharam

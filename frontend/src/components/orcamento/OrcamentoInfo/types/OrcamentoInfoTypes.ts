@@ -1,0 +1,1 @@
+export interface OrcamentoInfoProps { modalInfoAberto: boolean; onFecharInfo: () => void; }

@@ -1,0 +1,14 @@
+import styled from 'styled-components';
+
+export const StyledInfoOverlay = styled.div<{ $visible: boolean }>`position: fixed; inset: 0; background: rgba(0,0,0,0.7); display: ${props => props.$visible ? 'flex' : 'none'}; align-items: center; justify-content: center; z-index: 1000; padding: 20px;`;
+export const StyledInfoModal = styled.div`background: linear-gradient(135deg, rgba(26,26,46,0.95) 0%, rgba(15,15,26,0.98) 100%); border: 1px solid rgba(255,255,255,0.05); border-radius: 20px; width: 100%; max-width: 500px;`;
+export const StyledModalHeader = styled.div`display: flex; justify-content: space-between; align-items: center; padding: 24px 24px 0;`;
+export const StyledModalTitle = styled.h2`font-size: 20px; font-weight: 700; color: #fff; margin: 0;`;
+export const StyledModalClose = styled.button`background: none; border: none; color: #a0a0b0; font-size: 20px; cursor: pointer;`;
+export const StyledInfoIcon = styled.div`text-align: center; font-size: 48px; margin: 24px 0 16px;`;
+export const StyledInfoTitle = styled.h3`text-align: center; font-size: 18px; font-weight: 700; color: #fff; margin: 0 0 8px;`;
+export const StyledInfoText = styled.p`text-align: center; font-size: 14px; color: #a0a0b0; margin: 0 0 16px;`;
+export const StyledInfoList = styled.ul`list-style: none; padding: 0 24px; margin: 0 0 24px; display: flex; flex-direction: column; gap: 12px;`;
+export const StyledInfoListItem = styled.li`font-size: 14px; color: #a0a0b0; line-height: 1.5;`;
+export const StyledModalActions = styled.div`display: flex; justify-content: center; padding: 0 24px 24px;`;
+export const StyledButton = styled.button`padding: 10px 24px; border: none; border-radius: 10px; font-size: 14px; font-weight: 600; cursor: pointer; background: linear-gradient(135deg, #8b5cf6 0%, #6366f1 100%); color: #fff; transition: all 200ms ease; &:hover { transform: translateY(-1px); }`;

@@ -1,0 +1,2 @@
+import type { Divida } from '../../main/types/DividasTypes';
+export interface DividasDetalheProps { detalheDivida: Divida | null; formatarValor: (v: number) => string; formatarData: (d: string) => string; getSituacaoLabel: (s: string) => string; getSituacaoCor: (s: string) => string; getTipoLabel: (t: string) => string; calcularProgresso: (pg: number, pt: number) => number; onFecharDetalhe: () => void; onEditar: (d: Divida) => void; }

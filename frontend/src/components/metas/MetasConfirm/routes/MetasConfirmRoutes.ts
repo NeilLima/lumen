@@ -1,0 +1,1 @@
+export const metasConfirmRoutes = { confirm: '/metas/confirm' };

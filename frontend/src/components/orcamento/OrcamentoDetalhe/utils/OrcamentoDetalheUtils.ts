@@ -1,0 +1,1 @@
+export function useOrcamentoDetalhe() { return { state: {}, actions: {} }; }

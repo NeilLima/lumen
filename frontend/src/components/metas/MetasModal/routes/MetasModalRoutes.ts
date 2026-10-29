@@ -1,0 +1,1 @@
+export const metasModalRoutes = { create: '/metas/create', edit: (id: string) => `/metas/${id}/edit` };

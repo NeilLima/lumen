@@ -1,0 +1,14 @@
+import styled from 'styled-components';
+export const StyledModalOverlay = styled.div`position: fixed; inset: 0; background: rgba(0,0,0,0.7); display: flex; align-items: center; justify-content: center; z-index: 1000; padding: 20px;`;
+export const StyledModal = styled.div`background: linear-gradient(135deg, rgba(26,26,46,0.95) 0%, rgba(15,15,26,0.98) 100%); border: 1px solid rgba(255,255,255,0.05); border-radius: 20px; width: 100%; max-width: 520px; max-height: 90vh; overflow-y: auto;`;
+export const StyledModalHeader = styled.div`display: flex; justify-content: space-between; align-items: center; padding: 24px 24px 0;`;
+export const StyledModalTitle = styled.h2`font-size: 20px; font-weight: 700; color: #fff; margin: 0;`;
+export const StyledModalClose = styled.button`background: none; border: none; color: #a0a0b0; font-size: 20px; cursor: pointer; &:hover { color: #fff; }`;
+export const StyledForm = styled.div`padding: 24px; display: flex; flex-direction: column; gap: 16px;`;
+export const StyledFormGroup = styled.div`display: flex; flex-direction: column; gap: 6px;`;
+export const StyledLabel = styled.label`font-size: 13px; font-weight: 600; color: #a0a0b0;`;
+export const StyledInput = styled.input`padding: 10px 14px; border: 1px solid rgba(255,255,255,0.1); border-radius: 10px; background: rgba(26,26,46,0.8); color: #fff; font-size: 14px; &:focus { outline: none; border-color: rgba(139,92,246,0.5); }`;
+export const StyledSelect = styled.select`padding: 10px 14px; border: 1px solid rgba(255,255,255,0.1); border-radius: 10px; background: rgba(26,26,46,0.8); color: #fff; font-size: 14px;`;
+export const StyledColorInput = styled.input`width: 60px; height: 40px; border: 1px solid rgba(255,255,255,0.1); border-radius: 10px; padding: 4px; cursor: pointer;`;
+export const StyledModalActions = styled.div`display: flex; gap: 12px; justify-content: flex-end; margin-top: 8px;`;
+export const StyledButton = styled.button<{ $variant?: 'primary' | 'secondary' }>`padding: 10px 24px; border: none; border-radius: 10px; font-size: 14px; font-weight: 600; cursor: pointer; ${p => p.$variant === 'secondary' ? 'background: rgba(26,26,46,0.8); color: #fff; border: 1px solid rgba(255,255,255,0.1);' : 'background: linear-gradient(135deg, #8b5cf6 0%, #6366f1 100%); color: #fff;'} &:hover { transform: translateY(-1px); }`;

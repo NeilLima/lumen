@@ -1,0 +1,1 @@
+export const dividasMainRoutes = { view: '/dividas', edit: (id: string) => `/dividas/${id}/edit` };

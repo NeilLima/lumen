@@ -1,0 +1,1 @@
+export function dividasConfirmService() { return { pendente: null }; }

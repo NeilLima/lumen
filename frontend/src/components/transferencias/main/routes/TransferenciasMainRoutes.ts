@@ -1,0 +1,1 @@
+export const transferenciasMainRoutes = { view: "/transferencias", novo: "/transferencias/novo", editar: (id: string) => `/transferencias/${id}/editar`, detalhe: (id: string) => `/transferencias/${id}` };

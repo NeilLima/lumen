@@ -1,0 +1,1 @@
+export function useDividasModal() { return { state: {}, actions: {} }; }

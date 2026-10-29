@@ -1,0 +1,1 @@
+export interface TransferenciasDetalheProps { detalheTransferencia: import('../../main/types/TransferenciasTypes').Transferencia | null; formatarValor: (valor: number) => string; formatarData: (data: string) => string; onFecharDetalhe: () => void; onEditar: (t: import('../../main/types/TransferenciasTypes').Transferencia) => void }

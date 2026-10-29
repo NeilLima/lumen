@@ -1,0 +1,2 @@
+import type { Divida } from '../../main/types/DividasTypes';
+export interface DividasConfirmProps { exclusaoPendente: Divida | null; formatarValor: (v: number) => string; onCancelarExclusao: () => void; onConfirmarEExcluir: () => void; }

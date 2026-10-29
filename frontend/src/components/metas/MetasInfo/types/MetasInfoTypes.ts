@@ -1,0 +1,1 @@
+export interface MetasInfoProps { modalInfoAberto: boolean; onFecharInfo: () => void; }

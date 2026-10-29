@@ -1,0 +1,1 @@
+export function dividasHeaderService() { return { titulo: 'Dividas', subtitulo: 'Gerencie suas dividas e acompanhamentos' }; }

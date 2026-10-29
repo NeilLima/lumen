@@ -1,0 +1,1 @@
+export const orcamentoMainRoutes = { view: '/orcamento', edit: (id: string) => `/orcamento/${id}/edit` };

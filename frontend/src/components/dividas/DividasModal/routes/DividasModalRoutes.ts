@@ -1,0 +1,1 @@
+export const dividasModalRoutes = { create: '/dividas/create' };

@@ -1,0 +1,1 @@
+export function useDividasResumo() { return { state: {}, actions: {} }; }

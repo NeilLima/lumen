@@ -1,0 +1,1 @@
+export function useMetasDetalhe() { return { state: {}, actions: {} }; }

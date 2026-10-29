@@ -1,0 +1,620 @@
+Descrição Geral
+# Lumen - Plataforma de Gestão Financeira Pessoal
+
+## Objetivo
+
+Desenvolver uma plataforma web moderna para gerenciamento financeiro pessoal utilizando Next.js 15, React 19, TypeScript, React-Bootstrap, Bootstrap Icons, Prisma ORM e PostgreSQL.
+
+A aplicação deverá permitir que qualquer pessoa organize completamente sua vida financeira, acompanhando receitas, despesas, cartões de crédito, contas bancárias, investimentos, metas financeiras, patrimônio, empréstimos, assinaturas, dívidas, orçamento mensal e relatórios inteligentes.
+
+O objetivo é fornecer uma experiência semelhante a aplicativos como Mobills, Organizze, YNAB e Wallet, porém com identidade visual própria e foco em produtividade.
+
+Toda a interface deverá transmitir sensação de segurança, confiança, organização e sofisticação.
+
+ESTILIZAÇÃO
+- styled-components como base de estilização (tema centralizado com variáveis de cor, resposta mobile-first).
+- Bootstrap Icons para ícones.
+- Paleta: fundo roxo escuro / roxo acinzentado, navegação e cards em tons de roxo, primária verde esmeralda (#10b981), sucesso verde, erro vermelho, aviso amarelo, texto branco/cinza claro.
+
+------------------------------------------------------------
+
+IDENTIDADE VISUAL
+
+Tema escuro.
+
+Visual premium.
+
+Interface limpa.
+
+Minimalista.
+
+Espaçamento generoso.
+
+Tipografia moderna.
+
+Ícones Bootstrap.
+
+Sombras suaves.
+
+Bordas arredondadas.
+
+Animações discretas.
+
+------------------------------------------------------------
+
+PALETA DE CORES
+
+Fundo Principal
+
+Roxo Escuro
+
+Fundo Secundário
+
+Roxo Acinzentado
+
+Navbar
+
+Roxo quase preto
+
+Sidebar
+
+Roxo profundo
+
+Cards
+
+Roxo grafite
+
+Primária
+
+Verde Esmeralda
+
+Hover
+
+Verde Claro
+
+Texto
+
+Branco
+
+Texto secundário
+
+Cinza Claro
+
+Sucesso
+
+Verde
+
+Erro
+
+Vermelho
+
+Aviso
+
+Amarelo
+
+Gráficos
+
+Verde
+
+Roxo
+
+Azul
+
+Laranja
+
+------------------------------------------------------------
+
+LAYOUT
+
+Navbar Superior
+
+Sidebar
+
+Conteúdo Principal
+
+Painel Direito opcional
+
+Footer discreto
+
+Estrutura das páginas
+Dashboard
+
+A primeira tela deverá mostrar um panorama completo da vida financeira.
+
+Cards superiores
+
+Saldo Total
+
+Receitas do mês
+
+Despesas do mês
+
+Economia
+
+Patrimônio
+
+Limite disponível
+
+Cartões ativos
+
+Contas cadastradas
+
+Gráficos
+
+Fluxo financeiro mensal
+
+Receitas x Despesas
+
+Gastos por categoria
+
+Evolução do patrimônio
+
+Orçamento
+
+Meta financeira
+
+Atividades Recentes
+
+Últimos pagamentos
+
+Últimas compras
+
+Últimas receitas
+
+Próximos vencimentos
+
+Alertas importantes
+
+Receitas
+
+Cadastrar receitas.
+
+Campos:
+
+Nome
+Categoria
+Valor
+Conta
+Data
+Recorrência
+Observações
+Comprovante
+
+Permitir:
+
+Editar
+Excluir
+Duplicar
+Pesquisar
+Filtrar
+Despesas
+
+Cadastro completo.
+
+Campos:
+
+Nome
+Categoria
+Valor
+Conta
+Cartão
+Data
+Parcelas
+Prioridade
+Observações
+
+Status:
+
+Pago
+Pendente
+Atrasado
+Cartões de Crédito
+
+Uma tela exclusiva.
+
+Cada cartão deverá mostrar:
+
+Nome
+
+Bandeira
+
+Banco
+
+Limite Total
+
+Limite Utilizado
+
+Limite Disponível
+
+Melhor dia de compra
+
+Data de vencimento
+
+Cor personalizada
+
+Últimas compras
+
+Parcelas futuras
+
+Fatura atual
+
+Histórico
+
+Contas Bancárias
+
+Cadastrar:
+
+Conta Corrente
+
+Conta Poupança
+
+Carteira
+
+Conta Digital
+
+Cada conta deverá mostrar saldo em tempo real.
+
+Transferências
+
+Transferir dinheiro entre contas.
+
+Registrar automaticamente.
+
+Mostrar histórico.
+
+Metas Financeiras
+
+Exemplos:
+
+Comprar carro
+
+Comprar casa
+
+Viagem
+
+Casamento
+
+Reserva de emergência
+
+Notebook novo
+
+Cada meta deverá possuir:
+
+Nome
+
+Valor alvo
+
+Valor atual
+
+Prazo
+
+Porcentagem concluída
+
+Gráfico circular
+
+Orçamento Mensal
+
+Criar limites para categorias.
+
+Exemplo:
+
+Mercado
+
+Lazer
+
+Combustível
+
+Transporte
+
+Saúde
+
+Educação
+
+Moradia
+
+Ao atingir o limite:
+
+Mostrar alerta.
+
+Dívidas
+
+Tela exclusiva.
+
+Cadastrar:
+
+Pessoa
+
+Empresa
+
+Banco
+
+Valor
+
+Parcelas
+
+Juros
+
+Vencimento
+
+Situação
+
+Mostrar:
+
+Próximos vencimentos
+
+Atrasadas
+
+Quitadas
+
+Empréstimos
+
+Registrar empréstimos feitos ou recebidos.
+
+Histórico completo.
+
+Investimentos
+
+Cadastrar:
+
+CDB
+
+Tesouro
+
+Ações
+
+Fundos
+
+Criptomoedas
+
+Mostrar:
+
+Valor aplicado
+
+Rentabilidade
+
+Lucro
+
+Prejuízo
+
+Evolução
+
+Assinaturas
+
+Netflix
+
+Spotify
+
+ChatGPT
+
+Amazon Prime
+
+Disney+
+
+Academia
+
+Internet
+
+Telefone
+
+Mostrar:
+
+Valor
+
+Próxima cobrança
+
+Categoria
+
+Status
+
+Categorias
+
+CRUD completo.
+
+Ícone
+
+Cor
+
+Nome
+
+Descrição
+
+Relatórios
+
+Gráficos interativos.
+
+Receitas
+
+Despesas
+
+Fluxo de Caixa
+
+Patrimônio
+
+Cartões
+
+Investimentos
+
+Categorias
+
+Comparativo mensal
+
+Comparativo anual
+
+Exportação PDF
+
+Exportação Excel
+
+Calendário Financeiro
+
+Visual mensal.
+
+Mostrar:
+
+Pagamentos
+
+Receitas
+
+Parcelas
+
+Vencimentos
+
+Metas
+
+Notificações
+
+Pagamento próximo.
+
+Conta vencendo.
+
+Meta atingida.
+
+Limite do cartão.
+
+Orçamento excedido.
+
+Perfil
+
+Nome
+
+Foto
+
+Email
+
+Tema
+
+Idioma
+
+Moeda
+
+Senha
+
+Preferências
+
+Configurações
+
+Tema Claro/Escuro
+
+Idioma
+
+Moeda
+
+Backup
+
+Exportação
+
+Importação
+
+Segurança
+
+Notificações
+
+Componentes
+
+Navbar
+
+Sidebar
+
+DashboardCard
+
+BalanceCard
+
+ExpenseCard
+
+IncomeCard
+
+CreditCardCard
+
+BankAccountCard
+
+GoalCard
+
+DebtCard
+
+InvestmentCard
+
+SubscriptionCard
+
+Charts
+
+Calendar
+
+Modal
+
+Toast
+
+Loading
+
+SearchBar
+
+FilterBar
+
+Pagination
+
+ConfirmDialog
+
+Avatar
+
+Badge
+
+Button
+
+Dropdown
+
+Tooltip
+
+ProgressBar
+
+StatisticCard
+
+Banco de Dados
+
+Usuários
+
+Contas
+
+Cartões
+
+Receitas
+
+Despesas
+
+Categorias
+
+Transferências
+
+Metas
+
+Dívidas
+
+Empréstimos
+
+Investimentos
+
+Assinaturas
+
+Notificações
+
+Histórico
+
+Configurações
+
+Experiência do Usuário
+
+A aplicação deve transmitir imediatamente a sensação de um software financeiro premium. A navegação deve ser intuitiva e rápida, permitindo que o usuário visualize sua situação financeira em poucos segundos. O tema escuro com tons de roxo profundo e detalhes em verde esmeralda deve reforçar a sensação de segurança, organização e tecnologia. Todos os componentes devem seguir um padrão consistente utilizando React-Bootstrap como base, porém amplamente personalizados para criar uma identidade visual própria. O resultado final deve parecer um produto comercial pronto para lançamento, com design moderno, elegante e focado em ajudar o usuário a controlar toda a sua vida financeira em um único lugar.
+
+
+## Minha única recomendação
+
+Eu acrescentaria uma funcionalidade que poucos projetos de portfólio têm e que chama bastante atenção: uma **Central Financeira** na Dashboard.
+
+Nela, o usuário veria em uma única tela:
+
+- 💰 Saldo total consolidado.
+- 💳 Cartões próximos do limite.
+- 📅 Contas que vencem hoje, nesta semana e neste mês.
+- 🎯 Progresso das metas financeiras.
+- 📈 Evolução do patrimônio.
+- 💸 Últimas movimentações.
+- 🔔 Alertas importantes.
+
+Essa tela inicial impressiona visualmente e demonstra que você pensou na experiência do usuário, não apenas em implementar CRUDs. É um diferencial interessante para um projeto de portfólio.

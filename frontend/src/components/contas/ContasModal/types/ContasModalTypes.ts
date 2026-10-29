@@ -1,0 +1,1 @@
+export interface ContasModalProps { modalAberto: boolean; editandoId: string | null; formData: import('../../main/types/ContasTypes').ContasFormData; data: import('../../main/types/ContasTypes').ContasData | null; onFecharModal: () => void; onAtualizarForm: (c: keyof import('../../main/types/ContasTypes').ContasFormData, v: string) => void; onSalvarConta: () => void }

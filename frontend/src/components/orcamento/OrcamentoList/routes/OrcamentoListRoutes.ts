@@ -1,0 +1,1 @@
+export const orcamentoListRoutes = { view: '/orcamento' };

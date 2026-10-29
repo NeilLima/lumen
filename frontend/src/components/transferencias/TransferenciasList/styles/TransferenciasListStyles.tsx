@@ -1,0 +1,11 @@
+import styled from 'styled-components';
+export const StyledListContainer = styled.div`display: flex; flex-direction: column; gap: 20px;`;
+export const StyledFilters = styled.div`display: flex; gap: 12px; flex-wrap: wrap; align-items: center;`;
+export const StyledFilterInput = styled.input`flex: 1; min-width: 200px; padding: 10px 16px; border: 1px solid rgba(255,255,255,0.1); border-radius: 10px; background: rgba(26,26,46,0.8); color: #fff; font-size: 14px; &:focus { outline: none; border-color: rgba(139,92,246,0.5); }`;
+export const StyledFilterSelect = styled.select`padding: 10px 16px; border: 1px solid rgba(255,255,255,0.1); border-radius: 10px; background: rgba(26,26,46,0.8); color: #fff; font-size: 14px; min-width: 160px;`;
+export const StyledCleanButton = styled.button`padding: 10px 16px; border: 1px solid rgba(255,255,255,0.1); border-radius: 10px; background: rgba(26,26,46,0.8); color: #fff; cursor: pointer; font-size: 14px; transition: all 200ms ease; &:hover { background: rgba(37,37,66,0.8); }`;
+export const StyledTable = styled.table`width: 100%; border-collapse: collapse;`;
+export const StyledTh = styled.th`padding: 12px 16px; text-align: left; font-size: 12px; color: #a0a0b0; font-weight: 600; text-transform: uppercase; letter-spacing: 0.5px; border-bottom: 1px solid rgba(255,255,255,0.05);`;
+export const StyledTd = styled.td`padding: 12px 16px; font-size: 14px; color: #fff; border-bottom: 1px solid rgba(255,255,255,0.05);`;
+export const StyledActionButton = styled.button`width: 32px; height: 32px; border: none; border-radius: 8px; background: rgba(139,92,246,0.1); cursor: pointer; font-size: 14px; display: inline-flex; align-items: center; justify-content: center; margin-right: 4px; transition: all 200ms ease; &:hover { background: rgba(139,92,246,0.2); }`;
+export const StyledEmpty = styled.div`text-align: center; padding: 60px 20px; color: #a0a0b0; font-size: 16px;`;

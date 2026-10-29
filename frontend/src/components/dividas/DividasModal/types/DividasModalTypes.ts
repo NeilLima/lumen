@@ -1,0 +1,2 @@
+import type { DividasFormData } from '../../main/types/DividasTypes';
+export interface DividasModalProps { modalAberto: boolean; editandoId: string | null; formData: DividasFormData; onFecharModal: () => void; onAtualizarForm: (c: keyof DividasFormData, v: string) => void; onSalvarDivida: () => void; }

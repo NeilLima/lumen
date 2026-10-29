@@ -1,0 +1,1 @@
+export const orcamentoDetalheRoutes = { view: (id: string) => `/orcamento/${id}` };

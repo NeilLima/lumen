@@ -1,0 +1,257 @@
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "postgresql"
+  url      = env("DATABASE_URL")
+}
+
+model User {
+  id        String   @id @default(uuid())
+  email     String   @unique
+  password  String
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  profile         Profile?
+  accounts        Account[]
+  categories      Category[]
+  transactions    Transaction[]
+  creditCards     CreditCard[]
+  goals           Goal[]
+  debts           Debt[]
+  investments     Investment[]
+  subscriptions   Subscription[]
+  budgets         Budget[]
+  notifications   Notification[]
+
+  @@map("users")
+}
+
+model Profile {
+  id         String    @id @default(uuid())
+  userId     String    @unique
+  firstName  String
+  lastName   String
+  countryIso2 String?
+  stateIso2  String?
+  city       String?
+  birthDate  DateTime?
+  gender     String?
+  avatar     String?
+  createdAt  DateTime  @default(now())
+  updatedAt  DateTime  @updatedAt
+
+  user User @relation(fields: [userId], references: [id], onDelete: Cascade)
+
+  @@map("profiles")
+}
+
+model Account {
+  id        String   @id @default(uuid())
+  userId    String
+  name      String
+  bank      String?  // nome do banco (ex.: Nubank)
+  type      String   @default("CHECKING") // CHECKING | SAVINGS | WALLET | INVESTMENT
+  balance   Decimal  @default(0) @db.Decimal(14, 2)
+  color     String?
+  active    Boolean  @default(true)
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  user         User          @relation(fields: [userId], references: [id], onDelete: Cascade)
+  transactions Transaction[] @relation("AccountTransactions")
+
+  @@map("accounts")
+}
+
+model Category {
+  id        String   @id @default(uuid())
+  userId    String
+  name      String
+  color     String   @default("#8b5cf6")
+  icon      String?
+  type      String   @default("BOTH") // INCOME | EXPENSE | BOTH
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  user         User @relation(fields: [userId], references: [id], onDelete: Cascade)
+  transactions Transaction[] @relation("CategoryTransactions")
+  subscriptions Subscription[] @relation("CategorySubscriptions")
+  budgets Budget[] @relation("CategoryBudgets")
+
+  @@map("categories")
+}
+
+model Transaction {
+  id            String   @id @default(uuid())
+  userId        String
+  description   String
+  amount        Decimal  @db.Decimal(14, 2)
+  type          String // INCOME | EXPENSE | TRANSFER
+  status        String   @default("PENDING") // RECEIVED | PENDING | LATE
+  date          DateTime @default(now())
+  paymentMethod String?
+  recurrence    String? // NONE | WEEKLY | MONTHLY | YEARLY
+  notes         String?
+  attachment    String? // URL real do comprovante (blob:/data: sao recusados)
+  createdAt     DateTime @default(now())
+  updatedAt     DateTime @updatedAt
+
+  user          User      @relation(fields: [userId], references: [id], onDelete: Cascade)
+  account       Account?  @relation("AccountTransactions", fields: [accountId], references: [id], onDelete: SetNull)
+  accountId     String?
+  creditCard    CreditCard? @relation("CreditCardTransactions", fields: [creditCardId], references: [id], onDelete: SetNull)
+  creditCardId  String?
+  category      Category? @relation("CategoryTransactions", fields: [categoryId], references: [id], onDelete: SetNull)
+  categoryId    String?
+
+  @@index([userId])
+  @@index([accountId])
+  @@index([categoryId])
+  @@map("transactions")
+}
+model CreditCard {
+  id        String   @id @default(uuid())
+  userId    String
+  name      String
+  bank      String?
+  brand     String   @default("VISA") // VISA | MASTERCARD | ELO | AMEX | HIPERCARD | DINERS | DISCOVER | OUTRO
+  limitTotal   Decimal @db.Decimal(14, 2)
+  limitUsed    Decimal @default(0) @db.Decimal(14, 2)
+  dueDay       Int     @default(10) // vencimento da fatura
+  closingDay   Int?    // melhor dia de compra / fechamento
+  color        String?
+  createdAt    DateTime @default(now())
+  updatedAt    DateTime @updatedAt
+
+  user           User @relation(fields: [userId], references: [id], onDelete: Cascade)
+  transactions   Transaction[] @relation("CreditCardTransactions")
+
+  @@index([userId])
+  @@map("credit_cards")
+}
+
+model Goal {
+  id          String   @id @default(uuid())
+  userId      String
+  name        String
+  targetAmount Decimal @db.Decimal(14, 2)
+  currentAmount Decimal @default(0) @db.Decimal(14, 2)
+  deadline    DateTime?
+  color       String?
+  icon        String?
+  createdAt   DateTime @default(now())
+  updatedAt   DateTime @updatedAt
+
+  user User @relation(fields: [userId], references: [id], onDelete: Cascade)
+
+  @@index([userId])
+  @@map("goals")
+}
+
+model Debt {
+  id          String   @id @default(uuid())
+  userId      String
+  name        String
+  type        String   @default("DEBT") // DEBT | LOAN
+  totalAmount Decimal @db.Decimal(14, 2)
+  remainingAmount Decimal @db.Decimal(14, 2)
+  interestRate Decimal? // ao mes, %
+  dueDate     DateTime?
+  createdAt   DateTime @default(now())
+  updatedAt   DateTime @updatedAt
+
+  user User @relation(fields: [userId], references: [id], onDelete: Cascade)
+
+  @@index([userId])
+  @@map("debts")
+}
+
+model Investment {
+  id          String   @id @default(uuid())
+  userId      String
+  name        String
+  type        String   @default("OTHER") // STOCKS | FUNDS | CRYPTO | TESOURO | CDB | OTHER
+  broker      String?
+  currentValue Decimal @db.Decimal(14, 2)
+  investedAmount Decimal @default(0) @db.Decimal(14, 2)
+  createdAt   DateTime @default(now())
+  updatedAt   DateTime @updatedAt
+
+  user User @relation(fields: [userId], references: [id], onDelete: Cascade)
+
+  @@index([userId])
+  @@map("investments")
+}
+
+model Subscription {
+  id          String   @id @default(uuid())
+  userId      String
+  name        String
+  amount      Decimal @db.Decimal(14, 2)
+  dueDay      Int      @default(10) // dia do mes da cobranca
+  categoryId  String?
+  nextCharge  DateTime?
+  active      Boolean  @default(true)
+  createdAt   DateTime @default(now())
+  updatedAt   DateTime @updatedAt
+
+  user       User @relation(fields: [userId], references: [id], onDelete: Cascade)
+  category   Category? @relation("CategorySubscriptions", fields: [categoryId], references: [id], onDelete: SetNull)
+
+  @@index([userId])
+  @@map("subscriptions")
+}
+
+model Budget {
+  id          String   @id @default(uuid())
+  userId      String
+  categoryId  String?
+  month       String // YYYY-MM
+  limitAmount Decimal @db.Decimal(14, 2)
+  createdAt   DateTime @default(now())
+  updatedAt   DateTime @updatedAt
+
+  user      User @relation(fields: [userId], references: [id], onDelete: Cascade)
+  category  Category? @relation("CategoryBudgets", fields: [categoryId], references: [id], onDelete: SetNull)
+
+  @@index([userId])
+  @@index([categoryId])
+  @@map("budgets")
+}
+
+model Notification {
+  id          String   @id @default(uuid())
+  userId      String
+  type        String // PAYMENT_DUE | BILL_EXPIRING | GOAL_REACHED | CARD_LIMIT | BUDGET_EXCEEDED
+  title       String
+  message     String?
+  read        Boolean  @default(false)
+  link        String?
+  createdAt   DateTime @default(now())
+
+  user User @relation(fields: [userId], references: [id], onDelete: Cascade)
+
+  @@index([userId])
+  @@index([read])
+  @@map("notifications")
+}
+
+model EstoqueItem {
+  id            String   @id @default(uuid())
+  userId        String
+  nome          String
+  categoria     String
+  quantidade    Decimal  @db.Decimal(14, 2)
+  unidade       String
+  preco         Decimal  @db.Decimal(14, 2)
+  localCompra   String
+  quantidadeMinima Decimal @db.Decimal(14, 2)
+  dataAtualizacao DateTime @updatedAt
+  createdAt     DateTime @default(now())
+
+  @@index([userId])
+  @@map("estoque_itens")
+}

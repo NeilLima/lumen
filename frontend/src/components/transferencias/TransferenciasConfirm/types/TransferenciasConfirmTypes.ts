@@ -1,0 +1,1 @@
+export interface TransferenciasConfirmProps { exclusaoPendente: import('../../main/types/TransferenciasTypes').Transferencia | null; formatarValor: (valor: number) => string; onCancelarExclusao: () => void; onConfirmarEExcluir: () => void }

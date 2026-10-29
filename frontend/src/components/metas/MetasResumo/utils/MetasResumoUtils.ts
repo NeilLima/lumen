@@ -1,0 +1,1 @@
+export function useMetasResumo() { return { state: {}, actions: {} }; }

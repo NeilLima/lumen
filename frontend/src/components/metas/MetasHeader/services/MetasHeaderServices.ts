@@ -1,0 +1,1 @@
+export function metasHeaderService() { return { titulo: 'Metas Financeiras', subtitulo: 'Defina e acompanhe suas metas financeiras' }; }

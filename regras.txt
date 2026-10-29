@@ -1,0 +1,159 @@
+=======================================================================
+ REGRAS DE IMPLEMENTACAO — NEXUS SOCIAL
+ Ordem OBRIGATORIA, uma tarefa por vez, para CADA diretorio/feature.
+ Vale para front + backend + Prisma. Nao pular etapas.
+=======================================================================
+
+0) PRE-REQUISITOS (valem para TODAS as regras)
+   0.1 LER a documentacao ANTES de escrever codigo:
+       frontend/DOCUMENTACAO_GERAL.md + backend/src/DOCUMENTACAO_GERAL.md
+       (e a doc do diretorio que estiver sendo implementado).
+   0.2 BRANCH OBRIGATORIA: criar branch antes de qualquer alteracao; nunca
+       alterar direto na main; so encerrar quando estiver completo e aprovado.
+   0.3 CAMADAS NO FRONT: crudService -> services -> utils -> component.
+       - services: TanStack Query + HTTP + transformacao + cache.
+         NUNCA tipagem direta (interface so em types/).
+       - utils: variaveis -> estados -> objetos -> funcoes.
+         NUNCA TanStack Query. NUNCA tipagem direta.
+       - component: SO render. Sem logica, estado, array, effect, estilo
+         inline. Consome apenas utils. data-testid em todo interativo.
+   0.4 BACKEND: `/* eslint-disable prettier/prettier */` no topo de TODO
+       arquivo; fluxo Request -> Controller -> Service -> Repository -> DB;
+       DTO validando a entrada; erros consistentes; logs estruturados;
+       paginacao padrao.
+   0.5 POLITICA ZERO MOCK: proibido dado ficticio (pravatar / unsplash /
+       picsum / MOCK_* / SEED_* / localStorage como banco / window.alert como
+       acao). So API real; no banco SO URL real do storage (blob:/data: sao
+       recusados).
+   0.6 UMA TAREFA POR VEZ: marcar EM ANDAMENTO -> PRISMA -> BACKEND ->
+       FRONTEND. Testes SO no final (regra 15).
+
+1) PRISMA EM CONCORDE (primeiro de tudo)
+   1.1 Analisar/ajustar o schema do diretorio ANTES de qualquer codigo.
+   1.2 Modelos, enums, relations, indices e @@map coerentes com o que o front
+       consome — sem campo sem uso e sem campo faltando.
+   1.3 REUSAR tabelas existentes antes de criar novas (ex.: visitas, ratings,
+       follow, comments/likes genericos, stories, storage).
+   1.4 Ao alterar: `prisma validate` + `prisma generate` + aplicar o DDL
+       (scripts/*.sql com `prisma db execute` — `db push` trava neste ambiente).
+
+2) CRUD PRIMEIRO (criacao, edicao, exclusao; listagem tambem, se houver)
+   2.1 Mapear o que o diretorio precisa de CRUD (perfil, item, mensagem,
+       story, notificacao...) e o que ja existe.
+   2.2 TODA criacao / edicao / exclusao mostra o MODAL DE FEEDBACK que ja
+       temos no shared (FeedbackModalComp) — sucesso E erro.
+   2.3 TODA exclusao (e acao destrutiva) usa o MODAL DE CONFIRMACAO que ja
+       temos no shared (ConfirmModalComp). Proibido window.confirm.
+   2.4 Listagem NAO usa feedback: ela reflete o estado real (invalidacao/cache).
+   2.5 CRUD incompleto E CRUD a fazer (ex.: falta endpoint de excluir? falta
+       excluir na UI? os dois entram aqui).
+
+3) DETALHES (depois do CRUD)
+   3.1 Se o item tem pagina de detalhe, o detalhe tem que refletir o CRUD
+       (dados, contadores e acoes atualizados apos criar/editar/excluir).
+   3.2 No detalhe, o dono ve as acoes de dono (editar / excluir / gerenciar),
+       com confirmacao e feedback como na regra 2.
+   3.3 Navegacao consistente (card/lista -> detalhe) com as rotas
+       centralizadas em routes/.
+
+4) INTERACOES ENTRE USUARIOS
+   4.1 Implementar TODAS as interacoes que o diretorio preve: curtir,
+       super like, comentar, seguir/seguimentos, deixar de seguir,
+       convidar/aguardar/solicitar, bloquear, salvar etc. — cada uma com
+       endpoint, estado real e feedback.
+   4.2 Se o diretorio NAO preve alguma (ex.: comentarios nos encontros),
+       registrar a decisao de forma explicita — a UI nunca promete o que
+       nao existe.
+   4.3 Interacao que gera aviso -> cai na regra 12 (notificacoes).
+
+5) IDENTIDADE DO USUARIO NA UI (foto + nome)
+   5.1 Sem foto de perfil -> ICONE DE USUARIO (nunca src vazio, letra ou
+       imagem quebrada) — seguir o padrao ja existente no shared.
+   5.2 A FOTO DE PERFIL e o NOME sao CLICAVEIS e levam para a pagina de
+       perfil do usuario (rota centralizada em routes/).
+   5.3 Vale para: card, detalhe, chat, matches, notificacoes, comentarios,
+       sugestoes e qualquer lista que mostre um usuario.
+
+6) MENSAGENS ENTRE USUARIOS
+   6.1 Se o diretorio permite enviar/receber mensagem, implementar: enviar,
+       listar, marcar como lida, contador de nao lidas, tempo real
+       (useSocket/getGlobalSocket) e previa na lista de conversas.
+   6.2 Mensagem gera notificacao (regra 12) e respeita quem pode falar com
+       quem (ex.: conversa so entre matches).
+
+7) MENUS E OPCOES — UM POR UM
+   7.1 Listar TODOS os menus/opcoes do diretorio (menu ⋮, dropdowns, abas,
+       chips, botoes) e implementar cada funcionalidade deles.
+   7.2 Nenhum item "fantasma": ou funciona de verdade, ou nao aparece.
+   7.3 Menu/acao de dono aparece SO para o dono (visitante nao ve moderacao).
+
+8) MODAL DE EDICAO = MODAL DE CRIACAO
+   8.1 O MESMO modal/componente serve para criar e para editar, funcionando
+       exatamente do mesmo jeito; no editar, os campos ja vem preenchidos.
+   8.2 Rotulos corretos no modo edicao ("Salvar alteracoes" / "Atualizar
+       foto"), e o excluir aparece apenas no modo edicao (com a confirmacao
+       da regra 2.3).
+
+9) ESTUDIO DE FOTO EM TUDO QUE O USUARIO POSTA
+   9.1 Upload de imagem = hook global `useImageUpload` (preview local blob:
+       -> storage -> URL final). NUNCA base64/blob no banco.
+   9.2 TODA foto publicada pelo usuario tem o ICONE DE LAPIS (✏️) para editar
+       no ESTUDIO DE FOTO — o MESMO estudio que os stories usam. Vale para
+       capa, avatar, galeria e fotos dentro do texto.
+   9.3 O lapis aparece SOMENTE para o dono (admin/usuarios principal); para
+       os demais a foto e apenas leitura.
+   9.4 A edicao do estudio tem que APARECER: persistir o filtro aplicado
+       (ex.: coverFilterCss / photoFilterCss) e renderizar esse CSS em todas
+       as telas onde a foto aparece.
+
+10) DOCUMENTACAO + CAMADAS + TIPOS (antes de implementar)
+   10.1 Ler a documentacao do front e do back (regra 0.1) antes de codar.
+   10.2 NUNCA logica de negocio direto no componente (regra 0.3).
+   10.3 INTERFACES SO NO TYPE: nunca no service e nunca no util.
+   10.4 Nunca `any`; props sempre tipadas; tema nos styled-components;
+        responsividade mobile-first; data-testid nos elementos interativos.
+
+11) CONTADORES
+   11.1 Levantar TUDO que e contagem no diretorio (itens, fotos, curtidas,
+        comentarios, seguidores, visitas, matches, nao lidas, membros...).
+   11.2 Todo contador vem do backend (contrato do service), e invalidado
+        pelo CRUD/interacao e exibido na UI — nada somado "na mao" no front.
+
+12) NOTIFICACOES DO DIRETORIO (sincronizadas com o navbar)
+   12.1 Se o diretorio tem sino/notificacoes proprias, elas TEM que estar
+        SINCRONIZADAS com as notificacoes do navbar (mesma fonte de dados e
+        mesma contagem de nao lidas).
+   12.2 Implementar de ponta a ponta todos os tipos de notificacao do
+        diretorio (ex.: match, curtida, super like, mensagem, visita).
+   12.3 EXCLUSAO de notificacoes: o usuario pode excluir TODAS as do
+        diretorio ou UMA por uma (endpoint + UI + confirmacao).
+
+13) FOTOS NOS FORMULARIOS
+   13.1 Verificar TODOS os lugares que precisam de foto e garantir que o
+        formulario tem o campo de foto implementado (upload + preview +
+        estudio/lapis — regra 9).
+   13.2 Vale para capa, avatar, galeria, imagem de item e foto de story.
+
+14) REUSO ENTRE DIRETORIOS (avaliar ANTES de implementar)
+   14.1 Mapear quais diretorios interagem com quais e o que pode ser reusado
+        (front e back) antes de escrever Prisma/backend.
+   14.2 Reusar o que ja existe: storage/uploads, socket, stories/estudio,
+        comments, likes/follow, visitas/ratings, modais do shared
+        (confirm/feedback), sidebar e hooks globais (useImageUpload,
+        useSocket, useAuth, useProfileId, useFollow...).
+   14.3 Registrar o mapa de reuso junto da implementacao (quem alimenta quem,
+        quem consome quem — back e front interligados).
+
+15) TESTES (SO NO FINAL — diretorio 100% concluido)
+   15.1 Modo oficial da doc do front: probes `.cjs` em backend/scripts/probes/
+        rodando contra a API REAL e o BANCO REAL na mesma execucao
+        (helpers em _probe.cjs, JWT do backend/.env, sem id hardcoded,
+        read-only ou revertendo o que gravar, check() + done(), exit 0/1).
+   15.2 Rodar TODOS os probes do diretorio DE UMA VEZ, quando ele estiver
+        totalmente concluido (nao testar por partes).
+   15.3 data-testid continua obrigatorio para cobrir os fluxos de UI.
+
+-----------------------------------------------------------------------
+ ORDEM OFICIAL: 0 -> 1 -> 2 -> 3 -> 4 -> 5 -> 6 -> 7 -> 8 -> 9 -> 10 ->
+ 11 -> 12 -> 13 -> 14 -> 15. Nao pular etapas; uma tarefa por vez.
+-----------------------------------------------------------------------

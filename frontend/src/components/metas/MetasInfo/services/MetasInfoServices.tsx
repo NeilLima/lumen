@@ -1,0 +1,1 @@
+export function metasInfoService() { return { info: null }; }

@@ -1,0 +1,1 @@
+export function useMetasList() { return { state: {}, actions: {} }; }

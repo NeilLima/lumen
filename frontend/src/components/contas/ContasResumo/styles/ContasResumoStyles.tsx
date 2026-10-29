@@ -1,0 +1,6 @@
+import styled from 'styled-components';
+export const StyledResumoGrid = styled.div`display: flex; gap: 16px; margin-bottom: 24px; overflow-x: auto; padding-bottom: 8px; &::-webkit-scrollbar { height: 6px; } &::-webkit-scrollbar-thumb { background: rgba(139,92,246,0.3); border-radius: 9999px; }`;
+export const StyledResumoCard = styled.div<{ $accentColor: string }>`position: relative; background: linear-gradient(135deg, rgba(26,26,46,0.8) 0%, rgba(15,15,26,0.9) 100%); border: 1px solid rgba(255,255,255,0.05); border-radius: 16px; padding: 20px; min-width: 220px; flex: 1 1 220px; max-width: 300px; &::before { content: ''; position: absolute; top: 0; left: 0; right: 0; height: 3px; background: linear-gradient(90deg, ${p => p.$accentColor}, transparent); border-radius: 16px 16px 0 0; } &:hover { transform: translateY(-2px); }`;
+export const StyledResumoIcon = styled.div<{ $color: string; $bg: string }>`width: 40px; height: 40px; border-radius: 50%; background: ${p => p.$bg}; display: flex; align-items: center; justify-content: center; font-size: 18px; color: ${p => p.$color}; margin-bottom: 12px;`;
+export const StyledResumoLabel = styled.span`font-size: 12px; color: #a0a0b0; text-transform: uppercase; letter-spacing: 0.5px;`;
+export const StyledResumoValue = styled.h2`font-size: 22px; font-weight: 700; color: #fff; margin: 4px 0 0 0;`;

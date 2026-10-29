@@ -1,0 +1,2 @@
+import type { OrcamentoCategoria } from '../../main/types/OrcamentoTypes';
+export interface OrcamentoDetalheProps { detalheCategoria: OrcamentoCategoria | null; formatarValor: (v: number) => string; getStatusLabel: (s: string) => string; getStatusCor: (s: string) => string; calcularPercentual: (gasto: number, limite: number) => number; onFecharDetalhe: () => void; onEditar: (cat: OrcamentoCategoria) => void; }

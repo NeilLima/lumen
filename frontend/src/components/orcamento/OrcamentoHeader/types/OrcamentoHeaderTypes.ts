@@ -1,0 +1,1 @@
+export interface OrcamentoHeaderProps { onAbrirInfo: () => void; onAbrirModalNovo: () => void; }

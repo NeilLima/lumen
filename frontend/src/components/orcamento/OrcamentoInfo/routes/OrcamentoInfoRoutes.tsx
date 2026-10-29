@@ -1,0 +1,1 @@
+export const orcamentoInfoRoutes = { info: '/orcamento/info' };

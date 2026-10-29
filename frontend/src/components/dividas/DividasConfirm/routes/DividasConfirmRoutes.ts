@@ -1,0 +1,1 @@
+export const dividasConfirmRoutes = { confirm: '/dividas/confirm' };

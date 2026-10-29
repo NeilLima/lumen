@@ -1,0 +1,1 @@
+export interface DividasInfoProps { modalInfoAberto: boolean; onFecharInfo: () => void; }

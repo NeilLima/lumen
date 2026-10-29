@@ -1,0 +1,1 @@
+export function metasDetalheService() { return { detalhe: null }; }

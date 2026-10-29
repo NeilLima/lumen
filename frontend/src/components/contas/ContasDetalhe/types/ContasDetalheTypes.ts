@@ -1,0 +1,1 @@
+export interface ContasDetalheProps { detalheConta: import('../../main/types/ContasTypes').Conta | null; formatarValor: (v: number) => string; getTipoLabel: (t: string) => string; onFecharDetalhe: () => void; onEditar: (c: import('../../main/types/ContasTypes').Conta) => void }

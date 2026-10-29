@@ -1,0 +1,1 @@
+export function useOrcamentoResumo() { return { state: {}, actions: {} }; }
