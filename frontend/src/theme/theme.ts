@@ -17,6 +17,7 @@ export const theme = {
   // Brand colors
   primary: '#8b5cf6',
   primaryLight: '#a78bfa',
+  primaryHover: '#a78bfa',
   primaryDark: '#7c3aed',
   primaryGradient: 'linear-gradient(135deg, #8b5cf6 0%, #6366f1 100%)',
   
@@ -114,6 +115,7 @@ export const dashboardTheme: Theme = {
   // Brand (roxo/índigo da página de despesas)
   primary: '#8b5cf6',
   primaryLight: '#a78bfa',
+  primaryHover: '#a78bfa',
   primaryDark: '#7c3aed',
   primaryGradient: 'linear-gradient(135deg, #8b5cf6 0%, #6366f1 100%)',
 
