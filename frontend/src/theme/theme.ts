@@ -8,6 +8,7 @@ export const theme = {
   bgNavbar: '#0a0a14',
   bgSidebar: '#12121f',
   bgHover: 'rgba(139, 92, 246, 0.1)',
+  bgInput: 'rgba(255, 255, 255, 0.05)',
   
   // Text colors
   textPrimary: '#ffffff',
@@ -108,6 +109,7 @@ export const dashboardTheme: Theme = {
   bgNavbar: '#0a0a14',
   bgSidebar: '#12121f',
   bgHover: 'rgba(139, 92, 246, 0.1)',
+  bgInput: 'rgba(255, 255, 255, 0.05)',
 
   // Text (mesmos tons da página de despesas)
   textPrimary: '#ffffff',
