@@ -1,5 +1,5 @@
 export interface Assinatura {
-  id: string; nome: string; categoria: string; valor: number; ciclo: string; proximaCobranca: string; status: string; observacoes?: string; categoria: string; categoriaCor: string; categoriaIcone: string;
+  id: string; nome: string; categoria: string; valor: number; ciclo: string; proximaCobranca: string; status: string; observacoes?: string; categoriaCor: string; categoriaIcone: string;
 }
 export interface AssinaturasFiltros { pesquisa: string; categoria: string; status: string;  }
 export interface AssinaturasResumo { totalAssinaturas: number; totalMensal: number; totalAnual: number; totalAtivas: number;  }
