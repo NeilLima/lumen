@@ -38,8 +38,8 @@ export async function resolveDatabaseConnection(): Promise<{
   const prodEnv = readEnv('.env'); // banco de produção
   const localEnv = readEnv('.env.local'); // banco local de testes
 
-  const prodUrl = prodEnv.DATABASE_URL || '';
-  const defaultLocalUrl = localEnv.DATABASE_URL || prodUrl;
+  const prodUrl = prodEnv.DATABASE_URL || process.env.DATABASE_URL || '';
+  const defaultLocalUrl = localEnv.DATABASE_URL || prodUrl || process.env.DATABASE_URL || '';
   const localUrl = /(localhost|127\.0\.0\.1)/i.test(defaultLocalUrl)
     ? defaultLocalUrl
     : localEnv.DATABASE_URL || '';
