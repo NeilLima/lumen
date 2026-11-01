@@ -1,6 +1,6 @@
 /* eslint-disable prettier/prettier */
-import { CreateCategoryDto, UpdateCategoryDto } from '../dto/category.dto';
-import { CategoryResponse, DeleteResult } from '../types/category.types';
+import { CreateCategoryDto, UpdateCategoryDto } from '../dto/category.dto.js';
+import { CategoryResponse, DeleteResult } from '../types/category.types.js';
 
 export interface ICategoriesRepository {
   findAll(userId: string): Promise<CategoryResponse[]>;

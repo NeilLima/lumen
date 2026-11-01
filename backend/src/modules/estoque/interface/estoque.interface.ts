@@ -1,6 +1,6 @@
 /* eslint-disable prettier/prettier */
-import { CreateEstoqueItemDto, UpdateEstoqueItemDto } from '../dto/estoque.dto';
-import { EstoqueItemResponse, DeleteResult } from '../types/estoque.types';
+import { CreateEstoqueItemDto, UpdateEstoqueItemDto } from '../dto/estoque.dto.js';
+import { EstoqueItemResponse, DeleteResult } from '../types/estoque.types.js';
 
 export interface IEstoqueRepository {
   findAll(userId: string): Promise<EstoqueItemResponse[]>;

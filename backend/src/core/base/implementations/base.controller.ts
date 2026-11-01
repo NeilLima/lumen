@@ -3,9 +3,9 @@ import {
   Body, Delete, Get, HttpException,
   HttpStatus, Param, Patch, Post, Logger
 } from '@nestjs/common';
-import { CrudService } from '../interfaces/crud.interface';
-import { BaseEntity } from '../interfaces/entity.interface';
-import { IdFormatter } from '../../../config/id-formatter.config';
+import { CrudService } from '../interfaces/crud.interface.js';
+import { BaseEntity } from '../interfaces/entity.interface.js';
+import { IdFormatter } from '../../../config/id-formatter.config.js';
 
 /**
  * Implementação genérica de controlador CRUD

@@ -1,7 +1,7 @@
 /* eslint-disable prettier/prettier */
 import { NotFoundException, BadRequestException } from '@nestjs/common';
-import { TransactionsService } from './transactions.service';
-import { TransactionsRepository } from '../repository/transactions.repository';
+import { TransactionsService } from './transactions.service.js';
+import { TransactionsRepository } from '../repository/transactions.repository.js';
 
 describe('TransactionsService', () => {
   let service: TransactionsService;

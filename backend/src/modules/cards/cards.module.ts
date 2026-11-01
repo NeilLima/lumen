@@ -1,8 +1,8 @@
 /* eslint-disable prettier/prettier */
 import { Module } from '@nestjs/common';
-import { CardsController } from './controllers/cards.controller';
-import { CardsService } from './services/cards.service';
-import { CardsRepository } from './repository/cards.repository';
+import { CardsController } from './controllers/cards.controller.js';
+import { CardsService } from './services/cards.service.js';
+import { CardsRepository } from './repository/cards.repository.js';
 
 @Module({
   controllers: [CardsController],

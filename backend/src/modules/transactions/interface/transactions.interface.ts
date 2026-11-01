@@ -1,6 +1,6 @@
 /* eslint-disable prettier/prettier */
-import { CreateTransactionDto, UpdateTransactionDto } from '../dto/transaction.dto';
-import { DeleteResult, TransactionResponse } from '../types/transaction.types';
+import { CreateTransactionDto, UpdateTransactionDto } from '../dto/transaction.dto.js';
+import { DeleteResult, TransactionResponse } from '../types/transaction.types.js';
 
 export interface ITransactionsRepository {
   findAll(userId: string, type?: string, take?: number): Promise<TransactionResponse[]>;

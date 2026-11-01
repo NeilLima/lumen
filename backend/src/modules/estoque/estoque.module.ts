@@ -1,8 +1,8 @@
 /* eslint-disable prettier/prettier */
 import { Module } from '@nestjs/common';
-import { EstoqueController } from './controllers/estoque.controller';
-import { EstoqueService } from './services/estoque.service';
-import { EstoqueRepository } from './repository/estoque.repository';
+import { EstoqueController } from './controllers/estoque.controller.js';
+import { EstoqueService } from './services/estoque.service.js';
+import { EstoqueRepository } from './repository/estoque.repository.js';
 
 @Module({
   controllers: [EstoqueController],

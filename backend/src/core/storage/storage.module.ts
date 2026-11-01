@@ -1,6 +1,6 @@
 /* eslint-disable prettier/prettier */
 import { Module, Global } from '@nestjs/common';
-import { LocalStorageService } from './implementations/local.storage';
+import { LocalStorageService } from './implementations/local.storage.js';
 
 /**
  * Módulo para serviços de armazenamento

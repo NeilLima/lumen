@@ -1,8 +1,8 @@
 /* eslint-disable prettier/prettier */
 import { Module } from '@nestjs/common';
-import { SubscriptionsController } from './controllers/subscriptions.controller';
-import { SubscriptionsService } from './services/subscriptions.service';
-import { SubscriptionsRepository } from './repository/subscriptions.repository';
+import { SubscriptionsController } from './controllers/subscriptions.controller.js';
+import { SubscriptionsService } from './services/subscriptions.service.js';
+import { SubscriptionsRepository } from './repository/subscriptions.repository.js';
 
 @Module({
   controllers: [SubscriptionsController],

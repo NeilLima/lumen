@@ -1,7 +1,7 @@
 /* eslint-disable prettier/prettier */
 import { NotFoundException } from '@nestjs/common';
-import { AccountsService } from './accounts.service';
-import { AccountsRepository } from '../repository/accounts.repository';
+import { AccountsService } from './accounts.service.js';
+import { AccountsRepository } from '../repository/accounts.repository.js';
 
 describe('AccountsService', () => {
   let service: AccountsService;

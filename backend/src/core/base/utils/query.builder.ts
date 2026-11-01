@@ -1,5 +1,5 @@
 /* eslint-disable prettier/prettier */
-import { FilterOptions } from '../interfaces/query-options.interface';
+import { FilterOptions } from '../interfaces/query-options.interface.js';
 
 /**
  * Classe utilitária para construção de consultas dinâmicas

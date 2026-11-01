@@ -1,8 +1,8 @@
 /* eslint-disable prettier/prettier */
 import { Injectable, NotFoundException, BadRequestException } from '@nestjs/common';
-import { TransactionsRepository } from '../repository/transactions.repository';
-import { CreateTransactionDto, UpdateTransactionDto } from '../dto/transaction.dto';
-import { logTransactionCreated, logTransactionRemoved } from '../logs/transactions.logs';
+import { TransactionsRepository } from '../repository/transactions.repository.js';
+import { CreateTransactionDto, UpdateTransactionDto } from '../dto/transaction.dto.js';
+import { logTransactionCreated, logTransactionRemoved } from '../logs/transactions.logs.js';
 
 @Injectable()
 export class TransactionsService {

@@ -1,7 +1,7 @@
 /* eslint-disable prettier/prettier */
 import { BadRequestException, createParamDecorator, ExecutionContext } from '@nestjs/common';
 
-import { processMedia, validateMedia } from '../../../config/uploads.config';
+import { processMedia, validateMedia } from '../../../config/uploads.config.js';
 
 /**
  * Decorador para validar e processar uploads base64 automaticamente

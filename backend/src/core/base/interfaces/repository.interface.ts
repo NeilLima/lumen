@@ -1,6 +1,6 @@
 /* eslint-disable prettier/prettier */
-import { BaseEntity } from './entity.interface';
-import { FilterOptions, QueryOptions } from './query-options.interface';
+import { BaseEntity } from './entity.interface.js';
+import { FilterOptions, QueryOptions } from './query-options.interface.js';
 
 /**
  * Interface para o repositório base

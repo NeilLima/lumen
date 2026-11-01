@@ -25,10 +25,10 @@ interface ModelLike<T> {
   countDocuments: (filter: unknown) => QueryLike<number>;
 }
 
-import { BaseEntity } from '../interfaces/entity.interface';
-import { BaseRepository } from '../interfaces/repository.interface';
-import { FilterOptions, QueryOptions } from '../interfaces/query-options.interface';
-import { IdFormatter } from '../../../config/id-formatter.config';
+import { BaseEntity } from '../interfaces/entity.interface.js';
+import { BaseRepository } from '../interfaces/repository.interface.js';
+import { FilterOptions, QueryOptions } from '../interfaces/query-options.interface.js';
+import { IdFormatter } from '../../../config/id-formatter.config.js';
 import { Logger } from '@nestjs/common';
 
 /**

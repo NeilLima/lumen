@@ -1,7 +1,7 @@
 /* eslint-disable prettier/prettier */
 import { Injectable, NotFoundException } from '@nestjs/common';
-import { ProductsRepository } from '../repository/products.repository';
-import { CreateProductDto, UpdateProductDto } from '../dto/product.dto';
+import { ProductsRepository } from '../repository/products.repository.js';
+import { CreateProductDto, UpdateProductDto } from '../dto/product.dto.js';
 
 @Injectable()
 export class ProductsService {

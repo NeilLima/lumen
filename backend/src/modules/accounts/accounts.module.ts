@@ -1,8 +1,8 @@
 /* eslint-disable prettier/prettier */
 import { Module } from '@nestjs/common';
-import { AccountsController } from './controllers/accounts.controller';
-import { AccountsService } from './services/accounts.service';
-import { AccountsRepository } from './repository/accounts.repository';
+import { AccountsController } from './controllers/accounts.controller.js';
+import { AccountsService } from './services/accounts.service.js';
+import { AccountsRepository } from './repository/accounts.repository.js';
 
 @Module({
   controllers: [AccountsController],

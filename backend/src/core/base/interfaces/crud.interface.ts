@@ -1,5 +1,5 @@
 /* eslint-disable prettier/prettier */
-import { FilterOptions, QueryOptions } from './query-options.interface';
+import { FilterOptions, QueryOptions } from './query-options.interface.js';
 
 /**
  * Interface para serviços CRUD

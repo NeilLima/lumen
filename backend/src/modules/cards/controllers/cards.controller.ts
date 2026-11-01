@@ -1,8 +1,8 @@
 /* eslint-disable prettier/prettier */
 import { Body, Controller, Delete, Get, Param, Patch, Post, Req, UseGuards } from '@nestjs/common';
-import { CardsService } from '../services/cards.service';
-import { CreateCardDto, UpdateCardDto } from '../dto/card.dto';
-import { JwtAuthGuard } from '../../../auth/guards/jwt-auth.guard';
+import { CardsService } from '../services/cards.service.js';
+import { CreateCardDto, UpdateCardDto } from '../dto/card.dto.js';
+import { JwtAuthGuard } from '../../../auth/guards/jwt-auth.guard.js';
 
 @Controller('cards')
 @UseGuards(JwtAuthGuard)

@@ -4,8 +4,8 @@ import { JwtService } from '@nestjs/jwt';
 import { ConfigService } from '@nestjs/config';
 import { ConflictException, UnauthorizedException } from '@nestjs/common';
 import * as bcrypt from 'bcryptjs';
-import { AuthService } from '../services/auth.service';
-import { AuthRepository } from '../repository/auth.repository';
+import { AuthService } from '../services/auth.service.js';
+import { AuthRepository } from '../repository/auth.repository.js';
 
 describe('AuthService', () => {
   let service: AuthService;

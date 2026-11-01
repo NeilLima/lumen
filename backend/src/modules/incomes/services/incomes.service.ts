@@ -1,7 +1,7 @@
 /* eslint-disable prettier/prettier */
 import { Injectable, NotFoundException } from '@nestjs/common';
-import { IncomesRepository } from '../repository/incomes.repository';
-import { CreateIncomeDto, UpdateIncomeDto } from '../dto/create-income.dto';
+import { IncomesRepository } from '../repository/incomes.repository.js';
+import { CreateIncomeDto, UpdateIncomeDto } from '../dto/create-income.dto.js';
 
 @Injectable()
 export class IncomesService {

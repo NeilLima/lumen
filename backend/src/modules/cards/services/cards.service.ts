@@ -1,7 +1,7 @@
 /* eslint-disable prettier/prettier */
 import { Injectable, NotFoundException } from '@nestjs/common';
-import { CardsRepository } from '../repository/cards.repository';
-import { CreateCardDto, UpdateCardDto } from '../dto/card.dto';
+import { CardsRepository } from '../repository/cards.repository.js';
+import { CreateCardDto, UpdateCardDto } from '../dto/card.dto.js';
 
 @Injectable()
 export class CardsService {

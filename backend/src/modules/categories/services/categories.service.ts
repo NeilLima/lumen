@@ -1,7 +1,7 @@
 /* eslint-disable prettier/prettier */
 import { Injectable, Logger, NotFoundException } from '@nestjs/common';
-import { CategoriesRepository } from '../repository/categories.repository';
-import { CreateCategoryDto, UpdateCategoryDto } from '../dto/category.dto';
+import { CategoriesRepository } from '../repository/categories.repository.js';
+import { CreateCategoryDto, UpdateCategoryDto } from '../dto/category.dto.js';
 
 interface DefaultCategory {
   name: string;

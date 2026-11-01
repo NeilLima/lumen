@@ -1,9 +1,9 @@
 /* eslint-disable prettier/prettier */
 import { ValidationPipe } from '@nestjs/common';
 import { NestFactory } from '@nestjs/core';
-import { AppModule } from './app.module';
-import { corsConfig } from './config/cors.config';
-import { resolveDatabaseConnection } from './config/database.bootstrap';
+import { AppModule } from './app.module.js';
+import { corsConfig } from './config/cors.config.js';
+import { resolveDatabaseConnection } from './config/database.bootstrap.js';
 
 async function bootstrap() {
   // Resolve e conecta no banco: tenta LOCAL primeiro; se falhar, usa PRODUÇÃO

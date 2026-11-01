@@ -4,7 +4,7 @@ import {
   DashboardRepository,
   startOfMonth,
   startOfNextMonth,
-} from '../repository/dashboard.repository';
+} from '../repository/dashboard.repository.js';
 
 @Injectable()
 export class DashboardService {

@@ -1,7 +1,7 @@
 /* eslint-disable prettier/prettier */
 import { Injectable, NotFoundException } from '@nestjs/common';
-import { SubscriptionsRepository } from '../repository/subscriptions.repository';
-import { CreateSubscriptionDto, UpdateSubscriptionDto } from '../dto/subscription.dto';
+import { SubscriptionsRepository } from '../repository/subscriptions.repository.js';
+import { CreateSubscriptionDto, UpdateSubscriptionDto } from '../dto/subscription.dto.js';
 
 @Injectable()
 export class SubscriptionsService {

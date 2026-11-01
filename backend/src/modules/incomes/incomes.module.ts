@@ -1,8 +1,8 @@
 /* eslint-disable prettier/prettier */
 import { Module } from '@nestjs/common';
-import { IncomesController } from './controllers/incomes.controller';
-import { IncomesService } from './services/incomes.service';
-import { IncomesRepository } from './repository/incomes.repository';
+import { IncomesController } from './controllers/incomes.controller.js';
+import { IncomesService } from './services/incomes.service.js';
+import { IncomesRepository } from './repository/incomes.repository.js';
 
 @Module({
   controllers: [IncomesController],

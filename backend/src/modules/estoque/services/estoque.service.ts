@@ -1,8 +1,8 @@
 /* eslint-disable prettier/prettier */
 import { Injectable, NotFoundException } from '@nestjs/common';
-import { EstoqueRepository } from '../repository/estoque.repository';
-import { CreateEstoqueItemDto, UpdateEstoqueItemDto } from '../dto/estoque.dto';
-import { logEstoqueItemCreated, logEstoqueItemUpdated, logEstoqueItemRemoved } from '../logs/estoque.logs';
+import { EstoqueRepository } from '../repository/estoque.repository.js';
+import { CreateEstoqueItemDto, UpdateEstoqueItemDto } from '../dto/estoque.dto.js';
+import { logEstoqueItemCreated, logEstoqueItemUpdated, logEstoqueItemRemoved } from '../logs/estoque.logs.js';
 
 @Injectable()
 export class EstoqueService {

@@ -1,8 +1,8 @@
 /* eslint-disable prettier/prettier */
 import { Module } from '@nestjs/common';
-import { ProductsController } from './controllers/products.controller';
-import { ProductsService } from './services/products.service';
-import { ProductsRepository } from './repository/products.repository';
+import { ProductsController } from './controllers/products.controller.js';
+import { ProductsService } from './services/products.service.js';
+import { ProductsRepository } from './repository/products.repository.js';
 
 @Module({
   controllers: [ProductsController],

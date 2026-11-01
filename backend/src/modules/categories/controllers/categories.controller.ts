@@ -1,8 +1,8 @@
 /* eslint-disable prettier/prettier */
 import { Body, Controller, Delete, Get, Param, Patch, Post, Req, UseGuards } from '@nestjs/common';
-import { CategoriesService } from '../services/categories.service';
-import { CreateCategoryDto, UpdateCategoryDto } from '../dto/category.dto';
-import { JwtAuthGuard } from '../../../auth/guards/jwt-auth.guard';
+import { CategoriesService } from '../services/categories.service.js';
+import { CreateCategoryDto, UpdateCategoryDto } from '../dto/category.dto.js';
+import { JwtAuthGuard } from '../../../auth/guards/jwt-auth.guard.js';
 
 @Controller('categories')
 @UseGuards(JwtAuthGuard)

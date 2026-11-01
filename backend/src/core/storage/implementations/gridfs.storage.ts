@@ -1,6 +1,6 @@
 /* eslint-disable prettier/prettier */
 import { Injectable, Logger } from '@nestjs/common';
-import { StorageService } from '../interfaces/storage.interface';
+import { StorageService } from '../interfaces/storage.interface.js';
 
 /**
  * Implementação de armazenamento que utiliza GridFS do MongoDB

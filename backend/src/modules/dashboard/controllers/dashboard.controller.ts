@@ -1,7 +1,7 @@
 /* eslint-disable prettier/prettier */
 import { Controller, Get, Req, UseGuards } from '@nestjs/common';
-import { DashboardService } from '../services/dashboard.service';
-import { JwtAuthGuard } from '../../../auth/guards/jwt-auth.guard';
+import { DashboardService } from '../services/dashboard.service.js';
+import { JwtAuthGuard } from '../../../auth/guards/jwt-auth.guard.js';
 
 @Controller('dashboard')
 @UseGuards(JwtAuthGuard)

@@ -1,6 +1,6 @@
 /* eslint-disable prettier/prettier */
-import { CreateAccountDto, UpdateAccountDto } from '../dto/account.dto';
-import { AccountResponse, DeleteResult } from '../types/account.types';
+import { CreateAccountDto, UpdateAccountDto } from '../dto/account.dto.js';
+import { AccountResponse, DeleteResult } from '../types/account.types.js';
 
 export interface IAccountsRepository {
   findAll(userId: string): Promise<AccountResponse[]>;

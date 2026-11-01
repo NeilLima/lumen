@@ -1,6 +1,6 @@
 /* eslint-disable prettier/prettier */
 import { Type, applyDecorators, ClassSerializerInterceptor, UseInterceptors } from '@nestjs/common';
-import { BaseEntity } from '../interfaces/entity.interface';
+import { BaseEntity } from '../interfaces/entity.interface.js';
 
 export interface CrudOptions<T extends BaseEntity, CreateDto, UpdateDto> {
   model: Type<T>;

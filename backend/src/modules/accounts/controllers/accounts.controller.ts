@@ -1,8 +1,8 @@
 /* eslint-disable prettier/prettier */
 import { Body, Controller, Delete, Get, Param, Patch, Post, Req, UseGuards } from '@nestjs/common';
-import { AccountsService } from '../services/accounts.service';
-import { CreateAccountDto, UpdateAccountDto } from '../dto/account.dto';
-import { JwtAuthGuard } from '../../../auth/guards/jwt-auth.guard';
+import { AccountsService } from '../services/accounts.service.js';
+import { CreateAccountDto, UpdateAccountDto } from '../dto/account.dto.js';
+import { JwtAuthGuard } from '../../../auth/guards/jwt-auth.guard.js';
 
 @Controller('accounts')
 @UseGuards(JwtAuthGuard)

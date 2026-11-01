@@ -1,8 +1,8 @@
 /* eslint-disable prettier/prettier */
 import { Body, Controller, Delete, Get, Param, Patch, Post, Req, UseGuards } from '@nestjs/common';
-import { EstoqueService } from '../services/estoque.service';
-import { CreateEstoqueItemDto, UpdateEstoqueItemDto } from '../dto/estoque.dto';
-import { JwtAuthGuard } from '../../../auth/guards/jwt-auth.guard';
+import { EstoqueService } from '../services/estoque.service.js';
+import { CreateEstoqueItemDto, UpdateEstoqueItemDto } from '../dto/estoque.dto.js';
+import { JwtAuthGuard } from '../../../auth/guards/jwt-auth.guard.js';
 
 @Controller('estoque')
 @UseGuards(JwtAuthGuard)

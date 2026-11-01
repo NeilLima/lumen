@@ -1,10 +1,10 @@
 /* eslint-disable prettier/prettier */
 import { Logger } from '@nestjs/common';
-import { BaseEntity } from '../interfaces/entity.interface';
-import { BaseRepository } from '../interfaces/repository.interface';
-import { CrudService } from '../interfaces/crud.interface';
-import { FilterOptions, QueryOptions } from '../interfaces/query-options.interface';
-import { IdFormatter } from '../../../config/id-formatter.config';
+import { BaseEntity } from '../interfaces/entity.interface.js';
+import { BaseRepository } from '../interfaces/repository.interface.js';
+import { CrudService } from '../interfaces/crud.interface.js';
+import { FilterOptions, QueryOptions } from '../interfaces/query-options.interface.js';
+import { IdFormatter } from '../../../config/id-formatter.config.js';
 
 /**
  * Implementação genérica de serviço CRUD

@@ -1,19 +1,19 @@
 /* eslint-disable prettier/prettier */
 import { Module } from '@nestjs/common';
 import { ConfigModule } from '@nestjs/config';
-import { AppController } from './app.controller';
-import { AppService } from './app.service';
-import { CoreModule } from './core/core.module';
-import { AuthModule } from './auth/auth.module';
-import { DashboardModule } from './modules/dashboard/dashboard.module';
-import { AccountsModule } from './modules/accounts/accounts.module';
-import { CategoriesModule } from './modules/categories/categories.module';
-import { TransactionsModule } from './modules/transactions/transactions.module';
-import { EstoqueModule } from './modules/estoque/estoque.module';
-import { IncomesModule } from './modules/incomes/incomes.module';
-import { ProductsModule } from './modules/products/products.module';
-import { SubscriptionsModule } from './modules/subscriptions/subscriptions.module';
-import { CardsModule } from './modules/cards/cards.module';
+import { AppController } from './app.controller.js';
+import { AppService } from './app.service.js';
+import { CoreModule } from './core/core.module.js';
+import { AuthModule } from './auth/auth.module.js';
+import { DashboardModule } from './modules/dashboard/dashboard.module.js';
+import { AccountsModule } from './modules/accounts/accounts.module.js';
+import { CategoriesModule } from './modules/categories/categories.module.js';
+import { TransactionsModule } from './modules/transactions/transactions.module.js';
+import { EstoqueModule } from './modules/estoque/estoque.module.js';
+import { IncomesModule } from './modules/incomes/incomes.module.js';
+import { ProductsModule } from './modules/products/products.module.js';
+import { SubscriptionsModule } from './modules/subscriptions/subscriptions.module.js';
+import { CardsModule } from './modules/cards/cards.module.js';
 
 @Module({
   imports: [

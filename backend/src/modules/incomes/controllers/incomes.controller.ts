@@ -1,8 +1,8 @@
 /* eslint-disable prettier/prettier */
 import { Body, Controller, Delete, Get, Param, Patch, Post, Req, UseGuards } from '@nestjs/common';
-import { IncomesService } from '../services/incomes.service';
-import { CreateIncomeDto, UpdateIncomeDto } from '../dto/create-income.dto';
-import { JwtAuthGuard } from '../../../auth/guards/jwt-auth.guard';
+import { IncomesService } from '../services/incomes.service.js';
+import { CreateIncomeDto, UpdateIncomeDto } from '../dto/create-income.dto.js';
+import { JwtAuthGuard } from '../../../auth/guards/jwt-auth.guard.js';
 
 @Controller('incomes')
 @UseGuards(JwtAuthGuard)
