@@ -1,0 +1,82 @@
+﻿node.exe : 
+Vercel CLI 
+54.18.0 
+(Node.js 
+24.14.1)
+No C:\Users\vict
+or\AppData\Roami
+ng\npm\vercel.ps
+1:24 caractere:5
++     & 
+"node$exe"  "$ba
+sedir/node_modul
+es/vercel/dist/v
+c.js" $args
++     ~~~~~~~~~~
+~~~~~~~~~~~~~~~~
+~~~~~~~~~~~~~~~~
+~~~~~~~~~~~~~~~~
+~~~
+    + CategoryI 
+   nfo          
+    : NotSpec   
+ ified: (Ver    
+cel CLI 54.    
+18.0 (Node.    
+js 24.14.1)    
+:String) []    
+, RemoteExc    
+eption
+    + FullyQual 
+   ifiedErrorI  
+  d : NativeC   
+ ommandError
+ 
+Resolving 
+deployment "lume
+n-backend-a16z6c
+q9g-nexusapis-pr
+ojects.vercel.ap
+p"
+Fetching 
+project "prj_148
+qKs9gqQDvL6kucnG
+1dPdTaU8X"
+Fetching logs...
+TIME         
+HOST            
+                
+                
+       LEVEL    
+          
+STATUS  MESSAGE 
+                
+ 
+17:03:27.16  lum
+en-backend-a16z6
+cq9g-nexusapis-p
+rojects.vercel.a
+pp  info   ╬╗ 
+GET /     500   
+  Error [ERR_REQ
+UIRE_ESM]:ÔÇª
+16:59:59.58  lum
+en-backend-a16z6
+cq9g-nexusapis-p
+rojects.vercel.a
+pp  info   ╬╗ 
+GET /     500   
+  Error [ERR_REQ
+UIRE_ESM]:ÔÇª
+16:59:59.44  lum
+en-backend-a16z6
+cq9g-nexusapis-p
+rojects.vercel.a
+pp  info   ╬╗ 
+GET /     500   
+  Error [ERR_REQ
+UIRE_ESM]:ÔÇª
+Fetched 3 logs 
+for nexusapis-pr
+ojects/lumen-bac
+kend

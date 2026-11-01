@@ -6,7 +6,7 @@ import { PrismaClient } from '@prisma/client';
 export class PrismaService extends PrismaClient implements OnModuleInit, OnModuleDestroy {
   constructor() {
     const databaseUrl = process.env.DATABASE_URL;
-    
+    console.log('PRISMA SERVICE DB URL:', databaseUrl);
     // Garante que a URL tenha connection_limit para respeitar o limite do Supabase Pooler (15 connections max)
     const urlWithPool = databaseUrl?.includes('connection_limit')
       ? databaseUrl
