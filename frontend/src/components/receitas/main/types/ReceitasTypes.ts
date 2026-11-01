@@ -52,6 +52,7 @@ export interface ReceitasFormData {
   recorrencia: Receita['recorrencia'];
   observacoes: string;
   comprovante?: string;
+  status: Receita['status'];
 }
 
 export type ReceitasFeedback = FeedbackData;

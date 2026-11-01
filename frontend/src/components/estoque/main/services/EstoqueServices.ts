@@ -14,58 +14,8 @@ export function estoqueService() {
   const { data, isLoading } = useQuery({
     queryKey: ['estoque'],
     queryFn: async () => {
-      try {
-        const r = await list('estoque');
-        return calcularResumo(r as EstoqueItem[]);
-      } catch {
-        const MOCK: EstoqueItem[] = [
-          {
-            id: '1',
-            nome: 'Arroz Tipo 1 (5kg)',
-            categoria: 'Alimentos',
-            quantidade: 5,
-            unidade: 'kg',
-            preco: 27.9,
-            localCompra: 'Supermercado Extra',
-            quantidadeMinima: 3,
-            dataAtualizacao: new Date().toISOString(),
-          },
-          {
-            id: '2',
-            nome: 'Feijão Carioca (1kg)',
-            categoria: 'Alimentos',
-            quantidade: 1,
-            unidade: 'kg',
-            preco: 8.5,
-            localCompra: 'Supermercado Extra',
-            quantidadeMinima: 2,
-            dataAtualizacao: new Date().toISOString(),
-          },
-          {
-            id: '3',
-            nome: 'Óleo de Soja (900ml)',
-            categoria: 'Alimentos',
-            quantidade: 0,
-            unidade: 'l',
-            preco: 7.9,
-            localCompra: 'Atacado Z',
-            quantidadeMinima: 2,
-            dataAtualizacao: new Date().toISOString(),
-          },
-          {
-            id: '4',
-            nome: 'Detergente Neutro',
-            categoria: 'Limpeza',
-            quantidade: 6,
-            unidade: 'un',
-            preco: 2.49,
-            localCompra: 'Mercado Y',
-            quantidadeMinima: 3,
-            dataAtualizacao: new Date().toISOString(),
-          },
-        ];
-        return calcularResumo(MOCK);
-      }
+      const r = await list('estoque');
+      return calcularResumo(r as EstoqueItem[]);
     },
     staleTime: 5 * 60 * 1000,
   });
@@ -90,9 +40,9 @@ export function estoqueService() {
   return {
     data,
     isLoading,
-    criar: criar.mutate,
-    atualizar: atualizar.mutate,
-    excluir: excluir.mutate,
+    criar: criar.mutateAsync,
+    atualizar: atualizar.mutateAsync,
+    excluir: excluir.mutateAsync,
     isSaving: criar.isPending || atualizar.isPending,
   };
 }

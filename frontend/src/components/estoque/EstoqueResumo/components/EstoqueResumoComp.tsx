@@ -9,11 +9,19 @@ import {
   StyledResumoIcon,
   StyledResumoLabel,
   StyledResumoValue,
+  StyledResumoBar,
+  StyledResumoBarFill,
 } from '../styles/EstoqueResumoStyles';
 
 export default function EstoqueResumoComp({ itens, formatarValor, getStatusCor }: EstoqueResumoProps) {
   const lista = itens || [];
   const { totalItens, valorTotal, itensCriticos, itensBaixos } = calcularResumo(lista, getStatusCor);
+
+  const totalQtd = lista.reduce((acc, i) => acc + (i.quantidade || 0), 0);
+  const totalMin = lista.reduce((acc, i) => acc + (i.quantidadeMinima || 0), 0);
+  const nivel = totalMin > 0 ? Math.round((totalQtd / totalMin) * 100) : 100;
+  const corNivel = nivel >= 100 ? '#10b981' : nivel >= 50 ? '#f59e0b' : '#ef4444';
+  const labelNivel = nivel >= 100 ? 'Cheio' : nivel >= 50 ? 'Médio' : 'Baixo - reabastecer';
 
   return (
     <StyledResumoGrid>
@@ -39,6 +47,16 @@ export default function EstoqueResumoComp({ itens, formatarValor, getStatusCor }
         <StyledResumoIcon $color="#f59e0b" $bg="rgba(245, 158, 11, 0.1)">⚠️</StyledResumoIcon>
         <StyledResumoLabel>Baixos</StyledResumoLabel>
         <StyledResumoValue>{itensBaixos}</StyledResumoValue>
+      </StyledResumoCard>
+
+      <StyledResumoCard $accentColor={corNivel}>
+        <StyledResumoIcon $color={corNivel} $bg={`${corNivel}22`}>🌡️</StyledResumoIcon>
+        <StyledResumoLabel>Termômetro de Abastecimento</StyledResumoLabel>
+        <StyledResumoValue>{nivel}%</StyledResumoValue>
+        <StyledResumoBar>
+          <StyledResumoBarFill $percent={nivel} $color={corNivel} />
+        </StyledResumoBar>
+        <StyledResumoLabel>{labelNivel}</StyledResumoLabel>
       </StyledResumoCard>
     </StyledResumoGrid>
   );

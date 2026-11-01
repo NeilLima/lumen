@@ -12,4 +12,18 @@ export interface TransferenciasResumo { totalTransferido: number; quantidade: nu
 export interface TransferenciasData { transferencias: Transferencia[]; resumo: TransferenciasResumo; contas: string[] }
 export interface TransferenciasFormData { descricao: string; valor: string; contaOrigem: string; contaDestino: string; data: string; observacoes: string }
 export interface TransferenciasState { data: TransferenciasData | null; isLoading: boolean; filtros: TransferenciasFiltros; modalAberto: boolean; editandoId: string | null; formData: TransferenciasFormData; exclusaoPendente: Transferencia | null; detalheTransferencia: Transferencia | null; modalInfoAberto: boolean }
+export interface ApiAccount {
+  id: string;
+  name: string;
+}
+
+export interface ApiTransfer {
+  id: string;
+  description: string;
+  amount: number | string;
+  date: string;
+  notes?: string | null;
+  accountName?: string | null;
+}
+
 export interface TransferenciasActions { abrirModalNovo: () => void; abrirModalEditar: (t: Transferencia) => void; fecharModal: () => void; atualizarFiltro: (c: keyof TransferenciasFiltros, v: string) => void; limparFiltros: () => void; salvarTransferencia: () => void; excluirTransferencia: (id: string) => void; atualizarForm: (c: keyof TransferenciasFormData, v: string) => void; confirmarExclusao: (t: Transferencia) => void; cancelarExclusao: () => void; confirmarEExcluir: () => void; abrirDetalhe: (t: Transferencia) => void; fecharDetalhe: () => void; abrirInfo: () => void; fecharInfo: () => void }

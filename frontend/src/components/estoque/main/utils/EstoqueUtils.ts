@@ -2,7 +2,7 @@
 
 import { useState, useMemo, useCallback } from 'react';
 import { estoqueService } from '../services/EstoqueServices';
-import type { EstoqueItem, EstoqueFiltros, EstoqueFormData } from '../types/EstoqueTypes';
+import type { EstoqueItem, EstoqueFiltros, EstoqueFormData, EstoqueFeedback } from '../types/EstoqueTypes';
 import { formatarValor, formatarData, parseMoeda } from '@/shared/utils/moeda';
 
 // ============================================
@@ -50,6 +50,7 @@ export function useEstoqueUtils() {
   const [detalheItem, setDetalheItem] = useState<EstoqueItem | null>(null);
   const [modalInfoAberto, setModalInfoAberto] = useState(false);
   const [sidebarOpen, setSidebarOpen] = useState(false);
+  const [feedback, setFeedback] = useState<EstoqueFeedback | null>(null);
 
   // ============================================
   // 3️⃣ OBJETOS
@@ -117,12 +118,22 @@ export function useEstoqueUtils() {
     setFormData(prev => ({ ...prev, [campo]: valor }));
   }, []);
 
-  const salvarItem = useCallback(() => {
+  const salvarItem = useCallback(async () => {
     if (!formData.nome.trim()) return;
 
-    service.criar(formData);
-    fecharModal();
-  }, [formData, service, fecharModal]);
+    try {
+      if (editandoId) {
+        await service.atualizar({ id: editandoId, fd: formData });
+        setFeedback({ tipo: 'sucesso', titulo: 'Item atualizado', mensagem: 'O item foi atualizado com sucesso.' });
+      } else {
+        await service.criar(formData);
+        setFeedback({ tipo: 'sucesso', titulo: 'Item criado', mensagem: 'O item foi cadastrado com sucesso.' });
+      }
+      fecharModal();
+    } catch {
+      setFeedback({ tipo: 'erro', titulo: 'Não foi possível salvar', mensagem: 'Ocorreu um erro ao salvar o item. Tente novamente.' });
+    }
+  }, [formData, service, fecharModal, editandoId]);
 
   const confirmarExclusao = useCallback((item: EstoqueItem) => {
     setExclusaoPendente(item);
@@ -130,10 +141,16 @@ export function useEstoqueUtils() {
 
   const cancelarExclusao = useCallback(() => setExclusaoPendente(null), []);
 
-  const confirmarEExcluir = useCallback(() => {
+  const confirmarEExcluir = useCallback(async () => {
     if (exclusaoPendente) {
-      service.excluir(exclusaoPendente.id);
-      setExclusaoPendente(null);
+      try {
+        await service.excluir(exclusaoPendente.id);
+        setFeedback({ tipo: 'sucesso', titulo: 'Item excluído', mensagem: `O item "${exclusaoPendente.nome}" foi removido.` });
+      } catch {
+        setFeedback({ tipo: 'erro', titulo: 'Não foi possível excluir', mensagem: 'Ocorreu um erro ao excluir o item. Tente novamente.' });
+      } finally {
+        setExclusaoPendente(null);
+      }
     }
   }, [exclusaoPendente, service]);
 
@@ -149,6 +166,7 @@ export function useEstoqueUtils() {
 
   const abrirInfo = useCallback(() => setModalInfoAberto(true), []);
   const fecharInfo = useCallback(() => setModalInfoAberto(false), []);
+  const fecharFeedback = useCallback(() => setFeedback(null), []);
 
   function getStatusCor(quantidade: number, minima: number): string {
     const pct = minima > 0 ? (quantidade / minima) * 100 : 100;
@@ -178,6 +196,8 @@ export function useEstoqueUtils() {
       detalheItem,
       modalInfoAberto,
       isSaving: service.isSaving,
+    feedback,
+
     },
     actions: {
       toggleSidebar,
@@ -197,6 +217,8 @@ export function useEstoqueUtils() {
       fecharDetalhe,
       abrirInfo,
       fecharInfo,
+    fecharFeedback,
+
     },
     helpers: {
       formatarValor,

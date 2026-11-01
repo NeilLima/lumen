@@ -65,8 +65,38 @@ export interface DespesasState {
   modalInfoAberto: boolean;
 }
 
-export interface DespesasActions {
-  abrirModalNovo: () => void;
+export interface ApiCategory {
+  id: string;
+  name: string;
+  color?: string | null;
+  icon?: string | null;
+  type?: string;
+}
+
+export interface ApiAccount {
+  id: string;
+  name: string;
+  type?: string;
+}
+
+export interface ApiCreditCard {
+  id: string;
+  name: string;
+}
+
+export interface ApiExpense {
+  id: string;
+  description: string;
+  amount: number | string;
+  date: string;
+  status?: string;
+  paymentMethod?: string | null;
+  notes?: string | null;
+  categoryName?: string | null;
+  categoryColor?: string | null;
+  accountName?: string | null;
+  creditCardName?: string | null;
+}
   abrirModalEditar: (despesa: Despesa) => void;
   fecharModal: () => void;
   atualizarFiltro: (campo: keyof DespesasFiltros, valor: string) => void;

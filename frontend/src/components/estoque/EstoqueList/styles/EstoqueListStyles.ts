@@ -351,3 +351,38 @@ export const StyledEmptyText = styled.p`
   color: #a0a0b0;
   margin: 0;
 `;
+
+export const StyledPriceCompare = styled.div`
+  margin-top: 16px;
+`;
+
+export const StyledPriceCompareTitle = styled.div`
+  font-size: 14px;
+  font-weight: 600;
+  color: #a0a0b0;
+  margin-bottom: 8px;
+`;
+
+export const StyledPriceCompareItem = styled.div`
+  margin-bottom: 12px;
+  padding: 8px;
+  background: rgba(255, 255, 255, 0.03);
+  border-radius: 8px;
+`;
+
+export const StyledPriceCompareRow = styled.div`
+  display: flex;
+  gap: 12px;
+  flex-wrap: wrap;
+  margin-top: 4px;
+`;
+
+export const StyledPriceTag = styled.span<{ $highlight?: boolean }>`
+  font-size: 12px;
+  color: ${props => (props.$highlight ? '#10b981' : '#a0a0b0')};
+`;
+
+export const StyledPriceEconomia = styled.span`
+  font-size: 12px;
+  color: #ef4444;
+`;

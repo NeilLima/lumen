@@ -18,6 +18,7 @@ import {
 } from '../styles/EstoqueMainStyles';
 import { EstoqueDetalheComp } from '../../EstoqueDetalhe/components/EstoqueDetalheComp';
 import { EstoqueInfoComp } from '../../EstoqueInfo/components/EstoqueInfoComp';
+import { FeedbackModalComp } from '@/shared/feedback';
 
 export default function EstoqueMainComp() {
   const { state, actions, helpers } = useEstoqueUtils();
@@ -86,6 +87,10 @@ export default function EstoqueMainComp() {
           <EstoqueInfoComp
             modalInfoAberto={state.modalInfoAberto}
             onFecharInfo={actions.fecharInfo}
+          />
+          <FeedbackModalComp
+            feedback={state.feedback}
+            onFechar={actions.fecharFeedback}
           />
         </StyledEstoqueContainer>
       </StyledEstoqueMainContent>

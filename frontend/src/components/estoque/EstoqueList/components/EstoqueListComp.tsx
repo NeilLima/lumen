@@ -27,6 +27,12 @@ import {
   StyledEmptyIcon,
   StyledEmptyTitle,
   StyledEmptyText,
+  StyledPriceCompare,
+  StyledPriceCompareTitle,
+  StyledPriceCompareItem,
+  StyledPriceCompareRow,
+  StyledPriceTag,
+  StyledPriceEconomia,
 } from '../styles/EstoqueListStyles';
 
 const ICON_POR_CATEGORIA: Record<string, string> = {
@@ -139,6 +145,51 @@ export default function EstoqueListComp({
                 </StyledEstoqueActions>
               </StyledEstoqueItem>
             );
+      {(() => {
+        const grupos = new Map<string, typeof itensFiltrados>();
+        itensFiltrados.forEach((item) => {
+          const key = item.nome.toLowerCase().trim();
+          if (!grupos.has(key)) grupos.set(key, []);
+          grupos.get(key)!.push(item);
+        });
+        const comparaveis = [...grupos.entries()]
+          .map(([nome, its]) => {
+            const locais = [...new Set(its.map((i) => i.localCompra))];
+            if (locais.length < 2) return null;
+            const precos = its.map((i) => i.preco);
+            const min = Math.min(...precos);
+            const max = Math.max(...precos);
+            return { nome, locais, min, max, itens: its };
+          })
+          .filter(Boolean) as { nome: string; locais: string[]; min: number; max: number; itens: typeof itensFiltrados }[];
+
+        if (comparaveis.length === 0) return null;
+
+        return (
+          <StyledPriceCompare>
+            <StyledPriceCompareTitle>📊 Comparação de Preços por Local</StyledPriceCompareTitle>
+            {comparaveis.map((g) => (
+              <StyledPriceCompareItem key={g.nome}>
+                <StyledEstoqueNome>{g.nome}</StyledEstoqueNome>
+                <StyledPriceCompareRow>
+                  {g.locais.map((l) => {
+                    const item = g.itens.find((i) => i.localCompra === l)!;
+                    const isMin = item.preco === g.min;
+                    return (
+                      <StyledPriceTag key={l} $highlight={isMin}>
+                        {l}: R$ {formatarValor(item.preco)} {isMin ? ' (melhor)' : ''}
+                      </StyledPriceTag>
+                    );
+                  })}
+                  {g.max > g.min && (
+                    <StyledPriceEconomia>Economia: R$ {formatarValor(g.max - g.min)}</StyledPriceEconomia>
+                  )}
+                </StyledPriceCompareRow>
+              </StyledPriceCompareItem>
+            ))}
+          </StyledPriceCompare>
+        );
+      })()}
           })}
         </StyledEstoqueList>
       )}

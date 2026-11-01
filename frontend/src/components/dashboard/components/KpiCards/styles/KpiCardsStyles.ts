@@ -2,34 +2,11 @@ import styled from 'styled-components';
 
 export const StyledKpiGrid = styled.div`
   display: flex;
+  flex-wrap: wrap;
   gap: 20px;
   margin-bottom: 24px;
   width: 100%;
   max-width: 100%;
-  overflow-x: auto;
-  overflow-y: hidden;
-  scroll-snap-type: x mandatory;
-  scrollbar-width: thin;
-  scrollbar-color: rgba(139, 92, 246, 0.3) transparent;
-  padding-bottom: 8px;
-  -webkit-overflow-scrolling: touch;
-
-  &::-webkit-scrollbar {
-    height: 6px;
-  }
-
-  &::-webkit-scrollbar-track {
-    background: transparent;
-  }
-
-  &::-webkit-scrollbar-thumb {
-    background: rgba(139, 92, 246, 0.3);
-    border-radius: 9999px;
-  }
-
-  &::-webkit-scrollbar-thumb:hover {
-    background: rgba(139, 92, 246, 0.5);
-  }
 `;
 
 export const StyledKpiCard = styled.div<{ $accentColor: string }>`
@@ -41,11 +18,10 @@ export const StyledKpiCard = styled.div<{ $accentColor: string }>`
   padding: 24px;
   box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.3);
   transition: all 200ms ease;
-  min-width: 180px;
-  flex: 0 0 180px;
-  max-width: 300px;
+  min-width: 0;
+  flex: 1 1 220px;
+  max-width: none;
   overflow: hidden;
-  scroll-snap-align: start;
 
   &::before {
     content: '';

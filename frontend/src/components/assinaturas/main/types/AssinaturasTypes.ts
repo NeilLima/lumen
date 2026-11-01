@@ -6,4 +6,23 @@ export interface AssinaturasResumo { totalAssinaturas: number; totalMensal: numb
 export interface AssinaturasData { assinaturas: Assinatura[]; resumo: AssinaturasResumo; }
 export interface AssinaturasFormData { nome: string; categoria: string; valor: string; ciclo: string; proximaCobranca: string; status: string; observacoes: string;  }
 export interface AssinaturasState { data: AssinaturasData | null; isLoading: boolean; filtros: AssinaturasFiltros; modalAberto: boolean; editandoId: string | null; formData: AssinaturasFormData; exclusaoPendente: Assinatura | null; detalheAssinatura: Assinatura | null; modalInfoAberto: boolean; }
+export interface ApiCategory {
+  id: string;
+  name: string;
+  color?: string | null;
+  icon?: string | null;
+  type?: string;
+}
+
+export interface ApiSubscription {
+  id: string;
+  name: string;
+  amount: number | string;
+  dueDay: number;
+  categoryId?: string | null;
+  category?: ApiCategory | null;
+  nextCharge?: string | null;
+  active: boolean;
+}
+
 export interface AssinaturasActions { abrirModalNovo: () => void; abrirModalEditar: (d: Assinatura) => void; fecharModal: () => void; atualizarFiltro: (c: keyof AssinaturasFiltros, v: string) => void; limparFiltros: () => void; salvarAssinatura: () => void; atualizarForm: (c: keyof AssinaturasFormData, v: string) => void; confirmarExclusao: (d: Assinatura) => void; cancelarExclusao: () => void; confirmarEExcluir: () => void; abrirDetalhe: (d: Assinatura) => void; fecharDetalhe: () => void; abrirInfo: () => void; fecharInfo: () => void; }

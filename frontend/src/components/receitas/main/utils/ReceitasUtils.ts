@@ -29,6 +29,7 @@ const FORM_INICIAL: ReceitasFormData = {
   recorrencia: 'unica',
   observacoes: '',
   comprovante: '',
+  status: 'pendente',
 };
 
 const STATUS_LABELS: Record<Receita['status'], string> = {
@@ -113,6 +114,7 @@ export function useReceitas() {
       recorrencia: receita.recorrencia,
       observacoes: receita.observacoes || '',
       comprovante: receita.comprovante || '',
+      status: receita.status,
     });
     setEditandoId(receita.id);
     setModalAberto(true);

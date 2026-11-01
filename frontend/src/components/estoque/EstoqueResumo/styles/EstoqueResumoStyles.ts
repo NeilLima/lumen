@@ -97,3 +97,19 @@ export const StyledResumoValue = styled.h2`
   color: #ffffff;
   margin: 4px 0 0 0;
 `;
+export const StyledResumoBar = styled.div`
+  width: 100%;
+  height: 8px;
+  background: rgba(255, 255, 255, 0.08);
+  border-radius: 9999px;
+  overflow: hidden;
+  margin-top: 8px;
+`;
+
+export const StyledResumoBarFill = styled.div<{ $percent: number; $color: string }>`
+  height: 100%;
+  width: ${props => Math.min(100, Math.max(0, props.$percent))}%;
+  background: ${props => props.$color};
+  border-radius: 9999px;
+  transition: width 300ms ease;
+`;

@@ -9,9 +9,7 @@ export const StyledChartCard = styled.div<{ theme: Theme }>`
   padding: 24px;
   box-shadow: ${props => props.theme.shadowMd};
   min-width: 0;
-  overflow-x: auto;
-  overflow-y: hidden;
-  -webkit-overflow-scrolling: touch;
+  overflow: hidden;
 
   @media (max-width: 768px) {
     padding: 16px;

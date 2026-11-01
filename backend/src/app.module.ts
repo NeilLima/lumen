@@ -11,6 +11,9 @@ import { CategoriesModule } from './modules/categories/categories.module';
 import { TransactionsModule } from './modules/transactions/transactions.module';
 import { EstoqueModule } from './modules/estoque/estoque.module';
 import { IncomesModule } from './modules/incomes/incomes.module';
+import { ProductsModule } from './modules/products/products.module';
+import { SubscriptionsModule } from './modules/subscriptions/subscriptions.module';
+import { CardsModule } from './modules/cards/cards.module';
 
 @Module({
   imports: [
@@ -23,6 +26,9 @@ import { IncomesModule } from './modules/incomes/incomes.module';
     TransactionsModule,
     EstoqueModule,
     IncomesModule,
+    ProductsModule,
+    SubscriptionsModule,
+    CardsModule,
   ],
   controllers: [AppController],
   providers: [AppService],

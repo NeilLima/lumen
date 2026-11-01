@@ -114,6 +114,19 @@ export default function ReceitasModalComp({
               <option value="anual">Anual</option>
             </StyledFormSelect>
           </StyledFormGroup>
+          <StyledFormGroup>
+            <StyledLabel>Status</StyledLabel>
+            <StyledFormSelect
+              value={formData.status}
+              onChange={e => onAtualizarForm('status', e.target.value)}
+              data-testid="receitas-status"
+            >
+              <option value="pendente">Pendente</option>
+              <option value="recebido">Recebido</option>
+              <option value="atrasado">Atrasado</option>
+            </StyledFormSelect>
+          </StyledFormGroup>
+
 
           <StyledFormGroup>
             <StyledLabel>Observações</StyledLabel>

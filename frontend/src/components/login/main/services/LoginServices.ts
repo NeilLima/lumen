@@ -11,6 +11,7 @@ export function loginService() {
     if (typeof window !== 'undefined') {
       localStorage.setItem('token', response.token);
       localStorage.setItem('userId', response.user.id);
+      window.dispatchEvent(new Event('auth-change'));
     }
 
     return response;

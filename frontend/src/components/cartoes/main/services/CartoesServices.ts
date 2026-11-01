@@ -1,80 +1,54 @@
 import { useQuery, useMutation, useQueryClient } from '@tanstack/react-query';
-import type { Cartao, CartoesData, CartoesFormData } from '../types/CartoesTypes';
+import { list, create, update, remove } from '@/services/crudService';
+import { useAuth } from '@/hooks/useAuth';
+import type { Cartao, CartoesData, CartoesFormData, ApiCard } from '../types/CartoesTypes';
 
-const MOCK_CARTOES: Cartao[] = [
-  {
-    id: '1',
-    nome: 'Nubank',
-    bandeira: 'mastercard',
-    banco: 'Nubank',
-    limiteTotal: 8000,
-    limiteUtilizado: 3200,
-    melhorDiaCompra: 3,
-    dataVencimento: 15,
-    cor: '#8b5cf6',
-    status: 'ativo',
-  },
-  {
-    id: '2',
-    nome: 'Inter',
-    bandeira: 'visa',
-    banco: 'Banco Inter',
-    limiteTotal: 5000,
-    limiteUtilizado: 4500,
-    melhorDiaCompra: 10,
-    dataVencimento: 22,
-    cor: '#f59e0b',
-    status: 'ativo',
-  },
-  {
-    id: '3',
-    nome: 'Santander Free',
-    bandeira: 'mastercard',
-    banco: 'Santander',
-    limiteTotal: 12000,
-    limiteUtilizado: 2800,
-    melhorDiaCompra: 5,
-    dataVencimento: 18,
-    cor: '#ef4444',
-    status: 'ativo',
-  },
-  {
-    id: '4',
-    nome: 'C6 Bank',
-    bandeira: 'elo',
-    banco: 'C6 Bank',
-    limiteTotal: 3000,
-    limiteUtilizado: 0,
-    melhorDiaCompra: 15,
-    dataVencimento: 28,
-    cor: '#10b981',
-    status: 'bloqueado',
-  },
-  {
-    id: '5',
-    nome: 'XP Visa Infinite',
-    bandeira: 'visa',
-    banco: 'XP Investimentos',
-    limiteTotal: 25000,
-    limiteUtilizado: 8500,
-    melhorDiaCompra: 1,
-    dataVencimento: 10,
-    cor: '#3b82f6',
-    status: 'ativo',
-  },
-  {
-    id: '6',
-    nome: 'Hipercard',
-    bandeira: 'hipercard',
-    banco: 'Hipercard',
-    limiteTotal: 4000,
-    limiteUtilizado: 1200,
-    melhorDiaCompra: 8,
-    dataVencimento: 20,
-    cor: '#ec4899',
-    status: 'cancelado',
-  },
-];
+const STATUS_MAP: Record<string, Cartao['status']> = {
+  ACTIVE: 'ativo',
+  BLOCKED: 'bloqueado',
+  CANCELLED: 'cancelado',
+};
+
+const STATUS_REVERSO: Record<Cartao['status'], string> = {
+  ativo: 'ACTIVE',
+  bloqueado: 'BLOCKED',
+  cancelado: 'CANCELLED',
+};
+
+const BANDEIRA_MAP: Record<string, Cartao['bandeira']> = {
+  VISA: 'visa',
+  MASTERCARD: 'mastercard',
+  ELO: 'elo',
+  AMEX: 'amex',
+  HIPERCARD: 'hipercard',
+};
+
+function apiToCartao(card: ApiCard): Cartao {
+  return {
+    id: card.id,
+    nome: card.name,
+    bandeira: BANDEIRA_MAP[card.brand || ''] || 'outros',
+    banco: card.bank || '',
+    limiteTotal: Number(card.limitTotal),
+    limiteUtilizado: Number(card.limitUsed),
+    melhorDiaCompra: card.closingDay || card.dueDay,
+    dataVencimento: card.dueDay,
+    cor: card.color || '#8b5cf6',
+    status: STATUS_MAP[card.status || 'ACTIVE'] || 'ativo',
+  };
+}
+
+function toApiPayload(formData: CartoesFormData): Record<string, unknown> {
+  return {
+    name: formData.nome,
+    bank: formData.banco,
+    brand: formData.bandeira.toUpperCase(),
+    limitTotal: Number(formData.limiteTotal),
+    dueDay: Number(formData.dataVencimento),
+    closingDay: Number(formData.melhorDiaCompra),
+    color: formData.cor || undefined,
+  };
+}
 
 function calcularResumo(cartoes: Cartao[]) {
   const totalLimite = cartoes.reduce((acc, c) => acc + c.limiteTotal, 0);
@@ -101,65 +75,46 @@ function construirDados(cartoes: Cartao[]): CartoesData {
 }
 
 export function cartoesService() {
+  const { userId } = useAuth();
   const queryClient = useQueryClient();
 
-  const { data, isLoading } = useQuery({
-    queryKey: ['cartoes'],
-    queryFn: async () => {
-      await new Promise(resolve => setTimeout(resolve, 400));
-      return construirDados(MOCK_CARTOES);
-    },
+  const { data: cards, isLoading: loadingCards } = useQuery({
+    queryKey: ['cartoes', userId],
+    queryFn: () => list('cards'),
+    enabled: !!userId,
     staleTime: 5 * 60 * 1000,
   });
 
+  const data = construirDados(((cards as ApiCard[]) || []).map(apiToCartao));
+
   const criarMutation = useMutation({
-    mutationFn: async (formData: CartoesFormData) => {
-      await new Promise(resolve => setTimeout(resolve, 300));
-      const novoCartao: Cartao = {
-        id: String(Date.now()),
-        nome: formData.nome,
-        bandeira: formData.bandeira,
-        banco: formData.banco,
-        limiteTotal: Number(formData.limiteTotal),
-        limiteUtilizado: 0,
-        melhorDiaCompra: Number(formData.melhorDiaCompra),
-        dataVencimento: Number(formData.dataVencimento),
-        cor: formData.cor || '#8b5cf6',
-        status: 'ativo',
-      };
-      return novoCartao;
-    },
+    mutationFn: (formData: CartoesFormData) => create('cards', toApiPayload(formData)),
     onSuccess: () => {
-      queryClient.invalidateQueries({ queryKey: ['cartoes'] });
+      queryClient.invalidateQueries({ queryKey: ['cartoes', userId] });
     },
   });
 
   const atualizarMutation = useMutation({
-    mutationFn: async ({ id, formData }: { id: string; formData: CartoesFormData }) => {
-      await new Promise(resolve => setTimeout(resolve, 300));
-      return { id, formData };
-    },
+    mutationFn: ({ id, formData }: { id: string; formData: CartoesFormData }) =>
+      update('cards', id, toApiPayload(formData)),
     onSuccess: () => {
-      queryClient.invalidateQueries({ queryKey: ['cartoes'] });
+      queryClient.invalidateQueries({ queryKey: ['cartoes', userId] });
     },
   });
 
   const excluirMutation = useMutation({
-    mutationFn: async (id: string) => {
-      await new Promise(resolve => setTimeout(resolve, 300));
-      return id;
-    },
+    mutationFn: (id: string) => remove('cards', id),
     onSuccess: () => {
-      queryClient.invalidateQueries({ queryKey: ['cartoes'] });
+      queryClient.invalidateQueries({ queryKey: ['cartoes', userId] });
     },
   });
 
   return {
     data,
-    isLoading,
-    criar: criarMutation.mutate,
-    atualizar: atualizarMutation.mutate,
-    excluir: excluirMutation.mutate,
+    isLoading: loadingCards,
+    criar: criarMutation.mutateAsync,
+    atualizar: atualizarMutation.mutateAsync,
+    excluir: excluirMutation.mutateAsync,
     isSaving: criarMutation.isPending || atualizarMutation.isPending,
   };
 }

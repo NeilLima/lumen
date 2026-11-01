@@ -16,6 +16,7 @@ model User {
 
   profile         Profile?
   accounts        Account[]
+  products        Product[]
   categories      Category[]
   transactions    Transaction[]
   creditCards     CreditCard[]
@@ -123,6 +124,7 @@ model CreditCard {
   dueDay       Int     @default(10) // vencimento da fatura
   closingDay   Int?    // melhor dia de compra / fechamento
   color        String?
+  status       String   @default("ACTIVE") // ACTIVE | BLOCKED | CANCELLED
   createdAt    DateTime @default(now())
   updatedAt    DateTime @updatedAt
 
@@ -239,9 +241,26 @@ model Notification {
   @@map("notifications")
 }
 
+model Product {
+  id          String   @id @default(uuid())
+  userId      String
+  name        String
+  category    String
+  unit        String   @default("un")
+  createdAt   DateTime @default(now())
+  updatedAt   DateTime @updatedAt
+
+  user        User @relation(fields: [userId], references: [id], onDelete: Cascade)
+  stockItems  EstoqueItem[]
+
+  @@index([userId])
+  @@map("products")
+}
+
 model EstoqueItem {
   id            String   @id @default(uuid())
   userId        String
+  productId     String?
   nome          String
   categoria     String
   quantidade    Decimal  @db.Decimal(14, 2)
@@ -251,6 +270,8 @@ model EstoqueItem {
   quantidadeMinima Decimal @db.Decimal(14, 2)
   dataAtualizacao DateTime @updatedAt
   createdAt     DateTime @default(now())
+
+  product       Product? @relation(fields: [productId], references: [id], onDelete: SetNull)
 
   @@index([userId])
   @@map("estoque_itens")

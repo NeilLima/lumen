@@ -56,7 +56,18 @@ export interface CartoesState {
   modalInfoAberto: boolean;
 }
 
-export interface CartoesActions {
+export interface ApiCard {
+  id: string;
+  name: string;
+  bank?: string | null;
+  brand?: string | null;
+  limitTotal: number | string;
+  limitUsed: number | string;
+  dueDay: number;
+  closingDay?: number | null;
+  color?: string | null;
+  status?: string;
+}
   abrirModalNovo: () => void;
   abrirModalEditar: (cartao: Cartao) => void;
   fecharModal: () => void;

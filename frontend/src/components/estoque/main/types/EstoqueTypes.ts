@@ -1,3 +1,5 @@
+import type { FeedbackData } from '@/shared/feedback';
+
 export interface EstoqueItem {
   id: string;
   nome: string;
@@ -34,6 +36,8 @@ export interface EstoqueData {
   locais: string[];
 }
 
+export type EstoqueFeedback = FeedbackData;
+
 export interface EstoqueState {
   data: EstoqueData | null;
   isLoading: boolean;
@@ -44,6 +48,7 @@ export interface EstoqueState {
   exclusaoPendente: EstoqueItem | null;
   detalheItem: EstoqueItem | null;
   modalInfoAberto: boolean;
+  feedback: EstoqueFeedback | null;
 }
 
 export interface EstoqueActions {
@@ -62,4 +67,5 @@ export interface EstoqueActions {
   fecharDetalhe: () => void;
   abrirInfo: () => void;
   fecharInfo: () => void;
+  fecharFeedback: () => void;
 }

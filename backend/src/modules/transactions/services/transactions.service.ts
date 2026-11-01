@@ -64,6 +64,7 @@ export class TransactionsService {
   private balanceDelta(type: string, amount: number): number {
     if (type === 'INCOME') return amount;
     if (type === 'EXPENSE') return -amount;
+    if (type === 'TRANSFER') return -amount;
     return 0;
   }
 

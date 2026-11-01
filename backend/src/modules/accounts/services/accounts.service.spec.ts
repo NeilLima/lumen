@@ -69,9 +69,11 @@ describe('AccountsService', () => {
       expect(repository.create).toHaveBeenCalledWith(mockUserId, {
         userId: mockUserId,
         name: 'Nova Conta',
+        bank: null,
         type: 'SAVINGS',
         balance: 500,
         color: '#10B981',
+        active: true,
       });
       expect(result.balance).toBe(500);
       expect(typeof result.balance).toBe('number');
@@ -86,9 +88,11 @@ describe('AccountsService', () => {
       expect(repository.create).toHaveBeenCalledWith(mockUserId, {
         userId: mockUserId,
         name: 'Nova Conta',
+        bank: null,
         type: 'CHECKING',
         balance: 0,
         color: null,
+        active: true,
       });
     });
   });
@@ -97,9 +101,10 @@ describe('AccountsService', () => {
     const updateDto = { name: 'Conta Atualizada' };
 
     it('should update account and return updated data', async () => {
-      jest.spyOn(repository, 'findById').mockResolvedValue(mockAccount);
+      jest.spyOn(repository, 'findById')
+        .mockResolvedValueOnce(mockAccount)
+        .mockResolvedValueOnce({ ...mockAccount, ...updateDto });
       jest.spyOn(repository, 'update').mockResolvedValue({ ...mockAccount, ...updateDto });
-      jest.spyOn(repository, 'findById').mockResolvedValueOnce({ ...mockAccount, ...updateDto });
 
       const result = await service.update(mockUserId, 'acc_123', updateDto);
 

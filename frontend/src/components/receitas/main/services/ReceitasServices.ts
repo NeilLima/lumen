@@ -104,6 +104,7 @@ function toApiPayload(
     recurrence: RECORRENCIA_REVERSO[formData.recorrencia],
     notes: formData.observacoes || undefined,
     attachment: formData.comprovante || undefined,
+    status: STATUS_REVERSO[formData.status || 'pendente'],
   };
 }
 
@@ -192,7 +193,6 @@ export function receitasService() {
       const { categoriaId, contaId } = resolverIds(formData);
       return create('incomes', {
         ...toApiPayload(formData, categoriaId, contaId),
-        status: 'PENDING',
       });
     },
     onSuccess: () => {
