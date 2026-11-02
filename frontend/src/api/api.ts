@@ -53,7 +53,7 @@ const canReachApi = async (apiUrl: string): Promise<boolean> => {
 
 // URLs da API
 const LOCAL_API_URL = process.env.NEXT_PUBLIC_API_URL || 'http://localhost:3002';
-const PRODUCTION_API_URL = process.env.NEXT_PUBLIC_API_URL_PRODUCTION || 'https://lumen-backend.vercel.app';
+const PRODUCTION_API_URL = process.env.NEXT_PUBLIC_API_URL_PRODUCTION || 'https://lumen-backend-xi.vercel.app';
 
 // Estratégia DEFINITIVA:
 // - Em produção (Vercel): usa SEMPRE a URL de produção
