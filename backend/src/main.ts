@@ -27,7 +27,7 @@ async function bootstrap() {
   console.log(`📱 Access from mobile: http://<YOUR_IP>:${port}`);
 }
 
-if (require.main === module) {
+if (import.meta.url === `file://${process.argv[1]}`) {
   bootstrap();
 }
 
