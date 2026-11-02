@@ -36,6 +36,18 @@ let cachedApp: unknown = null;
 // Vercel serverless handler - default export é auto-detectado pela Vercel
 export default async function handler(req: unknown, res: unknown) {
   try {
+    // Vercel rewrite passes the original path via ?path=...
+    const r = req as { url?: string; headers?: Record<string,string> };
+    if (r.url && r.url.startsWith('/api/index')) {
+      try {
+        const u = new URL(r.url, 'http://localhost');
+        const p = u.searchParams.get('path');
+        if (p) {
+          const rest = u.search.replace(/[?&]path=[^&]*/, '').replace(/^\?&?/, '?').replace(/\?$/, '');
+          r.url = '/' + p.replace(/^\/+/, '') + (rest && rest !== '?' ? rest : '');
+        }
+      } catch { /* keep original */ }
+    }
     if (!cachedApp) {
       // Em produção o NODE_ENV=production já força o banco de produção
       await resolveDatabaseConnection();
