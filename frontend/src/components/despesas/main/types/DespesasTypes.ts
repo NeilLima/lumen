@@ -97,6 +97,8 @@ export interface ApiExpense {
   accountName?: string | null;
   creditCardName?: string | null;
 }
+export interface DespesasActions {
+  abrirModalNovo: () => void;
   abrirModalEditar: (despesa: Despesa) => void;
   fecharModal: () => void;
   atualizarFiltro: (campo: keyof DespesasFiltros, valor: string) => void;

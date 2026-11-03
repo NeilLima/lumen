@@ -68,6 +68,7 @@ export interface ApiCard {
   color?: string | null;
   status?: string;
 }
+export interface CartoesActions {
   abrirModalNovo: () => void;
   abrirModalEditar: (cartao: Cartao) => void;
   fecharModal: () => void;
