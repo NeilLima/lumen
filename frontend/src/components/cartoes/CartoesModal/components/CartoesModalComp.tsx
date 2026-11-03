@@ -22,8 +22,8 @@ export default function CartoesModalComp({ modalAberto, editandoId, formData, on
           <StyledFormGroup><StyledLabel>Vencimento</StyledLabel><StyledInput type="number" min="1" max="31" value={formData.dataVencimento} onChange={e => onAtualizarForm("dataVencimento", e.target.value)} /></StyledFormGroup>
           <StyledFormGroup><StyledLabel>Cor</StyledLabel><StyledColorInput type="color" value={formData.cor} onChange={e => onAtualizarForm("cor", e.target.value)} /></StyledFormGroup>
           <StyledModalActions>
-            <StyledButton onClick={onFecharModal}>Cancelar</StyledButton>
-            <StyledButton onClick={onSalvarCartao}>{editandoId ? "Salvar" : "Criar"}</StyledButton>
+            <StyledButton $variant="secondary" onClick={onFecharModal}>Cancelar</StyledButton>
+            <StyledButton $variant="primary" onClick={onSalvarCartao}>{editandoId ? "Salvar" : "Criar"}</StyledButton>
           </StyledModalActions>
         </StyledForm>
       </StyledModal>

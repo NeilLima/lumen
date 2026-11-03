@@ -4,6 +4,7 @@ import { NestFactory } from '@nestjs/core';
 import { AppModule } from './app.module.js';
 import { corsConfig } from './config/cors.config.js';
 import { resolveDatabaseConnection } from './config/database.bootstrap.js';
+import { pathToFileURL } from 'url';
 
 async function bootstrap() {
   await resolveDatabaseConnection();
@@ -15,7 +16,8 @@ async function bootstrap() {
   console.log(`Backend running on: http://0.0.0.0:${port}`);
 }
 
-if (import.meta.url === `file://${process.argv[1]}`) {
+const isMain = process.argv[1] && /main(\.js)?$/.test(process.argv[1]);
+if (isMain) {
   bootstrap();
 }
 

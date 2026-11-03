@@ -67,7 +67,7 @@ export function transferenciasService() {
         maiorTransferencia: t.length > 0 ? t.reduce((m, a) => (a.valor > m.valor ? a : m)) : null,
       };
     })(),
-    contas: [...new Set(((transfers as ApiTransfer[]) || []).map(apiToTransfer).flatMap((x) => [x.contaOrigem, x.contaDestino]))],
+    contas: contas.map((c) => c.name),
   };
 
   function resolverIds(formData: TransferenciasFormData) {
