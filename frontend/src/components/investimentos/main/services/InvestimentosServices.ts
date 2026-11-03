@@ -1,135 +1,92 @@
 import { useQuery, useMutation, useQueryClient } from '@tanstack/react-query';
+import { list, create, update, remove } from '@/services/crudService';
+import { useAuth } from '@/hooks/useAuth';
 import type { Investimento, InvestimentosData, InvestimentosFormData } from '../types/InvestimentosTypes';
 
-const MOCK_INVESTIMENTOS: Investimento[] = [
-  {
-    "id": "1",
-    "nome": "Tesouro Selic 2029",
-    "tipo": "tesouro",
-    "valorAplicado": 10000,
-    "valorAtual": 11200,
-    "dataAplicacao": "2025-01-15",
-    "status": "ativo",
-    "categoria": "Renda Fixa",
-    "categoriaCor": "#3b82f6",
-    "categoriaIcone": "🏛️",
-    "observacoes": "Tesouro direto pós-fixado"
-  },
-  {
-    "id": "2",
-    "nome": "CDB Banco Inter 120%",
-    "tipo": "cdb",
-    "valorAplicado": 5000,
-    "valorAtual": 5600,
-    "dataAplicacao": "2025-03-10",
-    "status": "ativo",
-    "categoria": "Renda Fixa",
-    "categoriaCor": "#3b82f6",
-    "categoriaIcone": "🏦"
-  },
-  {
-    "id": "3",
-    "nome": "ITSA4 - Itaúsa",
-    "tipo": "acoes",
-    "valorAplicado": 8000,
-    "valorAtual": 9200,
-    "dataAplicacao": "2024-11-20",
-    "status": "ativo",
-    "categoria": "Renda Variável",
-    "categoriaCor": "#f59e0b",
-    "categoriaIcone": "📊"
-  },
-  {
-    "id": "4",
-    "nome": "Bitcoin",
-    "tipo": "cripto",
-    "valorAplicado": 3000,
-    "valorAtual": 4500,
-    "dataAplicacao": "2025-06-01",
-    "status": "ativo",
-    "categoria": "Cripto",
-    "categoriaCor": "#ef4444",
-    "categoriaIcone": "₿"
-  }
-];
+interface ApiInvestimento { id: string; name: string; type?: string; broker?: string | null; currentValue: number | string; investedAmount: number | string; appliedDate?: string | null; status?: string; notes?: string | null; }
 
-function calcularResumo(investimentos: Investimento[]) {
-  const totalInvestimentos = investimentos.length;
-  const totalAplicado = investimentos.reduce((acc, d) => acc + (d.valorAplicado || 0), 0);
-  const totalAtual = investimentos.reduce((acc, d) => acc + (d.valorAtual || 0), 0);
-  const lucroPrejuizo = totalAtual - totalAplicado;
-
-  return { totalInvestimentos, totalAplicado, totalAtual, lucroPrejuizo };
-}
-
-function construirDados(investimentos: Investimento[]): InvestimentosData {
+function apiToInvestimento(i: ApiInvestimento): Investimento {
   return {
-    investimentos,
-    resumo: calcularResumo(investimentos),
+    id: i.id,
+    nome: i.name,
+    tipo: (i.type || 'cdb').toLowerCase(),
+    valorAplicado: Number(i.investedAmount) || 0,
+    valorAtual: Number(i.currentValue) || 0,
+    dataAplicacao: i.appliedDate ? i.appliedDate.split('T')[0] : '',
+    status: i.status || 'ativo',
+    observacoes: i.notes || undefined,
+    categoria: i.type || 'Geral',
+    categoriaCor: '#8b5cf6',
+    categoriaIcone: '📋',
   };
 }
 
+function calcResumo(items: Investimento[]) {
+  const totalInvestimentos = items.length;
+  const totalAplicado = items.reduce((acc, d) => acc + (d.valorAplicado || 0), 0);
+  const totalAtual = items.reduce((acc, d) => acc + (d.valorAtual || 0), 0);
+  const lucroPrejuizo = totalAtual - totalAplicado;
+  return { totalInvestimentos, totalAplicado, totalAtual, lucroPrejuizo };
+}
+
+function construirDados(items: Investimento[]): InvestimentosData {
+  return { investimentos: items, resumo: calcResumo(items) };
+}
+
 export function useInvestimentosService() {
+  const { userId } = useAuth();
   const queryClient = useQueryClient();
 
-  const { data, isLoading } = useQuery({
-    queryKey: ['investimentos'],
-    queryFn: async () => {
-      await new Promise(resolve => setTimeout(resolve, 400));
-      return construirDados(MOCK_INVESTIMENTOS);
-    },
+  const { data: investimentos, isLoading } = useQuery({
+    queryKey: ['investimentos', userId],
+    queryFn: () => list('investimentos'),
+    enabled: !!userId,
     staleTime: 5 * 60 * 1000,
   });
 
+  const data = construirDados(((investimentos as ApiInvestimento[]) || []).map(apiToInvestimento));
+
   const criarMutation = useMutation({
     mutationFn: async (formData: InvestimentosFormData) => {
-      await new Promise(resolve => setTimeout(resolve, 300));
-      const novoInvestimento: Investimento = {
-        id: String(Date.now()),
-        nome: formData.nome,
-        tipo: formData.tipo,
-        valorAplicado: Number(formData.valorAplicado) || 0,
-        valorAtual: Number(formData.valorAtual) || 0,
-        dataAplicacao: formData.dataAplicacao,
+      return create('investimentos', {
+        name: formData.nome,
+        type: formData.tipo,
+        currentValue: Number(formData.valorAtual) || 0,
+        investedAmount: Number(formData.valorAplicado) || 0,
+        appliedDate: formData.dataAplicacao || undefined,
         status: formData.status,
-        observacoes: formData.observacoes,
-        categoria: 'Geral',
-        categoriaCor: '#8b5cf6',
-        categoriaIcone: '📋',
-      };
-      return novoInvestimento;
+        notes: formData.observacoes || undefined,
+      });
     },
-    onSuccess: () => {
-      queryClient.invalidateQueries({ queryKey: ['investimentos'] });
-    },
+    onSuccess: () => { queryClient.invalidateQueries({ queryKey: ['investimentos', userId] }); },
   });
 
   const atualizarMutation = useMutation({
     mutationFn: async ({ id, formData }: { id: string; formData: InvestimentosFormData }) => {
-      await new Promise(resolve => setTimeout(resolve, 300));
-      return { id, formData };
+      return update('investimentos', id, {
+        name: formData.nome,
+        type: formData.tipo,
+        currentValue: Number(formData.valorAtual) || 0,
+        investedAmount: Number(formData.valorAplicado) || 0,
+        appliedDate: formData.dataAplicacao || undefined,
+        status: formData.status,
+        notes: formData.observacoes || undefined,
+      });
     },
-    onSuccess: () => {
-      queryClient.invalidateQueries({ queryKey: ['investimentos'] });
-    },
+    onSuccess: () => { queryClient.invalidateQueries({ queryKey: ['investimentos', userId] }); },
   });
 
   const excluirMutation = useMutation({
-    mutationFn: async (id: string) => {
-      await new Promise(resolve => setTimeout(resolve, 300));
-      return id;
-    },
-    onSuccess: () => {
-      queryClient.invalidateQueries({ queryKey: ['investimentos'] });
-    },
+    mutationFn: (id: string) => remove('investimentos', id),
+    onSuccess: () => { queryClient.invalidateQueries({ queryKey: ['investimentos', userId] }); },
   });
 
   return {
     data,
     isLoading,
-    criar: criarMutation.mutate,
-    atualizar: atualizarMutation.mutate,
-    excluir: excluirMutation.mutate,
+    criar: criarMutation.mutateAsync,
+    atualizar: atualizarMutation.mutateAsync,
+    excluir: excluirMutation.mutateAsync,
     isSaving: criarMutation.isPending || atualizarMutation.isPending,
   };
 }

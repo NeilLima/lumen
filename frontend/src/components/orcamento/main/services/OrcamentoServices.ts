@@ -1,8 +1,34 @@
 import { useQuery, useMutation, useQueryClient } from '@tanstack/react-query';
 import { list, create, update, remove } from '@/services/crudService';
-import type { OrcamentoCategoria, OrcamentoData, OrcamentoFormData } from '../types/OrcamentoTypes';
+import { useAuth } from '@/hooks/useAuth';
+import type { OrcamentoCategoria, OrcamentoData, OrcamentoFormData, ApiBudget, ApiCategory } from '../types/OrcamentoTypes';
 
-function calcularResumo(categorias: OrcamentoCategoria[]): OrcamentoData['resumo'] {
+function statusFrom(gasto: number, limite: number): 'dentro' | 'atencao' | 'estourado' {
+  if (limite <= 0) return 'dentro';
+  const pct = gasto / limite;
+  if (pct >= 1) return 'estourado';
+  if (pct >= 0.8) return 'atencao';
+  return 'dentro';
+}
+
+function apiToOrcamento(b: ApiBudget): OrcamentoCategoria {
+  const [anoStr, mesStr] = (b.month || '').split('-');
+  const limite = Number(b.limitAmount) || 0;
+  const gasto = Number(b.spentAmount) || 0;
+  return {
+    id: b.id,
+    categoria: b.category?.name || '',
+    categoriaCor: b.category?.color || '#8b5cf6',
+    categoriaIcone: b.category?.icon || '📋',
+    limite,
+    gasto,
+    mes: Number(mesStr) || new Date().getMonth() + 1,
+    ano: Number(anoStr) || new Date().getFullYear(),
+    status: statusFrom(gasto, limite),
+  };
+}
+
+function calcularResumo(categorias: OrcamentoCategoria[]) {
   const totalLimite = categorias.reduce((acc, c) => acc + c.limite, 0);
   const totalGasto = categorias.reduce((acc, c) => acc + c.gasto, 0);
   const totalDisponivel = totalLimite - totalGasto;
@@ -18,29 +44,69 @@ function construirDados(categorias: OrcamentoCategoria[]): OrcamentoData {
 }
 
 export function orcamentoService() {
+  const { userId } = useAuth();
   const queryClient = useQueryClient();
-  const { data, isLoading } = useQuery({
-    queryKey: ['orcamento'],
-    queryFn: async () => {
-      try { const r = await list('orcamento'); return construirDados(r as OrcamentoCategoria[]); }
-      catch {
-        const MOCK: OrcamentoCategoria[] = [
-          { id: '1', categoria: 'Mercado', categoriaCor: '#10b981', categoriaIcone: '🛒', limite: 2000, gasto: 1850, mes: 7, ano: 2026, status: 'atencao' },
-          { id: '2', categoria: 'Lazer', categoriaCor: '#8b5cf6', categoriaIcone: '🎮', limite: 800, gasto: 750, mes: 7, ano: 2026, status: 'atencao' },
-          { id: '3', categoria: 'Combustível', categoriaCor: '#f59e0b', categoriaIcone: '⛽', limite: 500, gasto: 520, mes: 7, ano: 2026, status: 'estourado' },
-          { id: '4', categoria: 'Transporte', categoriaCor: '#3b82f6', categoriaIcone: '🚌', limite: 400, gasto: 320, mes: 7, ano: 2026, status: 'dentro' },
-          { id: '5', categoria: 'Saúde', categoriaCor: '#ef4444', categoriaIcone: '🏥', limite: 600, gasto: 250, mes: 7, ano: 2026, status: 'dentro' },
-          { id: '6', categoria: 'Educação', categoriaCor: '#ec4899', categoriaIcone: '📚', limite: 1000, gasto: 980, mes: 7, ano: 2026, status: 'atencao' },
-          { id: '7', categoria: 'Moradia', categoriaCor: '#14b8a6', categoriaIcone: '🏠', limite: 3000, gasto: 3100, mes: 7, ano: 2026, status: 'estourado' },
-        ];
-        return construirDados(MOCK);
-      }
-    },
+
+  const { data: budgets, isLoading: loadingBudgets } = useQuery({
+    queryKey: ['orcamento', userId],
+    queryFn: () => list('orcamento'),
+    enabled: !!userId,
     staleTime: 5 * 60 * 1000,
   });
 
-  const criarMutation = useMutation({ mutationFn: async (fd: OrcamentoFormData) => create('orcamento', fd as unknown as Record<string, unknown>), onSuccess: () => { queryClient.invalidateQueries({ queryKey: ['orcamento'] }); } });
-  const atualizarMutation = useMutation({ mutationFn: async ({ id, formData }: { id: string; formData: OrcamentoFormData }) => update('orcamento', id, formData as unknown as Record<string, unknown>), onSuccess: () => { queryClient.invalidateQueries({ queryKey: ['orcamento'] }); } });
-  const excluirMutation = useMutation({ mutationFn: async (id: string) => remove('orcamento', id), onSuccess: () => { queryClient.invalidateQueries({ queryKey: ['orcamento'] }); } });
-  return { data, isLoading, criar: criarMutation.mutate, atualizar: atualizarMutation.mutate, excluir: excluirMutation.mutate, isSaving: criarMutation.isPending || atualizarMutation.isPending };
+  const { data: categories } = useQuery({
+    queryKey: ['orcamento-categorias', userId],
+    queryFn: () => list('categories'),
+    enabled: !!userId,
+    staleTime: 5 * 60 * 1000,
+  });
+
+  const categoriasList = ((categories as ApiCategory[]) || []).slice().sort((a, b) => a.name.localeCompare(b.name));
+
+  const data = construirDados(((budgets as ApiBudget[]) || []).map(apiToOrcamento));
+
+  const criarMutation = useMutation({
+    mutationFn: async (formData: OrcamentoFormData) => {
+      const categoria = categoriasList.find((c) => c.name === formData.categoria);
+      const mes = String(formData.mes).padStart(2, '0');
+      const month = `${formData.ano}-${mes}`;
+      return create('orcamento', {
+        categoryId: categoria ? categoria.id : undefined,
+        month,
+        limitAmount: Number(formData.limite) || 0,
+        spentAmount: Number(formData.gasto) || 0,
+      });
+    },
+    onSuccess: () => { queryClient.invalidateQueries({ queryKey: ['orcamento', userId] }); },
+  });
+
+  const atualizarMutation = useMutation({
+    mutationFn: async ({ id, formData }: { id: string; formData: OrcamentoFormData }) => {
+      const categoria = categoriasList.find((c) => c.name === formData.categoria);
+      const mes = String(formData.mes).padStart(2, '0');
+      const month = `${formData.ano}-${mes}`;
+      return update('orcamento', id, {
+        categoryId: categoria ? categoria.id : undefined,
+        month,
+        limitAmount: Number(formData.limite) || 0,
+        spentAmount: Number(formData.gasto) || 0,
+      });
+    },
+    onSuccess: () => { queryClient.invalidateQueries({ queryKey: ['orcamento', userId] }); },
+  });
+
+  const excluirMutation = useMutation({
+    mutationFn: (id: string) => remove('orcamento', id),
+    onSuccess: () => { queryClient.invalidateQueries({ queryKey: ['orcamento', userId] }); },
+  });
+
+  return {
+    data,
+    isLoading: loadingBudgets,
+    criar: criarMutation.mutateAsync,
+    atualizar: atualizarMutation.mutateAsync,
+    excluir: excluirMutation.mutateAsync,
+    isSaving: criarMutation.isPending || atualizarMutation.isPending,
+  };
 }
+

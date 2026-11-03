@@ -1,121 +1,84 @@
 import { useQuery, useMutation, useQueryClient } from '@tanstack/react-query';
+import { list, create, update, remove } from '@/services/crudService';
+import { useAuth } from '@/hooks/useAuth';
 import type { Notificacao, NotificacoesData, NotificacoesFormData } from '../types/NotificacoesTypes';
 
-const MOCK_NOTIFICACOES: Notificacao[] = [
-  {
-    "id": "1",
-    "titulo": "Pagamento de Aluguel Próximo",
-    "tipo": "pagamento",
-    "valor": 1500.00,
-    "data": "2026-07-28",
-    "mensagem": "O pagamento do aluguel vence em 3 dias",
-    "status": "nao_lida",
-    "categoria": "Pagamento",
-    "categoriaCor": "#f59e0b",
-    "categoriaIcone": "💳"
-  },
-  {
-    "id": "2",
-    "titulo": "Conta de Luz Vencendo",
-    "tipo": "conta",
-    "valor": 250.00,
-    "data": "2026-07-29",
-    "mensagem": "A conta de luz vence amanhã",
-    "status": "nao_lida",
-    "categoria": "Conta",
-    "categoriaCor": "#ef4444",
-    "categoriaIcone": "⚡"
-  },
-  {
-    "id": "3",
-    "titulo": "Meta de Viagem Atingida",
-    "tipo": "meta",
-    "valor": 5000.00,
-    "data": "2026-07-25",
-    "mensagem": "Parabéns! Você atingiu sua meta de viagem",
-    "status": "lida",
-    "categoria": "Meta",
-    "categoriaCor": "#10b981",
-    "categoriaIcone": "🎯"
-  }
-];
+interface ApiNotification { id: string; type: string; title: string; message?: string | null; read: boolean; link?: string | null; createdAt: string; }
 
-function calcularResumo(notificacoes: Notificacao[]) {
-  const totalNotificacoes = notificacoes.length;
-  const totalNaoLidas = notificacoes.filter(d => d.status === 'nao_lida').length;
-  const totalLidas = notificacoes.filter(d => d.status === 'lida').length;
-  const totalArquivadas = notificacoes.filter(d => d.status === 'arquivada').length;
-
-  return { totalNotificacoes, totalNaoLidas, totalLidas, totalArquivadas };
-}
-
-function construirDados(notificacoes: Notificacao[]): NotificacoesData {
+function apiToNotificacao(n: ApiNotification): Notificacao {
   return {
-    notificacoes,
-    resumo: calcularResumo(notificacoes),
+    id: n.id,
+    titulo: n.title,
+    tipo: n.type,
+    valor: 0,
+    data: n.createdAt ? n.createdAt.split('T')[0] : '',
+    mensagem: n.message || undefined,
+    status: n.read ? 'lida' : 'nao_lida',
+    categoria: n.type,
+    categoriaCor: '#8b5cf6',
+    categoriaIcone: '🔔',
   };
 }
 
+function calcResumo(items: Notificacao[]): NotificacoesData['resumo'] {
+  return {
+    totalNotificacoes: items.length,
+    totalNaoLidas: items.filter(i => i.status === 'nao_lida').length,
+    totalLidas: items.filter(i => i.status === 'lida').length,
+    totalArquivadas: items.filter(i => i.status === 'arquivada').length,
+  };
+}
+
+function build(items: Notificacao[]): NotificacoesData { return { notificacoes: items, resumo: calcResumo(items) }; }
+
 export function useNotificacoesService() {
+  const { userId } = useAuth();
   const queryClient = useQueryClient();
 
-  const { data, isLoading } = useQuery({
-    queryKey: ['notificacoes'],
-    queryFn: async () => {
-      await new Promise(resolve => setTimeout(resolve, 400));
-      return construirDados(MOCK_NOTIFICACOES);
-    },
+  const { data: notifications, isLoading } = useQuery({
+    queryKey: ['notificacoes', userId],
+    queryFn: () => list('notifications'),
+    enabled: !!userId,
     staleTime: 5 * 60 * 1000,
   });
 
+  const data = build(((notifications as ApiNotification[]) || []).map(apiToNotificacao));
+
   const criarMutation = useMutation({
     mutationFn: async (formData: NotificacoesFormData) => {
-      await new Promise(resolve => setTimeout(resolve, 300));
-      const novoNotificacao: Notificacao = {
-        id: String(Date.now()),
-        titulo: formData.titulo,
-        tipo: formData.tipo,
-        valor: 0,
-        data: formData.data,
-        mensagem: formData.mensagem,
-        status: formData.status,
-        categoria: 'Geral',
-        categoriaCor: '#8b5cf6',
-        categoriaIcone: '📋',
-      };
-      return novoNotificacao;
+      return create('notifications', {
+        type: formData.tipo,
+        title: formData.titulo,
+        message: formData.mensagem || undefined,
+        read: formData.status === 'lida',
+      });
     },
-    onSuccess: () => {
-      queryClient.invalidateQueries({ queryKey: ['notificacoes'] });
-    },
+    onSuccess: () => { queryClient.invalidateQueries({ queryKey: ['notificacoes', userId] }); },
   });
 
   const atualizarMutation = useMutation({
     mutationFn: async ({ id, formData }: { id: string; formData: NotificacoesFormData }) => {
-      await new Promise(resolve => setTimeout(resolve, 300));
-      return { id, formData };
+      return update('notifications', id, {
+        type: formData.tipo,
+        title: formData.titulo,
+        message: formData.mensagem || undefined,
+        read: formData.status === 'lida',
+      });
     },
-    onSuccess: () => {
-      queryClient.invalidateQueries({ queryKey: ['notificacoes'] });
-    },
+    onSuccess: () => { queryClient.invalidateQueries({ queryKey: ['notificacoes', userId] }); },
   });
 
   const excluirMutation = useMutation({
-    mutationFn: async (id: string) => {
-      await new Promise(resolve => setTimeout(resolve, 300));
-      return id;
-    },
-    onSuccess: () => {
-      queryClient.invalidateQueries({ queryKey: ['notificacoes'] });
-    },
+    mutationFn: (id: string) => remove('notifications', id),
+    onSuccess: () => { queryClient.invalidateQueries({ queryKey: ['notificacoes', userId] }); },
   });
 
   return {
     data,
     isLoading,
-    criar: criarMutation.mutate,
-    atualizar: atualizarMutation.mutate,
-    excluir: excluirMutation.mutate,
+    criar: criarMutation.mutateAsync,
+    atualizar: atualizarMutation.mutateAsync,
+    excluir: excluirMutation.mutateAsync,
     isSaving: criarMutation.isPending || atualizarMutation.isPending,
   };
 }

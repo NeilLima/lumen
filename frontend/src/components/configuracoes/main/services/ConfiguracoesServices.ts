@@ -1,123 +1,83 @@
 import { useQuery, useMutation, useQueryClient } from '@tanstack/react-query';
+import { list, create, update, remove } from '@/services/crudService';
+import { useAuth } from '@/hooks/useAuth';
 import type { Configuracao, ConfiguracoesData, ConfiguracoesFormData } from '../types/ConfiguracoesTypes';
 
-const MOCK_CONFIGURACOES: Configuracao[] = [
-  {
-    "id": "1",
-    "nome": "Tema Escuro",
-    "categoria": "aparencia",
-    "valor": "Ativado",
-    "data": "2025-01-15",
-    "descricao": "Tema escuro para a aplicação",
-    "categoriaCor": "#3b82f6",
-    "categoriaIcone": "🎨"
-  },
-  {
-    "id": "2",
-    "nome": "Idioma",
-    "categoria": "idioma",
-    "valor": "Português (BR)",
-    "data": "2025-01-15",
-    "descricao": "Idioma da aplicação",
-    "categoriaCor": "#10b981",
-    "categoriaIcone": "🌐"
-  },
-  {
-    "id": "3",
-    "nome": "Moeda",
-    "categoria": "moeda",
-    "valor": "Real (R$)",
-    "data": "2025-01-15",
-    "descricao": "Moeda padrão",
-    "categoriaCor": "#f59e0b",
-    "categoriaIcone": "💰"
-  },
-  {
-    "id": "4",
-    "nome": "Backup Automático",
-    "categoria": "backup",
-    "valor": "Ativado",
-    "data": "2025-01-15",
-    "descricao": "Backup automático semanal",
-    "categoriaCor": "#8b5cf6",
-    "categoriaIcone": "💾"
-  }
-];
+interface ApiSeftting { id: string; name: string; category?: string; value: string; description?: string | null; createdAt: string; }
 
-function calcularResumo(configuracoes: Configuracao[]) {
-  const totalConfiguracoes = configuracoes.length;
-  const totalAparencia = configuracoes.filter(d => d.categoria === 'aparencia').length;
-  const totalSeguranca = configuracoes.filter(d => d.categoria === 'seguranca').length;
-  const totalNotificacoesConfig = configuracoes.filter(d => d.categoria === 'notificacoes').length;
-
-  return { totalConfiguracoes, totalAparencia, totalSeguranca, totalNotificacoesConfig };
-}
-
-function construirDados(configuracoes: Configuracao[]): ConfiguracoesData {
+function apiToConfiguracao(s: ApiSetting): Configuracao {
+  const corMap: Record<string, string> = { aparencia: '#3b82f6', idioma: '#10b981', moeda: '#f59e0b', backup: '#8b5cf6', geral: '#6b6b7b' };
   return {
-    configuracoes,
-    resumo: calcularResumo(configuracoes),
+    id: s.id,
+    nome: s.name,
+    categoria: s.category || 'geral',
+    valor: s.value,
+    data: s.createdAt ? s.createdAt.split('T')[0] : '',
+    descricao: s.description || '',
+    categoriaCor: corMap[s.category || 'geral'] || '#8b5cf6',
+    categoriaIcone: '⚙️',
   };
 }
 
+function calcResumo(items: Configuracao[]) {
+  return {
+    totalConfiguracoes: items.length,
+    totalAparencia: items.filter(d => d.categoria === 'aparencia').length,
+    totalSeguranca: items.filter(d => d.categoria === 'seguranca').length,
+    totalNotificacoesConfig: items.filter(d => d.categoria === 'notificacoes').length,
+  };
+}
+
+function build(items: Configuracao[]): ConfiguracoesData { return { configuracoes: items, resumo: calcResumo(items) }; }
+
 export function useConfiguracoesService() {
+  const { userId } = useAuth();
   const queryClient = useQueryClient();
 
-  const { data, isLoading } = useQuery({
-    queryKey: ['configuracoes'],
-    queryFn: async () => {
-      await new Promise(resolve => setTimeout(resolve, 400));
-      return construirDados(MOCK_CONFIGURACOES);
-    },
+  const { data: settings, isLoading } = useQuery({
+    queryKey: ['configuracoes', userId],
+    queryFn: () => list('configuracoes'),
+    enabled: !!userId,
     staleTime: 5 * 60 * 1000,
   });
 
+  const data = build(((settings as ApiSetting[]) || []).map(apiToConfiguracao));
+
   const criarMutation = useMutation({
     mutationFn: async (formData: ConfiguracoesFormData) => {
-      await new Promise(resolve => setTimeout(resolve, 300));
-      const novoConfiguracao: Configuracao = {
-        id: String(Date.now()),
-        nome: formData.nome,
-        categoria: formData.categoria,
-        valor: formData.valor,
-        data: new Date().toISOString().split('T')[0],
-        descricao: formData.descricao,
-        categoriaCor: '#8b5cf6',
-        categoriaIcone: '📋',
-      };
-      return novoConfiguracao;
+      return create('configuracoes', {
+        name: formData.nome,
+        category: formData.categoria,
+        value: formData.valor,
+        description: formData.descricao || undefined,
+      });
     },
-    onSuccess: () => {
-      queryClient.invalidateQueries({ queryKey: ['configuracoes'] });
-    },
+    onSuccess: () => { queryClient.invalidateQueries({ queryKey: ['configuracoes', userId] }); },
   });
 
   const atualizarMutation = useMutation({
     mutationFn: async ({ id, formData }: { id: string; formData: ConfiguracoesFormData }) => {
-      await new Promise(resolve => setTimeout(resolve, 300));
-      return { id, formData };
+      return update('configuracoes', id, {
+        name: formData.nome,
+        category: formData.categoria,
+        value: formData.valor,
+        description: formData.descricao || undefined,
+      });
     },
-    onSuccess: () => {
-      queryClient.invalidateQueries({ queryKey: ['configuracoes'] });
-    },
+    onSuccess: () => { queryClient.invalidateQueries({ queryKey: ['configuracoes', userId] }); },
   });
 
   const excluirMutation = useMutation({
-    mutationFn: async (id: string) => {
-      await new Promise(resolve => setTimeout(resolve, 300));
-      return id;
-    },
-    onSuccess: () => {
-      queryClient.invalidateQueries({ queryKey: ['configuracoes'] });
-    },
+    mutationFn: (id: string) => remove('configuracoes', id),
+    onSuccess: () => { queryClient.invalidateQueries({ queryKey: ['configuracoes', userId] }); },
   });
 
   return {
     data,
     isLoading,
-    criar: criarMutation.mutate,
-    atualizar: atualizarMutation.mutate,
-    excluir: excluirMutation.mutate,
+    criar: criarMutation.mutateAsync,
+    atualizar: atualizarMutation.mutateAsync,
+    excluir: excluirMutation.mutateAsync,
     isSaving: criarMutation.isPending || atualizarMutation.isPending,
   };
 }

@@ -1,131 +1,107 @@
 import { useQuery, useMutation, useQueryClient } from '@tanstack/react-query';
-import type { Emprestimo, EmprestimosData, EmprestimosFormData } from '../types/EmprestimosTypes';
+import { list, create, update, remove } from '@/services/crudService';
+import { useAuth } from '@/hooks/useAuth';
+import type { Emprestimo, EmprestimosData, EmprestimosFormData, ApiEmprestimo, ApiCategory } from '../types/EmprestimosTypes';
 
-const MOCK_EMPRESTIMOS: Emprestimo[] = [
-  {
-    "id": "1",
-    "nome": "Empréstimo Pessoal Banco do Brasil",
-    "tipo": "recebido",
-    "valor": 15000,
-    "parcelas": 24,
-    "parcelasPagas": 8,
-    "juros": 1.5,
-    "dataVencimento": "2026-08-15",
-    "situacao": "em_dia",
-    "categoria": "Banco",
-    "categoriaCor": "#3b82f6",
-    "categoriaIcone": "🏦",
-    "observacoes": "Empréstimo pessoal para reforma"
-  },
-  {
-    "id": "2",
-    "nome": "Empréstimo para João",
-    "tipo": "feito",
-    "valor": 5000,
-    "parcelas": 10,
-    "parcelasPagas": 3,
-    "juros": 0,
-    "dataVencimento": "2026-07-20",
-    "situacao": "atrasada",
-    "categoria": "Pessoa",
-    "categoriaCor": "#f59e0b",
-    "categoriaIcone": "👤"
-  },
-  {
-    "id": "3",
-    "nome": "Financiamento Carro",
-    "tipo": "recebido",
-    "valor": 45000,
-    "parcelas": 48,
-    "parcelasPagas": 48,
-    "juros": 1.2,
-    "dataVencimento": "2026-06-30",
-    "situacao": "quitada",
-    "categoria": "Banco",
-    "categoriaCor": "#3b82f6",
-    "categoriaIcone": "🏦"
-  }
-];
-
-function calcularResumo(emprestimos: Emprestimo[]) {
-  const totalEmprestimos = emprestimos.length;
-  const totalValor = emprestimos.reduce((acc, d) => acc + (d.valor || 0), 0);
-  const totalAtrasado = emprestimos.filter(d => d.situacao === 'atrasada').reduce((acc, d) => acc + d.valor, 0);
-  const totalQuitado = emprestimos.filter(d => d.situacao === 'quitada').reduce((acc, d) => acc + d.valor, 0);
-
-  return { totalEmprestimos, totalValor, totalAtrasado, totalQuitado };
-}
-
-function construirDados(emprestimos: Emprestimo[]): EmprestimosData {
+function apiToEmprestimo(e: ApiEmprestimo): Emprestimo {
   return {
-    emprestimos,
-    resumo: calcularResumo(emprestimos),
+    id: e.id,
+    nome: e.name,
+    tipo: e.type === 'LOAN' ? 'recebido' : 'feito',
+    valor: Number(e.totalAmount) || 0,
+    juros: Number(e.interestRate) || 0,
+    parcelas: e.parcels ?? 0,
+    parcelasPagas: e.parcelasPagas ?? 0,
+    dataVencimento: e.dueDate ? e.dueDate.split('T')[0] : '',
+    situacao: e.status || 'em_dia',
+    observacoes: e.notes || undefined,
+    categoria: e.category?.name || 'Geral',
+    categoriaCor: e.category?.color || '#8b5cf6',
+    categoriaIcone: e.category?.icon || '📋',
   };
 }
 
+function calcResumo(items: Emprestimo[]): EmprestimosData['resumo'] {
+  return {
+    totalEmprestimos: items.length,
+    totalValor: items.reduce((a, x) => a + x.valor, 0),
+    totalAtrasado: items.filter(x => x.situacao === 'atrasada').reduce((a, x) => a + x.valor, 0),
+    totalQuitado: items.filter(x => x.situacao === 'quitada').reduce((a, x) => a + x.valor, 0),
+  };
+}
+
+function build(items: Emprestimo[]): EmprestimosData { return { emprestimos: items, resumo: calcResumo(items) }; }
+
 export function emprestimosService() {
+  const { userId } = useAuth();
   const queryClient = useQueryClient();
 
-  const { data, isLoading } = useQuery({
-    queryKey: ['emprestimos'],
-    queryFn: async () => {
-      await new Promise(resolve => setTimeout(resolve, 400));
-      return construirDados(MOCK_EMPRESTIMOS);
-    },
+  const { data: emprestimos, isLoading } = useQuery({
+    queryKey: ['emprestimos', userId],
+    queryFn: () => list('emprestimos'),
+    enabled: !!userId,
     staleTime: 5 * 60 * 1000,
   });
 
+  const { data: categories } = useQuery({
+    queryKey: ['emprestimos-categorias', userId],
+    queryFn: () => list('categories'),
+    enabled: !!userId,
+    staleTime: 5 * 60 * 1000,
+  });
+
+  const categoriasList = ((categories as ApiCategory[]) || []).slice().sort((a, b) => a.name.localeCompare(b.name));
+
+  const data = build(((emprestimos as ApiEmprestimo[]) || []).map(apiToEmprestimo));
+
   const criarMutation = useMutation({
     mutationFn: async (formData: EmprestimosFormData) => {
-      await new Promise(resolve => setTimeout(resolve, 300));
-      const novoEmprestimo: Emprestimo = {
-        id: String(Date.now()),
-        nome: formData.nome,
-        tipo: formData.tipo,
-        valor: Number(formData.valor) || 0,
-        juros: Number(formData.juros) || 0,
-        parcelas: Number(formData.parcelas) || 0,
+      const categoria = categoriasList.find((c) => c.name === formData.categoria);
+      return create('emprestimos', {
+        name: formData.nome,
+        totalAmount: Number(formData.valor) || 0,
+        remainingAmount: Number(formData.valor) || 0,
+        interestRate: Number(formData.juros) || 0,
+        dueDate: formData.dataVencimento || undefined,
+        parcels: Number(formData.parcelas) || 0,
         parcelasPagas: Number(formData.parcelasPagas) || 0,
-        dataVencimento: formData.dataVencimento,
-        situacao: formData.situacao,
-        observacoes: formData.observacoes,
-        categoria: 'Geral',
-        categoriaCor: '#8b5cf6',
-        categoriaIcone: '📋',
-      };
-      return novoEmprestimo;
+        status: formData.situacao,
+        categoryId: categoria ? categoria.id : undefined,
+        notes: formData.observacoes || undefined,
+      });
     },
-    onSuccess: () => {
-      queryClient.invalidateQueries({ queryKey: ['emprestimos'] });
-    },
+    onSuccess: () => { queryClient.invalidateQueries({ queryKey: ['emprestimos', userId] }); },
   });
 
   const atualizarMutation = useMutation({
     mutationFn: async ({ id, formData }: { id: string; formData: EmprestimosFormData }) => {
-      await new Promise(resolve => setTimeout(resolve, 300));
-      return { id, formData };
+      const categoria = categoriasList.find((c) => c.name === formData.categoria);
+      return update('emprestimos', id, {
+        name: formData.nome,
+        totalAmount: Number(formData.valor) || 0,
+        interestRate: Number(formData.juros) || 0,
+        dueDate: formData.dataVencimento || undefined,
+        parcels: Number(formData.parcelas) || 0,
+        parcelasPagas: Number(formData.parcelasPagas) || 0,
+        status: formData.situacao,
+        categoryId: categoria ? categoria.id : undefined,
+        notes: formData.observacoes || undefined,
+      });
     },
-    onSuccess: () => {
-      queryClient.invalidateQueries({ queryKey: ['emprestimos'] });
-    },
+    onSuccess: () => { queryClient.invalidateQueries({ queryKey: ['emprestimos', userId] }); },
   });
 
   const excluirMutation = useMutation({
-    mutationFn: async (id: string) => {
-      await new Promise(resolve => setTimeout(resolve, 300));
-      return id;
-    },
-    onSuccess: () => {
-      queryClient.invalidateQueries({ queryKey: ['emprestimos'] });
-    },
+    mutationFn: (id: string) => remove('emprestimos', id),
+    onSuccess: () => { queryClient.invalidateQueries({ queryKey: ['emprestimos', userId] }); },
   });
 
   return {
     data,
     isLoading,
-    criar: criarMutation.mutate,
-    atualizar: atualizarMutation.mutate,
-    excluir: excluirMutation.mutate,
+    criar: criarMutation.mutateAsync,
+    atualizar: atualizarMutation.mutateAsync,
+    excluir: excluirMutation.mutateAsync,
     isSaving: criarMutation.isPending || atualizarMutation.isPending,
   };
 }

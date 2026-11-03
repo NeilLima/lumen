@@ -1,3 +1,6 @@
+export interface ApiCategory { id: string; name: string; color?: string; icon?: string; type?: string; }
+export interface ApiDebt { id: string; name: string; type?: string; totalAmount: number | string; remainingAmount?: number | string; interestRate?: number | string | null; dueDate?: string | null; parcels?: number; parcelasPagas?: number; status?: string; category?: ApiCategory | null; notes?: string | null; }
+
 export interface Divida {
   id: string; nome: string; tipo: 'pessoa' | 'empresa' | 'banco'; valor: number; parcelas: number; parcelasPagas: number;
   juros: number; dataVencimento: string; situacao: 'em_dia' | 'atrasada' | 'quitada'; categoria: string; categoriaCor: string; categoriaIcone: string; observacoes?: string;

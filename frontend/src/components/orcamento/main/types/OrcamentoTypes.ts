@@ -9,6 +9,9 @@ export interface OrcamentoCategoria {
   ano: number;
   status: 'dentro' | 'atencao' | 'estourado';
 }
+export interface ApiCategory { id: string; name: string; color?: string; icon?: string; type?: string; }
+export interface ApiBudget { id: string; categoryId?: string | null; category?: ApiCategory | null; month: string; limitAmount: number | string; spentAmount: number | string; }
+
 
 export interface OrcamentoFiltros {
   pesquisa: string;

@@ -26,6 +26,8 @@ model User {
   subscriptions   Subscription[]
   budgets         Budget[]
   notifications   Notification[]
+  metas           Meta[]
+  settings        Setting[]
 
   @@map("users")
 }
@@ -81,6 +83,7 @@ model Category {
   transactions Transaction[] @relation("CategoryTransactions")
   subscriptions Subscription[] @relation("CategorySubscriptions")
   budgets Budget[] @relation("CategoryBudgets")
+  debts Debt[] @relation("CategoryDebts")
 
   @@map("categories")
 }
@@ -154,33 +157,43 @@ model Goal {
 }
 
 model Debt {
-  id          String   @id @default(uuid())
-  userId      String
-  name        String
-  type        String   @default("DEBT") // DEBT | LOAN
-  totalAmount Decimal @db.Decimal(14, 2)
+  id             String   @id @default(uuid())
+  userId         String
+  name           String
+  type           String   @default("DEBT") // DEBT | LOAN
+  totalAmount    Decimal  @db.Decimal(14, 2)
   remainingAmount Decimal @db.Decimal(14, 2)
-  interestRate Decimal? // ao mes, %
-  dueDate     DateTime?
-  createdAt   DateTime @default(now())
-  updatedAt   DateTime @updatedAt
+  interestRate   Decimal?
+  dueDate        DateTime?
+  parcels        Int      @default(0)
+  parcelasPagas  Int      @default(0)
+  status         String   @default("em_dia") // em_dia | atrasada | quitada
+  categoryId     String?
+  notes          String?
+  createdAt      DateTime @default(now())
+  updatedAt      DateTime @updatedAt
 
-  user User @relation(fields: [userId], references: [id], onDelete: Cascade)
+  user     User      @relation(fields: [userId], references: [id], onDelete: Cascade)
+  category Category? @relation("CategoryDebts", fields: [categoryId], references: [id], onDelete: SetNull)
 
   @@index([userId])
+  @@index([categoryId])
   @@map("debts")
 }
 
 model Investment {
-  id          String   @id @default(uuid())
-  userId      String
-  name        String
-  type        String   @default("OTHER") // STOCKS | FUNDS | CRYPTO | TESOURO | CDB | OTHER
-  broker      String?
-  currentValue Decimal @db.Decimal(14, 2)
-  investedAmount Decimal @default(0) @db.Decimal(14, 2)
-  createdAt   DateTime @default(now())
-  updatedAt   DateTime @updatedAt
+  id             String   @id @default(uuid())
+  userId         String
+  name           String
+  type           String   @default("OTHER") // STOCKS | FUNDS | CRYPTO | TESOURO | CDB | OTHER
+  broker         String?
+  currentValue   Decimal  @db.Decimal(14, 2)
+  investedAmount Decimal  @default(0) @db.Decimal(14, 2)
+  appliedDate    DateTime?
+  status         String   @default("ativo")
+  notes          String?
+  createdAt      DateTime @default(now())
+  updatedAt      DateTime @updatedAt
 
   user User @relation(fields: [userId], references: [id], onDelete: Cascade)
 
@@ -213,6 +226,7 @@ model Budget {
   categoryId  String?
   month       String // YYYY-MM
   limitAmount Decimal @db.Decimal(14, 2)
+  spentAmount Decimal @default(0) @db.Decimal(14, 2)
   createdAt   DateTime @default(now())
   updatedAt   DateTime @updatedAt
 
@@ -275,4 +289,44 @@ model EstoqueItem {
 
   @@index([userId])
   @@map("estoque_itens")
+}
+
+model Setting {
+  id          String   @id @default(uuid())
+  userId      String
+  name        String
+  category    String   @default("geral")
+  value       String
+  description String?
+  createdAt   DateTime @default(now())
+  updatedAt   DateTime @updatedAt
+
+  user User @relation(fields: [userId], references: [id], onDelete: Cascade)
+
+  @@index([userId])
+  @@map("settings")
+}
+
+model Meta {
+  id             String   @id @default(uuid())
+  userId         String
+  nome           String
+  valorAlvo      Decimal  @db.Decimal(14, 2)
+  valorAtual     Decimal  @default(0) @db.Decimal(14, 2)
+  dataLimite     String
+  categoria      String
+  categoriaCor   String?
+  categoriaIcone String?
+  prioridade     String   @default("media")
+  status         String   @default("em_andamento")
+  descricao      String?
+  createdAt      DateTime @default(now())
+  updatedAt      DateTime @updatedAt
+
+  user User @relation(fields: [userId], references: [id], onDelete: Cascade)
+
+
+
+  @@index([userId])
+  @@map("metas")
 }

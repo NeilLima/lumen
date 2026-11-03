@@ -14,6 +14,13 @@ import { IncomesModule } from './modules/incomes/incomes.module.js';
 import { ProductsModule } from './modules/products/products.module.js';
 import { SubscriptionsModule } from './modules/subscriptions/subscriptions.module.js';
 import { CardsModule } from './modules/cards/cards.module.js';
+import { MetasModule } from './modules/metas/metas.module.js';
+import { OrcamentoModule } from './modules/orcamento/orcamento.module.js';
+import { DividasModule } from './modules/dividas/dividas.module.js';
+import { ConfiguracaoModule } from './modules/configuracoes/configuracao.module.js';
+import { NotificacaoModule } from './modules/notificacoes/notificacao.module.js';
+import { InvestimentoModule } from './modules/investimentos/investimento.module.js';
+import { EmprestimosModule } from './modules/emprestimos/emprestimos.module.js';
 
 @Module({
   imports: [
@@ -29,9 +36,15 @@ import { CardsModule } from './modules/cards/cards.module.js';
     ProductsModule,
     SubscriptionsModule,
     CardsModule,
+    MetasModule,
+    OrcamentoModule,
+    DividasModule,
+    ConfiguracaoModule,
+    NotificacaoModule,
+    InvestimentoModule,
+    EmprestimosModule,
   ],
   controllers: [AppController],
   providers: [AppService],
 })
 export class AppModule {}
-
