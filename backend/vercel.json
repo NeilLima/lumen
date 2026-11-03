@@ -6,6 +6,9 @@
       "destination": "/api/index?path=$1"
     }
   ],
-  "installCommand": "npm install --legacy-peer-deps",
-  "buildCommand": "npx prisma generate && npm run build"
+  "installCommand": "npm install",
+  "buildCommand": "npx prisma generate && npm run build",
+  "env": {
+    "NODE_OPTIONS": "--max-old-space-size=4096"
+  }
 }
