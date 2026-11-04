@@ -9,7 +9,7 @@ import CategoriasModalComp from '../../CategoriasModal/components/CategoriasModa
 import CategoriasDetalheComp from '../../CategoriasDetalhe/components/CategoriasDetalheComp';
 import CategoriasConfirmComp from '../../CategoriasConfirm/components/CategoriasConfirmComp';
 import CategoriasInfoComp from '../../CategoriasInfo/components/CategoriasInfoComp';
-import { useCategoriasMain } from '../utils/CategoriasMainUtils';
+import { useCategoriasMain } from '../utils/CategoriasUtils';
 import {
   StyledCategoriasLayout,
   StyledCategoriasMainContent,

@@ -80,13 +80,17 @@ export function useCategorias() {
     setFormData(prev => ({ ...prev, [campo]: valor }));
   }, []);
 
-  const salvarCategoria = useCallback(() => {
-    if (editandoId) {
-      service.atualizar({ id: editandoId, formData });
-    } else {
-      service.criar(formData);
+  const salvarCategoria = useCallback(async () => {
+    try {
+      if (editandoId) {
+        await service.atualizar({ id: editandoId, formData });
+      } else {
+        await service.criar(formData);
+      }
+      fecharModal();
+    } catch (e) {
+      console.error('Erro ao salvar categoria:', e);
     }
-    fecharModal();
   }, [editandoId, formData, service, fecharModal]);
 
   const confirmarExclusao = useCallback((item: Categoria) => {
@@ -97,9 +101,13 @@ export function useCategorias() {
     setExclusaoPendente(null);
   }, []);
 
-  const confirmarEExcluir = useCallback(() => {
+  const confirmarEExcluir = useCallback(async () => {
     if (exclusaoPendente) {
-      service.excluir(exclusaoPendente.id);
+      try {
+        await service.excluir(exclusaoPendente.id);
+      } catch (e) {
+        console.error('Erro ao excluir categoria:', e);
+      }
       setExclusaoPendente(null);
     }
   }, [exclusaoPendente, service]);
@@ -177,5 +185,42 @@ export function useCategorias() {
       formatarValor, formatarData, getStatusLabel, getStatusCor,
     },
     theme,
+  };
+}
+
+// ============================================
+// useCategoriasMain (merged)
+// ============================================
+export function useCategoriasMain() {
+  const [sidebarOpen, setSidebarOpen] = useState(false);
+  const categorias = useCategorias();
+
+  const toggleSidebar = useCallback(() => {
+    setSidebarOpen(prev => !prev);
+  }, []);
+
+  const closeSidebar = useCallback(() => {
+    setSidebarOpen(false);
+  }, []);
+
+  const handleEditarFromDetalhe = useCallback((item: typeof categorias.state.detalheCategoria) => {
+    if (item) {
+      categorias.actions.fecharDetalhe();
+      categorias.actions.abrirModalEditar(item);
+    }
+  }, [categorias.actions]);
+
+  return {
+    state: {
+      sidebarOpen,
+      ...categorias.state,
+    },
+    actions: {
+      toggleSidebar,
+      closeSidebar,
+      ...categorias.actions,
+      handleEditarFromDetalhe,
+    },
+    helpers: categorias.helpers,
   };
 }

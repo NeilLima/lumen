@@ -71,7 +71,6 @@ export class CategoriesService {
   constructor(private readonly categoriesRepository: CategoriesRepository) {}
 
   async findAll(userId: string) {
-    await this.ensureDefaultCategories(userId);
     const categories = await this.categoriesRepository.findAll(userId);
     this.logger.log(`Listadas ${categories.length} categorias para o usuário ${userId}`);
     return categories;
