@@ -1,6 +1,6 @@
 import { useCallback, useMemo, useState } from 'react';
 import { formatarValor, formatarData, parseMoeda } from '@/shared/utils/moeda';
-import { salvarCatalogo, ProdutoCatalogo } from '@/shared/catalogo/catalogoService';
+import { useProdutosService, type ApiProduct } from '../services/ProdutosServices';
 
 export interface Produto {
   id: string;
@@ -29,9 +29,8 @@ export interface ProdutosFormData {
 
 export interface ProdutosResumo {
   totalProdutos: number;
-  valorTotal: number;
-  gastoMensal: number;
-  parcelados: number;
+  totalLocais: number;
+  totalCategorias: number;
 }
 
 export interface ProdutosData {
@@ -56,28 +55,25 @@ const FORM_INICIAL: ProdutosFormData = {
   parcelas: '1',
 };
 
-const MOCK_PRODUTOS: Produto[] = [
-  { id: 'p1', nome: 'Arroz Tipo 1 (5kg)', categoria: 'Alimentos', localCompra: 'Supermercado Extra', preco: 27.9, parcelas: 1, dataCadastro: '2026-09-10' },
-  { id: 'p2', nome: 'Feijão Carioca (1kg)', categoria: 'Alimentos', localCompra: 'Supermercado Extra', preco: 8.5, parcelas: 1, dataCadastro: '2026-09-10' },
-  { id: 'p3', nome: 'Óleo de Soja (900ml)', categoria: 'Alimentos', localCompra: 'Atacado Z', preco: 7.9, parcelas: 1, dataCadastro: '2026-09-15' },
-  { id: 'p4', nome: 'Café Torrado e Moído (500g)', categoria: 'Alimentos', localCompra: 'Padaria Central', preco: 18.9, parcelas: 3, dataCadastro: '2026-10-01' },
-  { id: 'p5', nome: 'Detergente Neutro', categoria: 'Limpeza', localCompra: 'Mercado Y', preco: 2.49, parcelas: 1, dataCadastro: '2026-10-02' },
-  { id: 'p6', nome: 'Sabão em Pó (1,6kg)', categoria: 'Limpeza', localCompra: 'Atacado Z', preco: 15.9, parcelas: 2, dataCadastro: '2026-10-05' },
-  { id: 'p7', nome: 'Papel Higiênico (12 rolos)', categoria: 'Higiene', localCompra: 'Atacado Z', preco: 21.9, parcelas: 3, dataCadastro: '2026-10-08' },
-];
-
 const CATEGORIAS_PADRAO = ['Alimentos', 'Bebidas', 'Limpeza', 'Higiene', 'Eletrônicos', 'Vestuário', 'Outros'];
+
+function apiToProduto(p: ApiProduct): Produto {
+  return {
+    id: p.id,
+    nome: p.name,
+    categoria: p.category,
+    localCompra: p.local || 'Não informado',
+    preco: Number(p.price) || 0,
+    parcelas: p.installments || 1,
+    dataCadastro: new Date().toISOString().split('T')[0],
+  };
+}
 
 function calcularResumo(produtos: Produto[]): ProdutosResumo {
   const totalProdutos = produtos.length;
-  const valorTotal = produtos.reduce((acc, p) => acc + p.preco, 0);
-  // Quanto sai neste mês: à vista integral ou 1x do parcelado
-  const gastoMensal = produtos.reduce(
-    (acc, p) => acc + (p.parcelas > 1 ? p.preco / p.parcelas : p.preco),
-    0
-  );
-  const parcelados = produtos.filter(p => p.parcelas > 1).length;
-  return { totalProdutos, valorTotal, gastoMensal, parcelados };
+  const totalLocais = new Set(produtos.map(p => p.localCompra)).size;
+  const totalCategorias = new Set(produtos.map(p => p.categoria)).size;
+  return { totalProdutos, totalLocais, totalCategorias };
 }
 
 function construirDados(produtos: Produto[]): ProdutosData {
@@ -93,45 +89,42 @@ function construirDados(produtos: Produto[]): ProdutosData {
   };
 }
 
-function sincronizarCatalogo(produtos: Produto[]): void {
-  const catalogo: ProdutoCatalogo[] = produtos.map(p => ({
-    id: p.id,
-    nome: p.nome,
-    categoria: p.categoria,
-    localCompra: p.localCompra,
-    preco: p.preco,
-  }));
-  salvarCatalogo(catalogo);
-}
-
 export function useProdutosMain() {
-  const [produtos, setProdutos] = useState<Produto[]>(MOCK_PRODUTOS);
   const [sidebarOpen, setSidebarOpen] = useState(false);
+  const [viewMode, setViewMode] = useState<'card' | 'list'>('card');
   const [filtros, setFiltros] = useState<ProdutosFiltros>(FILTROS_INICIAIS);
   const [modalAberto, setModalAberto] = useState(false);
   const [editandoId, setEditandoId] = useState<string | null>(null);
   const [formData, setFormData] = useState<ProdutosFormData>(FORM_INICIAL);
   const [exclusaoPendente, setExclusaoPendente] = useState<Produto | null>(null);
 
+  const service = useProdutosService();
+
+  const produtos: Produto[] = useMemo(() => {
+    const raw = (service.data as ApiProduct[] | undefined) || [];
+    return raw.map(apiToProduto);
+  }, [service.data]);
+
   const data = useMemo(() => construirDados(produtos), [produtos]);
 
   const produtosFiltrados = useMemo(() => {
-    return produtos.filter(p => {
-      if (filtros.pesquisa && !p.nome.toLowerCase().includes(filtros.pesquisa.toLowerCase())) {
+    return produtos.filter(produto => {
+      if (filtros.pesquisa && !produto.nome.toLowerCase().includes(filtros.pesquisa.toLowerCase())) {
         return false;
       }
-      if (filtros.categoria && p.categoria !== filtros.categoria) return false;
-      // Selecionar um local no select carrega apenas os produtos daquele local
-      if (filtros.localCompra && p.localCompra !== filtros.localCompra) return false;
+      if (filtros.categoria && produto.categoria !== filtros.categoria) {
+        return false;
+      }
+      if (filtros.localCompra && produto.localCompra !== filtros.localCompra) {
+        return false;
+      }
       return true;
     });
   }, [produtos, filtros]);
 
-  // ============================================
-  // AÇÕES
-  // ============================================
-  const toggleSidebar = useCallback(() => setSidebarOpen(p => !p), []);
+  const toggleSidebar = useCallback(() => setSidebarOpen(prev => !prev), []);
   const closeSidebar = useCallback(() => setSidebarOpen(false), []);
+  const toggleViewMode = useCallback(() => setViewMode(prev => prev === 'card' ? 'list' : 'card'), []);
 
   const abrirModalNovo = useCallback(() => {
     setFormData(FORM_INICIAL);
@@ -168,41 +161,33 @@ export function useProdutosMain() {
     setFormData(prev => ({ ...prev, [campo]: valor }));
   }, []);
 
-  const salvarProduto = useCallback(() => {
+  const salvarProduto = useCallback(async () => {
     if (!formData.nome.trim()) return;
 
-    // Local novo digitado tem prioridade sobre o select
     const localFinal =
       formData.localCompra === '__novo__'
         ? formData.novoLocal.trim() || 'Não informado'
         : formData.localCompra || 'Não informado';
 
-    const base = {
-      nome: formData.nome.trim(),
-      categoria: formData.categoria || 'Outros',
-      localCompra: localFinal,
-      preco: parseMoeda(formData.preco),
-      parcelas: Math.max(1, Number(formData.parcelas) || 1),
+    const payload = {
+      name: formData.nome.trim(),
+      category: formData.categoria || 'Outros',
+      local: localFinal,
+      price: parseMoeda(formData.preco),
+      installments: Math.max(1, Number(formData.parcelas) || 1),
     };
 
-    setProdutos(prev => {
-      let atualizados: Produto[];
+    try {
       if (editandoId) {
-        atualizados = prev.map(p => (p.id === editandoId ? { ...p, ...base } : p));
+        await service.atualizar({ id: editandoId, data: payload });
       } else {
-        const novo: Produto = {
-          id: String(Date.now()),
-          dataCadastro: new Date().toISOString().split('T')[0],
-          ...base,
-        };
-        atualizados = [novo, ...prev];
+        await service.criar(payload);
       }
-      sincronizarCatalogo(atualizados);
-      return atualizados;
-    });
-
-    fecharModal();
-  }, [formData, editandoId, fecharModal]);
+      fecharModal();
+    } catch {
+      // erro tratado pelo service
+    }
+  }, [formData, editandoId, service, fecharModal]);
 
   const confirmarExclusao = useCallback((produto: Produto) => {
     setExclusaoPendente(produto);
@@ -210,32 +195,34 @@ export function useProdutosMain() {
 
   const cancelarExclusao = useCallback(() => setExclusaoPendente(null), []);
 
-  const confirmarEExcluir = useCallback(() => {
+  const confirmarEExcluir = useCallback(async () => {
     if (exclusaoPendente) {
-      setProdutos(prev => {
-        const atualizados = prev.filter(p => p.id !== exclusaoPendente.id);
-        sincronizarCatalogo(atualizados);
-        return atualizados;
-      });
+      try {
+        await service.excluir(exclusaoPendente.id);
+      } catch {
+        // erro tratado pelo service
+      }
       setExclusaoPendente(null);
     }
-  }, [exclusaoPendente]);
+  }, [exclusaoPendente, service]);
 
   return {
     state: {
       data,
       produtosFiltrados,
       filtros,
+      viewMode,
       sidebarOpen,
       modalAberto,
       editandoId,
       formData,
       exclusaoPendente,
-      isLoading: false,
+      isLoading: service.isLoading,
     },
     actions: {
       toggleSidebar,
       closeSidebar,
+      toggleViewMode,
       abrirModalNovo,
       abrirModalEditar,
       fecharModal,

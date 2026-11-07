@@ -21,6 +21,7 @@ import { ConfiguracaoModule } from './modules/configuracoes/configuracao.module.
 import { NotificacaoModule } from './modules/notificacoes/notificacao.module.js';
 import { InvestimentoModule } from './modules/investimentos/investimento.module.js';
 import { EmprestimosModule } from './modules/emprestimos/emprestimos.module.js';
+import { ComprasModule } from './modules/compras/compras.module.js';
 
 @Module({
   imports: [
@@ -43,6 +44,7 @@ import { EmprestimosModule } from './modules/emprestimos/emprestimos.module.js';
     NotificacaoModule,
     InvestimentoModule,
     EmprestimosModule,
+    ComprasModule,
   ],
   controllers: [AppController],
   providers: [AppService],

@@ -20,6 +20,7 @@ const MOCK_SIDEBAR_DATA: SidebarData = {
       { label: 'Assinaturas', icon: 'tag', active: false, path: '/assinaturas' },
       { label: 'Estoque / Dispensa', icon: 'squares-four', active: false, path: '/estoque' },
       { label: 'Produtos', icon: 'tag', active: false, path: '/produtos' },
+      { label: 'Compras', icon: 'bag', active: false, path: '/compras' },
     ],
     relatorios: [
       { label: 'Relatórios', icon: 'file-text', active: false, path: '/relatorios' },

@@ -51,10 +51,12 @@ interface ProdutosListProps {
   produtosFiltrados: Produto[];
   filtros: ProdutosFiltros;
   data: { categorias: string[]; locais: string[] };
+  viewMode: 'card' | 'list';
   formatarValor: (valor: number) => string;
   formatarData: (data: string) => string;
   onAtualizarFiltro: (campo: keyof ProdutosFiltros, valor: string) => void;
   onLimparFiltros: () => void;
+  onToggleViewMode: () => void;
   onAbrirModalEditar: (produto: Produto) => void;
   onConfirmarExclusao: (produto: Produto) => void;
 }
@@ -63,10 +65,12 @@ export default function ProdutosListComp({
   produtosFiltrados,
   filtros,
   data,
+  viewMode,
   formatarValor,
   formatarData,
   onAtualizarFiltro,
   onLimparFiltros,
+  onToggleViewMode,
   onAbrirModalEditar,
   onConfirmarExclusao,
 }: ProdutosListProps) {
@@ -76,11 +80,19 @@ export default function ProdutosListComp({
     <StyledProdutosCard>
       <StyledProdutosCardHeader>
         <StyledProdutosCardTitle>Lista de Produtos ({produtosFiltrados.length})</StyledProdutosCardTitle>
-        {temFiltros && (
-          <StyledProdutosButton $variant="ghost" onClick={onLimparFiltros}>
-            Limpar filtros
+        <div style={{ display: 'flex', gap: '8px', alignItems: 'center' }}>
+          <StyledProdutosButton $variant={viewMode === 'card' ? 'primary' : 'ghost'} onClick={viewMode !== 'card' ? onToggleViewMode : undefined}>
+            ▦ Cards
           </StyledProdutosButton>
-        )}
+          <StyledProdutosButton $variant={viewMode === 'list' ? 'primary' : 'ghost'} onClick={viewMode !== 'list' ? onToggleViewMode : undefined}>
+            ☰ Lista
+          </StyledProdutosButton>
+          {temFiltros && (
+            <StyledProdutosButton $variant="ghost" onClick={onLimparFiltros}>
+              Limpar filtros
+            </StyledProdutosButton>
+          )}
+        </div>
       </StyledProdutosCardHeader>
 
       <StyledProdutosFilterBar>
@@ -120,7 +132,7 @@ export default function ProdutosListComp({
               : 'Comece cadastrando seu primeiro produto.'}
           </StyledProdutosEmptyText>
         </StyledProdutosEmptyState>
-      ) : (
+      ) : viewMode === 'card' ? (
         <StyledProdutosList>
           {produtosFiltrados.map(produto => {
             const cor = COR_CATEGORIA[produto.categoria] || '#64748b';
@@ -156,7 +168,55 @@ export default function ProdutosListComp({
             );
           })}
         </StyledProdutosList>
-      )}
+       ) : (
+         <div style={{ overflowX: 'auto' }}>
+           <table style={{ width: '100%', borderCollapse: 'collapse', fontSize: '14px' }}>
+             <thead>
+               <tr style={{ borderBottom: '1px solid rgba(255,255,255,0.1)' }}>
+                 <th style={{ textAlign: 'left', padding: '12px 8px', color: '#a0a0b0', fontWeight: 600 }}>Produto</th>
+                 <th style={{ textAlign: 'left', padding: '12px 8px', color: '#a0a0b0', fontWeight: 600 }}>Categoria</th>
+                 <th style={{ textAlign: 'left', padding: '12px 8px', color: '#a0a0b0', fontWeight: 600 }}>Local</th>
+                 <th style={{ textAlign: 'right', padding: '12px 8px', color: '#a0a0b0', fontWeight: 600 }}>Preco</th>
+                 <th style={{ textAlign: 'center', padding: '12px 8px', color: '#a0a0b0', fontWeight: 600 }}>Parcelas</th>
+                 <th style={{ textAlign: 'center', padding: '12px 8px', color: '#a0a0b0', fontWeight: 600 }}>Acoes</th>
+               </tr>
+             </thead>
+             <tbody>
+               {produtosFiltrados.map(produto => {
+                 const cor = COR_CATEGORIA[produto.categoria] || '#64748b';
+                 const icone = ICON_POR_CATEGORIA[produto.categoria] || '📦';
+                 const parcela = produto.preco / produto.parcelas;
+                 return (
+                   <tr key={produto.id} style={{ borderBottom: '1px solid rgba(255,255,255,0.05)' }}>
+                     <td style={{ padding: '12px 8px', color: '#ffffff' }}>
+                       <span style={{ marginRight: '8px' }}>{icone}</span>
+                       {produto.nome}
+                     </td>
+                     <td style={{ padding: '12px 8px' }}>
+                       <span style={{ color: cor, fontWeight: 500 }}>{produto.categoria}</span>
+                     </td>
+                     <td style={{ padding: '12px 8px', color: '#a0a0b0' }}>{produto.localCompra}</td>
+                     <td style={{ padding: '12px 8px', textAlign: 'right', color: '#ffffff', fontWeight: 600 }}>
+                       R$ {formatarValor(produto.preco)}
+                     </td>
+                     <td style={{ padding: '12px 8px', textAlign: 'center', color: '#a0a0b0' }}>
+                       {produto.parcelas > 1 ? `${produto.parcelas}x de R$ ${formatarValor(parcela)}` : '1x'}
+                     </td>
+                     <td style={{ padding: '12px 8px', textAlign: 'center' }}>
+                       <StyledProdutoIconButton title="Editar" onClick={() => onAbrirModalEditar(produto)}>
+                         ✏️
+                       </StyledProdutoIconButton>
+                       <StyledProdutoIconButton title="Excluir" $color="#ef4444" onClick={() => onConfirmarExclusao(produto)}>
+                         🗑️
+                       </StyledProdutoIconButton>
+                     </td>
+                   </tr>
+                 );
+               })}
+             </tbody>
+           </table>
+         </div>
+       )}
     </StyledProdutosCard>
   );
 }

@@ -8,22 +8,34 @@ export class ProductsService {
   constructor(private readonly productsRepository: ProductsRepository) {}
 
   async findAll(userId: string) {
-    return this.productsRepository.findAll(userId);
+    const products = await this.productsRepository.findAll(userId);
+    return products.map((p) => this.map(p));
   }
 
   async findById(userId: string, id: string) {
     const p = await this.productsRepository.findById(userId, id);
     if (!p) return null;
-    return p;
+    return this.map(p);
+  }
+
+  private map(p: { id: string; userId: string; name: string; category: string; unit: string; local: string | null; price: unknown; installments: number; createdAt: Date; updatedAt: Date }) {
+    return {
+      ...p,
+      price: p.price != null ? Number(p.price) : null,
+    };
   }
 
   async create(userId: string, dto: CreateProductDto) {
-    return this.productsRepository.create(userId, {
+    const created = await this.productsRepository.create(userId, {
       userId,
       name: dto.name,
       category: dto.category,
       unit: dto.unit ?? 'un',
+      local: dto.local ?? null,
+      price: dto.price ?? null,
+      installments: dto.installments ?? 1,
     });
+    return this.map(created);
   }
 
   async update(userId: string, id: string, dto: UpdateProductDto) {
@@ -33,10 +45,13 @@ export class ProductsService {
       ...(dto.name !== undefined ? { name: dto.name } : {}),
       ...(dto.category !== undefined ? { category: dto.category } : {}),
       ...(dto.unit !== undefined ? { unit: dto.unit } : {}),
+      ...(dto.local !== undefined ? { local: dto.local } : {}),
+      ...(dto.price !== undefined ? { price: dto.price } : {}),
+      ...(dto.installments !== undefined ? { installments: dto.installments } : {}),
     });
     const p = await this.productsRepository.findById(userId, id);
     if (!p) throw new NotFoundException('Produto não encontrado');
-    return p;
+    return this.map(p);
   }
 
   async remove(userId: string, id: string) {

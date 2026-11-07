@@ -31,17 +31,18 @@ export default function ProdutosMainComp() {
 
           <ProdutosResumoComp
             resumo={state.data.resumo}
-            formatarValor={helpers.formatarValor}
           />
 
           <ProdutosListComp
             produtosFiltrados={state.produtosFiltrados}
             filtros={state.filtros}
             data={state.data}
+            viewMode={state.viewMode}
             formatarValor={helpers.formatarValor}
             formatarData={helpers.formatarData}
             onAtualizarFiltro={actions.atualizarFiltro}
             onLimparFiltros={actions.limparFiltros}
+            onToggleViewMode={actions.toggleViewMode}
             onAbrirModalEditar={actions.abrirModalEditar}
             onConfirmarExclusao={actions.confirmarExclusao}
           />

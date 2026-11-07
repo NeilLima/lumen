@@ -1,18 +1,32 @@
 /* eslint-disable prettier/prettier */
-import { IsString, IsNotEmpty, IsOptional } from 'class-validator';
+import { IsString, IsNotEmpty, IsOptional, IsNumber, Min } from 'class-validator';
 
 export class CreateProductDto {
   @IsString()
   @IsNotEmpty({ message: 'Nome é obrigatório' })
-  name: string;
+  name!: string;
 
   @IsString()
   @IsNotEmpty({ message: 'Categoria é obrigatória' })
-  category: string;
+  category!: string;
 
   @IsString()
   @IsOptional()
   unit?: string;
+
+  @IsString()
+  @IsOptional()
+  local?: string;
+
+  @IsNumber()
+  @IsOptional()
+  @Min(0)
+  price?: number;
+
+  @IsNumber()
+  @IsOptional()
+  @Min(1)
+  installments?: number;
 }
 
 export class UpdateProductDto {
@@ -27,4 +41,18 @@ export class UpdateProductDto {
   @IsString()
   @IsOptional()
   unit?: string;
+
+  @IsString()
+  @IsOptional()
+  local?: string;
+
+  @IsNumber()
+  @IsOptional()
+  @Min(0)
+  price?: number;
+
+  @IsNumber()
+  @IsOptional()
+  @Min(1)
+  installments?: number;
 }
