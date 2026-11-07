@@ -1,4 +1,4 @@
-import styled from 'styled-components';
+ï»¿import styled from 'styled-components';
 
 // ============================================
 // HEADER
@@ -35,7 +35,7 @@ export const StyledComprasSubtitle = styled.p`
 `;
 
 // ============================================
-// BOTÕES
+// BOTOES
 // ============================================
 export const StyledButton = styled.button<{ $variant?: 'primary' | 'secondary' | 'danger' | 'ghost' }>`
   display: inline-flex;
@@ -101,7 +101,7 @@ export const StyledButton = styled.button<{ $variant?: 'primary' | 'secondary' |
 `;
 
 // ============================================
-// BOTÃO DE INFO NO TÍTULO
+// BOTAO DE INFO NO TITULO
 // ============================================
 export const StyledInfoButton = styled.button`
   display: inline-flex;

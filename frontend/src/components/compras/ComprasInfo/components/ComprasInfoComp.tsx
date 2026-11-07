@@ -1,4 +1,4 @@
-'use client';
+ï»¿'use client';
 
 import type { ComprasInfoProps } from '../types/ComprasInfoTypes';
 import {
@@ -18,13 +18,13 @@ export default function ComprasInfoComp({ modalInfoAberto, onFecharInfo }: Compr
     <StyledInfoOverlay $visible={modalInfoAberto} onClick={onFecharInfo}>
       <StyledInfoModal onClick={e => e.stopPropagation()}>
         <StyledModalHeader>
-          <StyledModalTitle>Sobre a Página de Compras</StyledModalTitle>
+          <StyledModalTitle>Sobre a Pagina de Compras</StyledModalTitle>
           <StyledModalClose onClick={onFecharInfo}>?</StyledModalClose>
         </StyledModalHeader>
         <StyledInfoTitle>Controle todas as suas compras</StyledInfoTitle>
         <StyledInfoText>
-          A página de Compras permite que você cadastre, edite e acompanhe todas as suas compras
-          em um único lugar. Mantenha seu controle financeiro sempre atualizado.
+          A pagina de Compras permite que vocï¿½ cadastre, edite e acompanhe todas as suas compras
+          em um unico lugar. Mantenha seu controle financeiro sempre atualizado.
         </StyledInfoText>
         <StyledModalActions>
           <StyledButton $variant="primary" onClick={onFecharInfo}>Entendi</StyledButton>
