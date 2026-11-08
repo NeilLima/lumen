@@ -1,0 +1,19 @@
+botao: {
+  "rect": {
+    "x": 1106.109375,
+    "y": 173.5,
+    "w": 141.890625,
+    "h": 37
+  },
+  "display": "flex",
+  "visibility": "visible",
+  "opacity": "1",
+  "disabled": false,
+  "topElement": "BUTTON.C-Users-victor-Documents-GitHub-lumen-frontend-src-components-receitas-ReceitasH",
+  "viewport": {
+    "w": 1280,
+    "h": 720
+  }
+}
+screenshot salvo em scripts/probes/debug-ui.png
+fim

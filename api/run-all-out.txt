@@ -1,0 +1,151 @@
+Executando 4 probe(s): categories-receitas.cjs, contas-crud.cjs, incomes-crud.cjs, ui-receitas.cjs
+
+
+Probe: categorias de receita
+node:internal/process/promises:394
+    triggerUncaughtException(err, true /* fromPromise */);
+    ^
+
+[TypeError: fetch failed] {
+  [cause]: AggregateError [ECONNREFUSED]: 
+      at internalConnectMultiple (node:net:1142:49)
+      at afterConnectMultiple (node:net:1723:7) {
+    code: 'ECONNREFUSED',
+    [errors]: [
+      Error: connect ECONNREFUSED ::1:3002
+          at createConnectionError (node:net:1686:14)
+          at afterConnectMultiple (node:net:1716:16) {
+        errno: -4078,
+        code: 'ECONNREFUSED',
+        syscall: 'connect',
+        address: '::1',
+        port: 3002
+      },
+      Error: connect ECONNREFUSED 127.0.0.1:3002
+          at createConnectionError (node:net:1686:14)
+          at afterConnectMultiple (node:net:1716:16) {
+        errno: -4078,
+        code: 'ECONNREFUSED',
+        syscall: 'connect',
+        address: '127.0.0.1',
+        port: 3002
+      }
+    ]
+  }
+}
+
+Node.js v24.14.1
+
+Probe: CRUD de contas (accounts)
+node:internal/process/promises:394
+    triggerUncaughtException(err, true /* fromPromise */);
+    ^
+
+[TypeError: fetch failed] {
+  [cause]: AggregateError [ECONNREFUSED]: 
+      at internalConnectMultiple (node:net:1142:49)
+      at afterConnectMultiple (node:net:1723:7) {
+    code: 'ECONNREFUSED',
+    [errors]: [
+      Error: connect ECONNREFUSED ::1:3002
+          at createConnectionError (node:net:1686:14)
+          at afterConnectMultiple (node:net:1716:16) {
+        errno: -4078,
+        code: 'ECONNREFUSED',
+        syscall: 'connect',
+        address: '::1',
+        port: 3002
+      },
+      Error: connect ECONNREFUSED 127.0.0.1:3002
+          at createConnectionError (node:net:1686:14)
+          at afterConnectMultiple (node:net:1716:16) {
+        errno: -4078,
+        code: 'ECONNREFUSED',
+        syscall: 'connect',
+        address: '127.0.0.1',
+        port: 3002
+      }
+    ]
+  }
+}
+
+Node.js v24.14.1
+
+Probe: CRUD de receitas (incomes)
+node:internal/process/promises:394
+    triggerUncaughtException(err, true /* fromPromise */);
+    ^
+
+[TypeError: fetch failed] {
+  [cause]: AggregateError [ECONNREFUSED]: 
+      at internalConnectMultiple (node:net:1142:49)
+      at afterConnectMultiple (node:net:1723:7) {
+    code: 'ECONNREFUSED',
+    [errors]: [
+      Error: connect ECONNREFUSED ::1:3002
+          at createConnectionError (node:net:1686:14)
+          at afterConnectMultiple (node:net:1716:16) {
+        errno: -4078,
+        code: 'ECONNREFUSED',
+        syscall: 'connect',
+        address: '::1',
+        port: 3002
+      },
+      Error: connect ECONNREFUSED 127.0.0.1:3002
+          at createConnectionError (node:net:1686:14)
+          at afterConnectMultiple (node:net:1716:16) {
+        errno: -4078,
+        code: 'ECONNREFUSED',
+        syscall: 'connect',
+        address: '127.0.0.1',
+        port: 3002
+      }
+    ]
+  }
+}
+
+Node.js v24.14.1
+
+Probe: UI de Receitas (fluxo completo)
+node:internal/process/promises:394
+    triggerUncaughtException(err, true /* fromPromise */);
+    ^
+
+[TypeError: fetch failed] {
+  [cause]: AggregateError [ECONNREFUSED]: 
+      at internalConnectMultiple (node:net:1142:49)
+      at afterConnectMultiple (node:net:1723:7) {
+    code: 'ECONNREFUSED',
+    [errors]: [
+      Error: connect ECONNREFUSED ::1:3002
+          at createConnectionError (node:net:1686:14)
+          at afterConnectMultiple (node:net:1716:16) {
+        errno: -4078,
+        code: 'ECONNREFUSED',
+        syscall: 'connect',
+        address: '::1',
+        port: 3002
+      },
+      Error: connect ECONNREFUSED 127.0.0.1:3002
+          at createConnectionError (node:net:1686:14)
+          at afterConnectMultiple (node:net:1716:16) {
+        errno: -4078,
+        code: 'ECONNREFUSED',
+        syscall: 'connect',
+        address: '127.0.0.1',
+        port: 3002
+      }
+    ]
+  }
+}
+
+Node.js v24.14.1
+
+========================================
+RESUMO DA EXECUCAO UNICA
+========================================
+❌ categories-receitas.cjs (exit 1)
+❌ contas-crud.cjs (exit 1)
+❌ incomes-crud.cjs (exit 1)
+❌ ui-receitas.cjs (exit 1)
+========================================

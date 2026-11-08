@@ -34,6 +34,7 @@ export default function EstoqueModalComp({
   editandoId,
   formData,
   data,
+  formatarValor,
   onFecharModal,
   onAtualizarForm,
   onSalvarItem,

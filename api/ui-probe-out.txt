@@ -1,0 +1,15 @@
+
+Probe: UI de Receitas (fluxo completo)
+  ✅ conta de teste criada (status 201)
+  ✅ tela /receitas abriu e renderizou o header
+  ✅ estado vazio exibido para usuario novo
+  ℹ️  excecao: page.click: Timeout 60000ms exceeded.
+Call log:
+[2m  - waiting for locator('[data-testid="receitas-nova-receita"]')[22m
+[2m    - locator resolved to <button data-testid="receitas-nova-receita" class="C-Users-victor-Documents-GitHub-lumen-frontend-src-components-receitas-ReceitasHeader-styles-ReceitasHeaderStyles__StyledButton-sc-75615315-3 fbTDHS">+ Nova Receita</button>[22m
+[2m  - attempting click action[22m
+[2m    - waiting for element to be visible, enabled and stable[22m
+
+  ❌ probe de UI terminou sem excecoes
+
+Resultado: 3 passaram, 1 falharam

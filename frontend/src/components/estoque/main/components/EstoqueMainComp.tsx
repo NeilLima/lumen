@@ -63,6 +63,7 @@ export default function EstoqueMainComp() {
             editandoId={state.editandoId}
             formData={state.formData}
             data={state.data || { categorias: [], locais: [] }}
+            formatarValor={helpers.formatarValor}
             onFecharModal={actions.fecharModal}
             onAtualizarForm={actions.atualizarForm}
             onSalvarItem={actions.salvarItem}
