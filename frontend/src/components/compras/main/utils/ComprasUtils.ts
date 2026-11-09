@@ -4,14 +4,14 @@ import { useState, useMemo, useCallback, useEffect } from 'react';
 import { list } from '@/services/crudService';
 import { comprasService } from '../services/ComprasServices';
 import { useTheme } from '@/context/theme/ThemeContext';
-import type { Compra, CompraFilters, CreateCompraPayload } from '../types/ComprasTypes';
+import type { Compra, CompraFilters, CreateCompraPayload, ContaOpcao } from '../types/ComprasTypes';
 
 // ============================================
 // 1 VARI�VEIS
 // ============================================
 const FILTROS_INICIAIS: CompraFilters = { pesquisa: '', statusPagamento: '' };
 
-const FORM_INICIAL: CreateCompraPayload = { local: '', statusPagamento: 'pendente', itens: [] };
+const FORM_INICIAL: CreateCompraPayload = { local: '', statusPagamento: 'pendente', accountId: '', itens: [] };
 
 const STATUS_LABELS: Record<string, string> = {
   pago: 'Pago',
@@ -48,6 +48,7 @@ export function useComprasUtils() {
 
   const [produtos, setProdutos] = useState<any[]>([]);
   const [locais, setLocais] = useState<any[]>([]);
+  const [contas, setContas] = useState<ContaOpcao[]>([]);
 
   useEffect(() => {
     list('products')
@@ -62,6 +63,19 @@ export function useComprasUtils() {
         }));
         setProdutos(mapped);
         setLocais([...new Set(mapped.map((p: any) => p.localCompra).filter(Boolean))]);
+      })
+      .catch(() => {});
+
+    list('accounts')
+      .then((data) => {
+        const arr = Array.isArray(data) ? data : (data?.data || []);
+        setContas(
+          arr.map((a: any) => ({
+            id: a.id,
+            name: a.name,
+            balance: Number(a.balance) || 0,
+          }))
+        );
       })
       .catch(() => {});
   }, []);
@@ -97,6 +111,7 @@ export function useComprasUtils() {
     setFormData({
       local: compra.local || '',
       statusPagamento: compra.statusPagamento || 'pendente',
+      accountId: compra.accountId || '',
       itens: (compra.itens || []).map(i => ({ productId: i.productId || undefined, nome: i.nome, quantidade: i.quantidade, unidade: i.unidade, precoUnitario: i.precoUnitario })),
     });
     setEditandoId(compra.id);
@@ -263,6 +278,7 @@ export function useComprasUtils() {
       showLocalSelector,
       produtos,
       locais,
+      contas,
     },
     actions: {
       abrirModalNovo,

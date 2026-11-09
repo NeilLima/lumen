@@ -16,11 +16,6 @@ import { useDashboardMain } from '../utils/DashboardMainUtils';
 import {
   StyledDashboardLayout,
   StyledMainContent,
-  StyledKpiRow,
-  StyledKpiCard,
-  StyledKpiLabel,
-  StyledKpiValue,
-  StyledKpiSubtitle,
   StyledContentGrid,
   StyledLeftColumn,
   StyledRightColumn,
@@ -49,28 +44,7 @@ export default function DashboardMainComp() {
       <StyledMainContent theme={theme}>
         <HeaderComp />
 
-        <StyledKpiRow>
-          <StyledKpiCard theme={theme} $accentColor="#10b981">
-            <StyledKpiLabel theme={theme}>Saldo Total</StyledKpiLabel>
-            <StyledKpiValue theme={theme}>R$ 0,00</StyledKpiValue>
-            <StyledKpiSubtitle theme={theme}>em relação ao mês anterior</StyledKpiSubtitle>
-          </StyledKpiCard>
-          <StyledKpiCard theme={theme} $accentColor="#f59e0b">
-            <StyledKpiLabel theme={theme}>Receitas</StyledKpiLabel>
-            <StyledKpiValue theme={theme}>R$ 0,00</StyledKpiValue>
-            <StyledKpiSubtitle theme={theme}>este mês</StyledKpiSubtitle>
-          </StyledKpiCard>
-          <StyledKpiCard theme={theme} $accentColor="#ef4444">
-            <StyledKpiLabel theme={theme}>Despesas</StyledKpiLabel>
-            <StyledKpiValue theme={theme}>R$ 0,00</StyledKpiValue>
-            <StyledKpiSubtitle theme={theme}>este mês</StyledKpiSubtitle>
-          </StyledKpiCard>
-          <StyledKpiCard theme={theme} $accentColor="#8b5cf6">
-            <StyledKpiLabel theme={theme}>Economia</StyledKpiLabel>
-            <StyledKpiValue theme={theme}>R$ 0,00</StyledKpiValue>
-            <StyledKpiSubtitle theme={theme}>em relação ao mês anterior</StyledKpiSubtitle>
-          </StyledKpiCard>
-        </StyledKpiRow>
+        <KpiCardsComp />
 
         <StyledContentGrid>
           <StyledLeftColumn>

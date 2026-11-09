@@ -4,9 +4,10 @@ import { ComprasController } from './controllers/compras.controller.js';
 import { ComprasService } from './services/compras.service.js';
 import { ComprasRepository } from './repository/compras.repository.js';
 import { DividasModule } from '../dividas/dividas.module.js';
+import { TransactionsModule } from '../transactions/transactions.module.js';
 
 @Module({
-  imports: [DividasModule],
+  imports: [DividasModule, TransactionsModule],
   controllers: [ComprasController],
   providers: [ComprasService, ComprasRepository],
   exports: [ComprasService],

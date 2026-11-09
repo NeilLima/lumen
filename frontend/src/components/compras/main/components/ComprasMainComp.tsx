@@ -100,6 +100,7 @@ export default function ComprasMainComp() {
             onSelectLocal={(local: string) => { actions.atualizarForm('local', local); actions.setShowLocalSelector(false); }}
             produtos={state.produtos}
             locais={state.locais}
+            contas={state.contas}
             total={state.formData.itens.reduce((a: number, i: any) => a + i.quantidade * i.precoUnitario, 0)}
           />
 

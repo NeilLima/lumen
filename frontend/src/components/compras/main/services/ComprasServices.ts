@@ -92,6 +92,8 @@ export function comprasService() {
     onSuccess: () => {
       queryClient.invalidateQueries({ queryKey: ['compras', userId] });
       queryClient.invalidateQueries({ queryKey: ['dashboard'] });
+      queryClient.invalidateQueries({ queryKey: ['accounts'] });
+      queryClient.invalidateQueries({ queryKey: ['transactions'] });
     },
   });
 
@@ -100,6 +102,8 @@ export function comprasService() {
     onSuccess: () => {
       queryClient.invalidateQueries({ queryKey: ['compras', userId] });
       queryClient.invalidateQueries({ queryKey: ['dashboard'] });
+      queryClient.invalidateQueries({ queryKey: ['accounts'] });
+      queryClient.invalidateQueries({ queryKey: ['transactions'] });
     },
   });
 
@@ -108,6 +112,8 @@ export function comprasService() {
     onSuccess: () => {
       queryClient.invalidateQueries({ queryKey: ['compras', userId] });
       queryClient.invalidateQueries({ queryKey: ['dashboard'] });
+      queryClient.invalidateQueries({ queryKey: ['accounts'] });
+      queryClient.invalidateQueries({ queryKey: ['transactions'] });
     },
   });
 

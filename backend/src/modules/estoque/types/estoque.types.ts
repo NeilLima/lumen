@@ -15,9 +15,21 @@ export interface EstoqueItemResponse {
   preco: number;
   localCompra: string;
   quantidadeMinima: number;
+  compraItemId?: string | null;
+  compraItem?: {
+    id: string;
+    nome: string;
+    quantidade: number;
+    precoUnitario: number;
+  } | null;
   dataAtualizacao: Date;
   createdAt: Date;
   updatedAt: Date;
+  product?: {
+    id: string;
+    name: string;
+    // Add other product fields as needed
+  };
 }
 
 export interface DeleteResult {

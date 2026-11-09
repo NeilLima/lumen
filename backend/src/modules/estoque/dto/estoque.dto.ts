@@ -1,34 +1,38 @@
 /* eslint-disable prettier/prettier */
-import { IsString, IsNotEmpty, IsOptional, IsNumber, Min } from 'class-validator';
+import { IsString, IsOptional, IsNumber, Min } from 'class-validator';
 
 export class CreateEstoqueItemDto {
   @IsString()
-  @IsNotEmpty({ message: 'Nome é obrigatório' })
-  nome: string;
+  @IsOptional({ message: 'Nome pode ser preenchido manualmente ou vindo da compra' })
+  nome?: string;
 
   @IsString()
-  @IsNotEmpty({ message: 'Categoria é obrigatória' })
-  categoria: string;
+  @IsOptional({ message: 'Categoria deve ser puxada da compra ou produto' })
+  categoria?: string;
 
-  @IsNumber({}, { message: 'Quantidade deve ser um número' })
-  @Min(0, { message: 'Quantidade não pode ser negativa' })
-  quantidade: number;
-
-  @IsString()
-  @IsNotEmpty({ message: 'Unidade é obrigatória' })
-  unidade: string;
-
-  @IsNumber({}, { message: 'Preço deve ser um número' })
-  @Min(0, { message: 'Preço não pode ser negativo' })
-  preco: number;
+  @IsNumber({}, { message: 'Quantidade deve ser um n\u00fademero' })
+  @Min(0, { message: 'Quantidade n\u00e3o pode ser negativa' })
+  quantidade: number = 0;
 
   @IsString()
-  @IsNotEmpty({ message: 'Local de compra é obrigatório' })
-  localCompra: string;
+  @IsOptional({ message: 'Unidade pode ser preenchida manualmente' })
+  unidade?: string;
 
-  @IsNumber({}, { message: 'Quantidade mínima deve ser um número' })
-  @Min(0, { message: 'Quantidade mínima não pode ser negativa' })
-  quantidadeMinima: number;
+  @IsNumber({}, { message: 'Pre\u00e7o deve ser um n\u00fademero' })
+  @Min(0, { message: 'Pre\u00e7o n\u00e3o pode ser negativo' })
+  preco?: number;
+
+  @IsString()
+  @IsOptional({ message: 'Local de compra n\u00e3o \u00e9 obrigat\u00f3rio aqui' })
+  localCompra?: string;
+
+  @IsNumber({}, { message: 'Quantidade m\u00ednima deve ser um n\u00fademero' })
+  @Min(0, { message: 'Quantidade m\u00ednima n\u00e3o pode ser negativa' })
+  quantidadeMinima: number = 0;
+
+  @IsString()
+  @IsOptional({ message: 'Item de compra de origem \u00e9 opcional' })
+  compraItemId?: string;
 }
 
 export class UpdateEstoqueItemDto {
@@ -62,4 +66,8 @@ export class UpdateEstoqueItemDto {
   @Min(0)
   @IsOptional()
   quantidadeMinima?: number;
+
+  @IsString()
+  @IsOptional()
+  compraItemId?: string;
 }

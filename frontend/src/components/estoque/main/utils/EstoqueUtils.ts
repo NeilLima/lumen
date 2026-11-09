@@ -16,7 +16,6 @@ const FILTROS_INICIAIS: EstoqueFiltros = {
 };
 
 const FORM_INICIAL: EstoqueFormData = {
-  produtoCatalogoId: '',
   nome: '',
   categoria: '',
   localCompra: '',
@@ -24,6 +23,7 @@ const FORM_INICIAL: EstoqueFormData = {
   unidade: 'un',
   preco: '',
   quantidadeMinima: '',
+  compraItemId: '',
 };
 
 const STATUS_CORES: Record<string, string> = {
@@ -89,7 +89,6 @@ export function useEstoqueUtils() {
 
   const abrirModalEditar = useCallback((item: EstoqueItem) => {
     setFormData({
-      produtoCatalogoId: '',
       nome: item.nome,
       categoria: item.categoria,
       localCompra: item.localCompra,
@@ -97,6 +96,7 @@ export function useEstoqueUtils() {
       unidade: item.unidade,
       preco: formatarValor(item.preco),
       quantidadeMinima: String(item.quantidadeMinima),
+      compraItemId: item.compraItemId ?? '',
     });
     setEditandoId(item.id);
     setModalAberto(true);
@@ -107,6 +107,21 @@ export function useEstoqueUtils() {
     setEditandoId(null);
     setFormData(FORM_INICIAL);
   }, []);
+
+  const selecionarCompraItem = useCallback((compraItemId: string) => {
+    const item = service.itensCompra.find(i => i.id === compraItemId);
+    if (!item) return;
+    setFormData(prev => ({
+      ...prev,
+      nome: item.nome,
+      categoria: item.categoria,
+      localCompra: item.localCompra,
+      quantidade: String(item.quantidade),
+      unidade: item.unidade,
+      preco: formatarValor(item.preco),
+      compraItemId: item.id,
+    }));
+  }, [service.itensCompra]);
 
   const atualizarFiltro = useCallback((campo: keyof EstoqueFiltros, valor: string) => {
     setFiltros(prev => ({ ...prev, [campo]: valor }));
@@ -121,12 +136,23 @@ export function useEstoqueUtils() {
   const salvarItem = useCallback(async () => {
     if (!formData.nome.trim()) return;
 
+    const payload = {
+      nome: formData.nome,
+      categoria: formData.categoria,
+      localCompra: formData.localCompra,
+      quantidade: Number(formData.quantidade) || 0,
+      unidade: formData.unidade,
+      preco: parseMoeda(formData.preco),
+      quantidadeMinima: Number(formData.quantidadeMinima) || 0,
+      ...(formData.compraItemId ? { compraItemId: formData.compraItemId } : {}),
+    };
+
     try {
       if (editandoId) {
-        await service.atualizar({ id: editandoId, fd: formData });
+        await service.atualizar({ id: editandoId, fd: payload });
         setFeedback({ tipo: 'sucesso', titulo: 'Item atualizado', mensagem: 'O item foi atualizado com sucesso.' });
       } else {
-        await service.criar(formData);
+        await service.criar(payload);
         setFeedback({ tipo: 'sucesso', titulo: 'Item criado', mensagem: 'O item foi cadastrado com sucesso.' });
       }
       fecharModal();
@@ -185,6 +211,7 @@ export function useEstoqueUtils() {
   return {
     state: {
       data: service.data,
+      itensCompra: service.itensCompra,
       isLoading: service.isLoading,
       filtros,
       itensFiltrados,
@@ -218,6 +245,7 @@ export function useEstoqueUtils() {
       abrirInfo,
       fecharInfo,
     fecharFeedback,
+    selecionarCompraItem,
 
     },
     helpers: {

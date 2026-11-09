@@ -8,6 +8,5 @@ export interface SidebarSection {
 export interface SidebarData {
   sections: Record<string, SidebarSection[]>;
   userName: string;
-  userPlan: string;
   userInitial: string;
 }

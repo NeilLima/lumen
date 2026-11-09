@@ -9,6 +9,7 @@ import CategoriasModalComp from '../../CategoriasModal/components/CategoriasModa
 import CategoriasDetalheComp from '../../CategoriasDetalhe/components/CategoriasDetalheComp';
 import CategoriasConfirmComp from '../../CategoriasConfirm/components/CategoriasConfirmComp';
 import CategoriasInfoComp from '../../CategoriasInfo/components/CategoriasInfoComp';
+import { FeedbackModalComp } from '@/shared/feedback';
 import { useCategoriasMain } from '../utils/CategoriasUtils';
 import {
   StyledCategoriasLayout,
@@ -83,6 +84,10 @@ export default function CategoriasMainComp() {
           <CategoriasInfoComp
             modalInfoAberto={state.modalInfoAberto}
             onFecharInfo={actions.fecharInfo}
+          />
+          <FeedbackModalComp
+            feedback={state.feedback}
+            onFechar={actions.fecharFeedback}
           />
         </StyledCategoriasContainer>
       </StyledCategoriasMainContent>

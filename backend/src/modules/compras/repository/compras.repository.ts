@@ -10,7 +10,7 @@ export class ComprasRepository {
   async findAll(userId: string) {
     return this.prisma.compra.findMany({
       where: { userId },
-      include: { itens: true },
+      include: { itens: { include: { product: true } }, account: { select: { id: true, name: true } } },
       orderBy: { dataCompra: 'desc' },
     });
   }
@@ -18,7 +18,7 @@ export class ComprasRepository {
   async findById(userId: string, id: string) {
     return this.prisma.compra.findFirst({
       where: { id, userId },
-      include: { itens: true },
+      include: { itens: { include: { product: true } }, account: { select: { id: true, name: true } } },
     });
   }
 

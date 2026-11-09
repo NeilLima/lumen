@@ -11,11 +11,12 @@ export class EstoqueRepository {
     return this.prisma.estoqueItem.findMany({
       where: { userId },
       orderBy: { dataAtualizacao: 'desc' },
+      include: { product: true, compraItem: true },
     });
   }
 
   async findById(userId: string, id: string) {
-    return this.prisma.estoqueItem.findFirst({ where: { id, userId } });
+    return this.prisma.estoqueItem.findFirst({ where: { id, userId }, include: { product: true, compraItem: true } });
   }
 
   async create(userId: string, data: Prisma.EstoqueItemUncheckedCreateInput) {

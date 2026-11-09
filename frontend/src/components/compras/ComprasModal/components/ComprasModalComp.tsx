@@ -1,6 +1,7 @@
 ﻿'use client';
 
 import type { ComprasModalProps } from '../types/ComprasModalTypes';
+import type { ContaOpcao } from '../../main/types/ComprasTypes';
 import {
   StyledModalOverlay,
   StyledModal,
@@ -26,6 +27,7 @@ export default function ComprasModalComp({
   itemPreco,
   produtos,
   locais,
+  contas,
   onFecharModal,
   onAtualizarForm,
   onSalvarCompra,
@@ -80,6 +82,22 @@ export default function ComprasModalComp({
             >
               <option value="pendente">Pendente</option>
               <option value="pago">Pago</option>
+            </StyledFormSelect>
+          </StyledFormGroup>
+
+          <StyledFormGroup>
+            <StyledLabel>Conta (desconta o saldo se paga)</StyledLabel>
+            <StyledFormSelect
+              value={formData.accountId || ''}
+              onChange={e => onAtualizarForm('accountId', e.target.value)}
+              data-testid="compra-conta-select"
+            >
+              <option value="">Nenhuma</option>
+              {contas.map((c: ContaOpcao) => (
+                <option key={c.id} value={c.id}>
+                  {c.name}
+                </option>
+              ))}
             </StyledFormSelect>
           </StyledFormGroup>
 

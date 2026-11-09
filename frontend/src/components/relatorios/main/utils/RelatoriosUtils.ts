@@ -1,6 +1,7 @@
 import { useState, useMemo, useCallback } from 'react';
 import { useRelatoriosService } from '../services/RelatoriosServices';
 import { useTheme } from '@/context/theme/ThemeContext';
+import type { FeedbackData } from '@/shared/feedback';
 import type { Relatorio, RelatoriosFiltros, RelatoriosFormData } from '../types/RelatoriosTypes';
 
 // ============================================
@@ -25,6 +26,7 @@ export function useRelatorios() {
   const [exclusaoPendente, setExclusaoPendente] = useState<Relatorio | null>(null);
   const [detalheRelatorio, setDetalheRelatorio] = useState<Relatorio | null>(null);
   const [modalInfoAberto, setModalInfoAberto] = useState(false);
+  const [feedback, setFeedback] = useState<FeedbackData | null>(null);
 
   // ============================================
   // 3️⃣ OBJETOS
@@ -82,13 +84,19 @@ export function useRelatorios() {
     setFormData(prev => ({ ...prev, [campo]: valor }));
   }, []);
 
-  const salvarRelatorio = useCallback(() => {
-    if (editandoId) {
-      service.atualizar({ id: editandoId, formData });
-    } else {
-      service.criar(formData);
+  const salvarRelatorio = useCallback(async () => {
+    try {
+      if (editandoId) {
+        await service.atualizar({ id: editandoId, formData });
+        setFeedback({ tipo: 'sucesso', titulo: 'Relatório atualizado', mensagem: 'O relatório foi atualizado com sucesso.' });
+      } else {
+        await service.criar(formData);
+        setFeedback({ tipo: 'sucesso', titulo: 'Relatório criado', mensagem: 'O relatório foi gerado com sucesso.' });
+      }
+      fecharModal();
+    } catch {
+      setFeedback({ tipo: 'erro', titulo: 'Não foi possível salvar', mensagem: 'Ocorreu um erro ao salvar o relatório. Tente novamente.' });
     }
-    fecharModal();
   }, [editandoId, formData, service, fecharModal]);
 
   const confirmarExclusao = useCallback((item: Relatorio) => {
@@ -99,10 +107,16 @@ export function useRelatorios() {
     setExclusaoPendente(null);
   }, []);
 
-  const confirmarEExcluir = useCallback(() => {
+  const confirmarEExcluir = useCallback(async () => {
     if (exclusaoPendente) {
-      service.excluir(exclusaoPendente.id);
-      setExclusaoPendente(null);
+      try {
+        await service.excluir(exclusaoPendente.id);
+        setFeedback({ tipo: 'sucesso', titulo: 'Relatório excluído', mensagem: `O relatório "${exclusaoPendente.nome}" foi removido.` });
+      } catch {
+        setFeedback({ tipo: 'erro', titulo: 'Não foi possível excluir', mensagem: 'Ocorreu um erro ao excluir o relatório. Tente novamente.' });
+      } finally {
+        setExclusaoPendente(null);
+      }
     }
   }, [exclusaoPendente, service]);
 
@@ -114,6 +128,10 @@ export function useRelatorios() {
     setDetalheRelatorio(null);
   }, []);
 
+  const gerarPdf = useCallback((item: Relatorio) => {
+    service.gerarPdf(item, service.transacoes || []);
+  }, [service]);
+
   const abrirInfo = useCallback(() => {
     setModalInfoAberto(true);
   }, []);
@@ -121,6 +139,8 @@ export function useRelatorios() {
   const fecharInfo = useCallback(() => {
     setModalInfoAberto(false);
   }, []);
+
+  const fecharFeedback = useCallback(() => setFeedback(null), []);
 
   function formatarValor(valor: number): string {
     if (!valor) return '0,00';
@@ -158,6 +178,7 @@ export function useRelatorios() {
       exclusaoPendente,
       detalheRelatorio,
       modalInfoAberto,
+      feedback,
     },
     actions: {
       abrirModalNovo,
@@ -174,6 +195,8 @@ export function useRelatorios() {
       fecharDetalhe,
       abrirInfo,
       fecharInfo,
+      gerarPdf,
+      fecharFeedback,
     },
     helpers: {
       formatarValor, formatarData, getStatusLabel, getStatusCor,

@@ -2,11 +2,14 @@ import styled from 'styled-components';
 
 export const StyledKpiGrid = styled.div`
   display: flex;
-  flex-wrap: wrap;
+  flex-wrap: nowrap;
   gap: 20px;
   margin-bottom: 24px;
   width: 100%;
   max-width: 100%;
+  overflow-x: auto;
+  scrollbar-width: thin;
+  padding-bottom: 4px;
 `;
 
 export const StyledKpiCard = styled.div<{ $accentColor: string }>`
@@ -18,8 +21,8 @@ export const StyledKpiCard = styled.div<{ $accentColor: string }>`
   padding: 24px;
   box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.3);
   transition: all 200ms ease;
-  min-width: 0;
-  flex: 1 1 220px;
+  min-width: 240px;
+  flex: 1 1 240px;
   max-width: none;
   overflow: hidden;
 

@@ -1,4 +1,4 @@
-import type { Compra } from '../../main/types/ComprasTypes';
+import type { Compra, ContaOpcao } from '../../main/types/ComprasTypes';
 
 export interface ComprasModalProps {
   modalAberto: boolean;
@@ -24,5 +24,6 @@ export interface ComprasModalProps {
   onSelectLocal: (local: string) => void;
   produtos: any[];
   locais: any[];
+  contas: ContaOpcao[];
   total: number;
 }

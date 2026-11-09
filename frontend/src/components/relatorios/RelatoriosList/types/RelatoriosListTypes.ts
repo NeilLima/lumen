@@ -12,4 +12,5 @@ export interface RelatoriosListProps {
   onAbrirDetalhe: (d: Relatorio) => void;
   onAbrirModalEditar: (d: Relatorio) => void;
   onConfirmarExclusao: (d: Relatorio) => void;
+  onGerarPdf: (d: Relatorio) => void;
 }

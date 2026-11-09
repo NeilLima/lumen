@@ -1,6 +1,7 @@
 import { useState, useMemo, useCallback } from 'react';
 import { useCategoriasService } from '../services/CategoriasServices';
 import { useTheme } from '@/context/theme/ThemeContext';
+import type { FeedbackData } from '@/shared/feedback';
 import type { Categoria, CategoriasFiltros, CategoriasFormData } from '../types/CategoriasTypes';
 
 // ============================================
@@ -25,6 +26,7 @@ export function useCategorias() {
   const [exclusaoPendente, setExclusaoPendente] = useState<Categoria | null>(null);
   const [detalheCategoria, setDetalheCategoria] = useState<Categoria | null>(null);
   const [modalInfoAberto, setModalInfoAberto] = useState(false);
+  const [feedback, setFeedback] = useState<FeedbackData | null>(null);
 
   // ============================================
   // 3️⃣ OBJETOS
@@ -84,12 +86,14 @@ export function useCategorias() {
     try {
       if (editandoId) {
         await service.atualizar({ id: editandoId, formData });
+        setFeedback({ tipo: 'sucesso', titulo: 'Categoria atualizada', mensagem: 'A categoria foi atualizada com sucesso.' });
       } else {
         await service.criar(formData);
+        setFeedback({ tipo: 'sucesso', titulo: 'Categoria criada', mensagem: 'A categoria foi cadastrada com sucesso.' });
       }
       fecharModal();
-    } catch (e) {
-      console.error('Erro ao salvar categoria:', e);
+    } catch {
+      setFeedback({ tipo: 'erro', titulo: 'Não foi possível salvar', mensagem: 'Ocorreu um erro ao salvar a categoria. Tente novamente.' });
     }
   }, [editandoId, formData, service, fecharModal]);
 
@@ -105,10 +109,12 @@ export function useCategorias() {
     if (exclusaoPendente) {
       try {
         await service.excluir(exclusaoPendente.id);
-      } catch (e) {
-        console.error('Erro ao excluir categoria:', e);
+        setFeedback({ tipo: 'sucesso', titulo: 'Categoria excluída', mensagem: `A categoria "${exclusaoPendente.nome}" foi removida.` });
+      } catch {
+        setFeedback({ tipo: 'erro', titulo: 'Não foi possível excluir', mensagem: 'Ocorreu um erro ao excluir a categoria. Tente novamente.' });
+      } finally {
+        setExclusaoPendente(null);
       }
-      setExclusaoPendente(null);
     }
   }, [exclusaoPendente, service]);
 
@@ -127,6 +133,8 @@ export function useCategorias() {
   const fecharInfo = useCallback(() => {
     setModalInfoAberto(false);
   }, []);
+
+  const fecharFeedback = useCallback(() => setFeedback(null), []);
 
   function formatarValor(valor: number): string {
     if (!valor) return '0,00';
@@ -164,6 +172,7 @@ export function useCategorias() {
       exclusaoPendente,
       detalheCategoria,
       modalInfoAberto,
+      feedback,
     },
     actions: {
       abrirModalNovo,
@@ -180,6 +189,7 @@ export function useCategorias() {
       fecharDetalhe,
       abrirInfo,
       fecharInfo,
+      fecharFeedback,
     },
     helpers: {
       formatarValor, formatarData, getStatusLabel, getStatusCor,

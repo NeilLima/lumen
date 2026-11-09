@@ -63,10 +63,12 @@ export default function EstoqueMainComp() {
             editandoId={state.editandoId}
             formData={state.formData}
             data={state.data || { categorias: [], locais: [] }}
+            itensCompra={state.itensCompra}
             formatarValor={helpers.formatarValor}
             onFecharModal={actions.fecharModal}
             onAtualizarForm={actions.atualizarForm}
             onSalvarItem={actions.salvarItem}
+            onSelecionarCompraItem={actions.selecionarCompraItem}
           />
 
           <EstoqueConfirmComp

@@ -50,6 +50,10 @@ export class CreateCompraDto {
   @IsOptional()
   notes?: string;
 
+  @IsString()
+  @IsOptional()
+  accountId?: string;
+
   @IsArray()
   @ValidateNested({ each: true })
   @Type(() => CompraItemDto)
@@ -82,4 +86,8 @@ export class UpdateCompraDto {
   @IsString()
   @IsOptional()
   notes?: string;
+
+  @IsString()
+  @IsOptional()
+  accountId?: string;
 }

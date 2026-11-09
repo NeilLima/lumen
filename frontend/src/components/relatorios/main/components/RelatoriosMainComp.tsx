@@ -9,6 +9,7 @@ import RelatoriosModalComp from '../../RelatoriosModal/components/RelatoriosModa
 import RelatoriosDetalheComp from '../../RelatoriosDetalhe/components/RelatoriosDetalheComp';
 import RelatoriosConfirmComp from '../../RelatoriosConfirm/components/RelatoriosConfirmComp';
 import RelatoriosInfoComp from '../../RelatoriosInfo/components/RelatoriosInfoComp';
+import { FeedbackModalComp } from '@/shared/feedback';
 import { useRelatoriosMain } from '../utils/RelatoriosMainUtils';
 import {
   StyledRelatoriosLayout,
@@ -57,7 +58,7 @@ export default function RelatoriosMainComp() {
           />
 
           <RelatoriosListComp
-            relatoriosFiltradas={state.relatoriosFiltradas} filtros={state.filtros} formatarValor={helpers.formatarValor} formatarData={helpers.formatarData} getStatusLabel={helpers.getStatusLabel} getStatusCor={helpers.getStatusCor} onAtualizarFiltro={actions.atualizarFiltro} onLimparFiltros={actions.limparFiltros} onAbrirDetalhe={actions.abrirDetalhe} onAbrirModalEditar={actions.abrirModalEditar} onConfirmarExclusao={actions.confirmarExclusao}
+            relatoriosFiltradas={state.relatoriosFiltradas} filtros={state.filtros} formatarValor={helpers.formatarValor} formatarData={helpers.formatarData} getStatusLabel={helpers.getStatusLabel} getStatusCor={helpers.getStatusCor} onAtualizarFiltro={actions.atualizarFiltro} onLimparFiltros={actions.limparFiltros} onAbrirDetalhe={actions.abrirDetalhe} onAbrirModalEditar={actions.abrirModalEditar} onConfirmarExclusao={actions.confirmarExclusao} onGerarPdf={actions.gerarPdf}
           />
 
           <RelatoriosModalComp
@@ -70,7 +71,7 @@ export default function RelatoriosMainComp() {
           />
 
           <RelatoriosDetalheComp
-            detalheRelatorio={state.detalheRelatorio} formatarValor={helpers.formatarValor} formatarData={helpers.formatarData} getStatusLabel={helpers.getStatusLabel} getStatusCor={helpers.getStatusCor} onFecharDetalhe={actions.fecharDetalhe} onEditar={actions.handleEditarFromDetalhe}
+            detalheRelatorio={state.detalheRelatorio} formatarValor={helpers.formatarValor} formatarData={helpers.formatarData} getStatusLabel={helpers.getStatusLabel} getStatusCor={helpers.getStatusCor} onFecharDetalhe={actions.fecharDetalhe} onEditar={actions.handleEditarFromDetalhe} onGerarPdf={actions.gerarPdf}
           />
 
           <RelatoriosConfirmComp
@@ -83,6 +84,10 @@ export default function RelatoriosMainComp() {
           <RelatoriosInfoComp
             modalInfoAberto={state.modalInfoAberto}
             onFecharInfo={actions.fecharInfo}
+          />
+          <FeedbackModalComp
+            feedback={state.feedback}
+            onFechar={actions.fecharFeedback}
           />
         </StyledRelatoriosContainer>
       </StyledRelatoriosMainContent>

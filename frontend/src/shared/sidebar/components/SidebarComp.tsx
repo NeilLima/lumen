@@ -19,7 +19,6 @@ import {
   StyledUserInfo,
   StyledUserName,
   StyledUserEmail,
-  StyledUserPlan,
   StyledThemeToggle,
   StyledThemeToggleIcon,
   StyledLogoutButton,
@@ -66,7 +65,6 @@ export default function SidebarComp({ $isOpen }: { $isOpen?: boolean }) {
           <StyledUserInfo>
             <StyledUserName theme={theme}>{data.userName}</StyledUserName>
             <StyledUserEmail theme={theme}>victor@email.com</StyledUserEmail>
-            <StyledUserPlan theme={theme}>⭐ Plano Premium</StyledUserPlan>
           </StyledUserInfo>
         </StyledUserCard>
         <StyledThemeToggle theme={theme}>

@@ -14,27 +14,26 @@ export class EstoqueService {
       ...item,
       quantidade: Number(item.quantidade),
       preco: Number(item.preco),
-      quantidadeMinima: Number(item.quantidadeMinima),
     }));
   }
 
   async create(userId: string, dto: CreateEstoqueItemDto) {
     const item = await this.estoqueRepository.create(userId, {
       userId,
-      nome: dto.nome,
-      categoria: dto.categoria,
+      nome: dto.nome ?? '',
+      categoria: dto.categoria ?? '',
       quantidade: dto.quantidade,
-      unidade: dto.unidade,
-      preco: dto.preco,
-      localCompra: dto.localCompra,
+      unidade: dto.unidade ?? 'un',
+      preco: dto.preco ?? 0,
+      localCompra: dto.localCompra ?? '',
       quantidadeMinima: dto.quantidadeMinima,
+      compraItemId: dto.compraItemId ?? null,
     });
     logEstoqueItemCreated(item.id, userId);
     return {
       ...item,
       quantidade: Number(item.quantidade),
       preco: Number(item.preco),
-      quantidadeMinima: Number(item.quantidadeMinima),
     };
   }
 
@@ -53,7 +52,6 @@ export class EstoqueService {
       ...item,
       quantidade: Number(item.quantidade),
       preco: Number(item.preco),
-      quantidadeMinima: Number(item.quantidadeMinima),
     };
   }
 

@@ -22,6 +22,7 @@ import { NotificacaoModule } from './modules/notificacoes/notificacao.module.js'
 import { InvestimentoModule } from './modules/investimentos/investimento.module.js';
 import { EmprestimosModule } from './modules/emprestimos/emprestimos.module.js';
 import { ComprasModule } from './modules/compras/compras.module.js';
+import { RelatoriosModule } from './modules/relatorios/relatorios.module.js';
 
 @Module({
   imports: [
@@ -45,6 +46,7 @@ import { ComprasModule } from './modules/compras/compras.module.js';
     InvestimentoModule,
     EmprestimosModule,
     ComprasModule,
+    RelatoriosModule,
   ],
   controllers: [AppController],
   providers: [AppService],

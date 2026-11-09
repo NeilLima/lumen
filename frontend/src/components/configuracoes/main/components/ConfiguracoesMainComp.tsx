@@ -9,6 +9,7 @@ import ConfiguracoesModalComp from '../../ConfiguracoesModal/components/Configur
 import ConfiguracoesDetalheComp from '../../ConfiguracoesDetalhe/components/ConfiguracoesDetalheComp';
 import ConfiguracoesConfirmComp from '../../ConfiguracoesConfirm/components/ConfiguracoesConfirmComp';
 import ConfiguracoesInfoComp from '../../ConfiguracoesInfo/components/ConfiguracoesInfoComp';
+import { FeedbackModalComp } from '@/shared/feedback';
 import { useConfiguracoesMain } from '../utils/ConfiguracoesMainUtils';
 import {
   StyledConfiguracoesLayout,
@@ -93,6 +94,10 @@ export default function ConfiguracoesMainComp() {
           <ConfiguracoesInfoComp
             modalInfoAberto={state.modalInfoAberto}
             onFecharInfo={actions.fecharInfo}
+          />
+          <FeedbackModalComp
+            feedback={state.feedback}
+            onFechar={actions.fecharFeedback}
           />
         </StyledConfiguracoesContainer>
       </StyledConfiguracoesMainContent>

@@ -18,11 +18,21 @@ export interface Compra {
   parcelasPagas: number;
   totalAmount: number;
   notes: string | null;
+  accountId?: string | null;
+  transactionId?: string | null;
+  account?: { id: string; name: string } | null;
   itens: CompraItem[];
+}
+
+export interface ContaOpcao {
+  id: string;
+  name: string;
+  balance?: number;
 }
 
 export interface CreateCompraPayload {
   local?: string;
+  accountId?: string;
   dataCompra?: string;
   statusPagamento?: string;
   parcels?: number;

@@ -30,6 +30,7 @@ model User {
   notifications   Notification[]
   metas           Meta[]
   settings        Setting[]
+  relatorios      Relatorio[]
 
   @@map("users")
 }
@@ -67,6 +68,7 @@ model Account {
 
   user         User          @relation(fields: [userId], references: [id], onDelete: Cascade)
   transactions Transaction[] @relation("AccountTransactions")
+  compras      Compra[]
 
   @@map("accounts")
 }
@@ -109,6 +111,7 @@ model Transaction {
   user          User      @relation(fields: [userId], references: [id], onDelete: Cascade)
   account       Account?  @relation("AccountTransactions", fields: [accountId], references: [id], onDelete: SetNull)
   accountId     String?
+  compra        Compra?   @relation("CompraTransaction")
   creditCard    CreditCard? @relation("CreditCardTransactions", fields: [creditCardId], references: [id], onDelete: SetNull)
   creditCardId  String?
   category      Category? @relation("CategoryTransactions", fields: [categoryId], references: [id], onDelete: SetNull)
@@ -293,6 +296,8 @@ model EstoqueItem {
   createdAt     DateTime @default(now())
 
   product       Product? @relation(fields: [productId], references: [id], onDelete: SetNull)
+  compraItem    CompraItem? @relation(fields: [compraItemId], references: [id], onDelete: SetNull)
+  compraItemId  String?
 
   @@index([userId])
   @@map("estoque_itens")
@@ -346,13 +351,18 @@ model Compra {
   parcelasPagas     Int           @default(0)
   totalAmount       Decimal       @db.Decimal(14, 2)
   notes             String?
+  accountId         String?
+  transactionId     String?      @unique
   createdAt         DateTime      @default(now())
   updatedAt         DateTime      @updatedAt
 
-  user  User         @relation(fields: [userId], references: [id], onDelete: Cascade)
-  itens CompraItem[]
+  user       User          @relation(fields: [userId], references: [id], onDelete: Cascade)
+  account    Account?      @relation(fields: [accountId], references: [id], onDelete: SetNull)
+  transaction Transaction? @relation("CompraTransaction", fields: [transactionId], references: [id], onDelete: SetNull)
+  itens      CompraItem[]
 
   @@index([userId])
+  @@index([accountId])
   @@map("compras")
 }
 
@@ -369,8 +379,26 @@ model CompraItem {
 
   compra  Compra   @relation(fields: [compraId], references: [id], onDelete: Cascade)
   product Product? @relation(fields: [productId], references: [id], onDelete: SetNull)
+  estoqueVinculos EstoqueItem[]
 
   @@index([compraId])
   @@map("compra_itens")
+}
+
+model Relatorio {
+  id          String   @id @default(uuid())
+  userId      String
+  nome        String
+  tipo        String   @default("fluxo")
+  periodo     String   @default("mensal")
+  dataInicio  DateTime
+  dataFim     DateTime
+  observacoes String?
+  createdAt   DateTime @default(now())
+  updatedAt   DateTime @updatedAt
+
+  user User @relation(fields: [userId], references: [id], onDelete: Cascade)
+
+  @@map("relatorios")
 }
 

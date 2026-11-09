@@ -21,25 +21,26 @@ import {
   StyledPreviewValorStrong,
 } from '../styles/EstoqueModalStyles';
 
-const UNIDADES = [
-  { value: 'un', label: 'Unidade' },
-  { value: 'kg', label: 'Kg' },
-  { value: 'g', label: 'g' },
-  { value: 'l', label: 'L' },
-  { value: 'ml', label: 'ml' },
-];
-
 export default function EstoqueModalComp({
   modalAberto,
   editandoId,
   formData,
   data,
+  itensCompra,
   formatarValor,
   onFecharModal,
   onAtualizarForm,
   onSalvarItem,
+  onSelecionarCompraItem,
 }: EstoqueModalProps) {
+  // Calcula os valores do modal
   const { preco, quantidade, totalEstoque } = calcularCalculosModal(formData);
+
+  const formatarDataCurta = (iso: string) => {
+    if (!iso) return '';
+    const d = new Date(iso);
+    return Number.isNaN(d.getTime()) ? iso : d.toLocaleDateString('pt-BR');
+  };
 
   return (
     <StyledModalOverlay $visible={modalAberto} onClick={onFecharModal}>
@@ -51,40 +52,50 @@ export default function EstoqueModalComp({
 
         <StyledForm>
           <StyledFormGroup>
-            <StyledLabel>Nome do item *</StyledLabel>
-            <StyledInput
-              type="text"
-              placeholder="Ex: Arroz, Feijão, Óleo..."
-              value={formData.nome}
-              onChange={e => onAtualizarForm('nome', e.target.value)}
-            />
+            <StyledLabel>Puxar item da compra (opcional)</StyledLabel>
+            <StyledFormSelect
+              value={formData.compraItemId}
+              onChange={e => onSelecionarCompraItem(e.target.value)}
+              data-testid="estoque-compra-item-select"
+            >
+              <option value="">Selecione um item comprado...</option>
+              {itensCompra.map(item => (
+                <option key={item.id} value={item.id}>
+                  {item.nome}
+                  {item.categoria ? ` — ${item.categoria}` : ''}
+                  {` • ${item.quantidade} ${item.unidade}`}
+                  {` • R$ ${formatarValor(item.preco)}`}
+                  {item.localCompra ? ` • ${item.localCompra}` : ''}
+                  {item.dataCompra ? ` • ${formatarDataCurta(item.dataCompra)}` : ''}
+                </option>
+              ))}
+            </StyledFormSelect>
+            {itensCompra.length === 0 && (
+              <small>Nenhum item de compra encontrado. Cadastre uma compra primeiro.</small>
+            )}
           </StyledFormGroup>
 
           <StyledFormRow>
             <StyledFormGroup>
-              <StyledLabel>Categoria *</StyledLabel>
-              <StyledFormSelect
-                value={formData.categoria}
-                onChange={e => onAtualizarForm('categoria', e.target.value)}
-              >
-                <option value="">Selecione...</option>
-                {data.categorias.map(cat => (
-                  <option key={cat} value={cat}>{cat}</option>
-                ))}
-              </StyledFormSelect>
+              <StyledLabel>Nome do item *</StyledLabel>
+              <StyledInput
+                type="text"
+                placeholder="Ex: Arroz, Feijão, Óleo..."
+                value={formData.nome}
+                onChange={e => onAtualizarForm('nome', e.target.value)}
+                data-testid="estoque-nome-input"
+              />
             </StyledFormGroup>
 
             <StyledFormGroup>
-              <StyledLabel>Local de compra *</StyledLabel>
-              <StyledFormSelect
-                value={formData.localCompra}
-                onChange={e => onAtualizarForm('localCompra', e.target.value)}
-              >
-                <option value="">Selecione...</option>
-                {data.locais.map(local => (
-                  <option key={local} value={local}>{local}</option>
-                ))}
-              </StyledFormSelect>
+              <StyledLabel>Categoria</StyledLabel>
+              <StyledInput
+                type="text"
+                value={formData.categoria}
+                readOnly
+                placeholder="Preenchida automaticamente pela compra"
+                data-testid="estoque-categoria-input"
+              />
             </StyledFormGroup>
           </StyledFormRow>
 
@@ -97,34 +108,7 @@ export default function EstoqueModalComp({
                 placeholder="0"
                 value={formData.quantidade}
                 onChange={e => onAtualizarForm('quantidade', e.target.value)}
-              />
-            </StyledFormGroup>
-
-            <StyledFormGroup>
-              <StyledLabel>Unidade</StyledLabel>
-              <StyledFormSelect
-                value={formData.unidade}
-                onChange={e => onAtualizarForm('unidade', e.target.value)}
-              >
-                {UNIDADES.map(u => (
-                  <option key={u.value} value={u.value}>{u.label}</option>
-                ))}
-              </StyledFormSelect>
-            </StyledFormGroup>
-          </StyledFormRow>
-
-          <StyledFormRow>
-            <StyledFormGroup>
-              <StyledLabel>Preço unitário (R$) *</StyledLabel>
-              <StyledInput
-                type="text"
-                inputMode="numeric"
-                placeholder="R$ 0,00"
-                value={formData.preco}
-                onChange={e => {
-                  const digitos = e.target.value.replace(/\D/g, '');
-                  onAtualizarForm('preco', digitos ? formatarValor(parseInt(digitos, 10) / 100) : '');
-                }}
+                data-testid="estoque-quantidade-input"
               />
             </StyledFormGroup>
 
@@ -136,9 +120,25 @@ export default function EstoqueModalComp({
                 placeholder="0"
                 value={formData.quantidadeMinima}
                 onChange={e => onAtualizarForm('quantidadeMinima', e.target.value)}
+                data-testid="estoque-minimo-input"
               />
             </StyledFormGroup>
           </StyledFormRow>
+
+          <StyledFormGroup>
+            <StyledLabel>Preço unitário (R$) *</StyledLabel>
+            <StyledInput
+              type="text"
+              inputMode="numeric"
+              placeholder="R$ 0,00"
+              value={formData.preco}
+              onChange={e => {
+                const digitos = e.target.value.replace(/\D/g, '');
+                onAtualizarForm('preco', digitos ? formatarValor(parseInt(digitos, 10) / 100) : '');
+              }}
+              data-testid="estoque-preco-input"
+            />
+          </StyledFormGroup>
 
           <StyledPreviewValor>
             <span>Total neste estoque:</span>
@@ -149,7 +149,7 @@ export default function EstoqueModalComp({
             <StyledButton $variant="secondary" onClick={onFecharModal}>
               Cancelar
             </StyledButton>
-            <StyledButton $variant="primary" onClick={onSalvarItem}>
+            <StyledButton $variant="primary" onClick={onSalvarItem} data-testid="estoque-salvar-btn">
               {editandoId ? 'Salvar Alterações' : 'Adicionar ao Estoque'}
             </StyledButton>
           </StyledModalActions>

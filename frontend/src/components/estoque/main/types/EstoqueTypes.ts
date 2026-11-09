@@ -10,6 +10,42 @@ export interface EstoqueItem {
   localCompra: string;
   quantidadeMinima: number;
   dataAtualizacao: string;
+  compraItemId?: string | null;
+}
+
+export interface EstoqueCompraItemApi {
+  id: string;
+  nome: string;
+  quantidade: number;
+  unidade: string;
+  precoUnitario: number;
+  productId?: string | null;
+  product?: { id: string; name: string; category: string } | null;
+}
+
+export interface EstoqueCompraApi {
+  id: string;
+  local: string | null;
+  dataCompra: string;
+  itens: EstoqueCompraItemApi[];
+}
+
+export interface EstoqueProductApi {
+  id: string;
+  name: string;
+  category: string;
+}
+
+export interface EstoqueCompraItemOption {
+  id: string;
+  compraId: string;
+  nome: string;
+  categoria: string;
+  quantidade: number;
+  unidade: string;
+  preco: number;
+  localCompra: string;
+  dataCompra: string;
 }
 
 export interface EstoqueFiltros {
@@ -20,7 +56,6 @@ export interface EstoqueFiltros {
 }
 
 export interface EstoqueFormData {
-  produtoCatalogoId: string;
   nome: string;
   categoria: string;
   localCompra: string;
@@ -28,6 +63,18 @@ export interface EstoqueFormData {
   unidade: string;
   preco: string;
   quantidadeMinima: string;
+  compraItemId: string;
+}
+
+export interface EstoqueSubmitData {
+  nome: string;
+  categoria: string;
+  localCompra: string;
+  quantidade: number;
+  unidade: string;
+  preco: number;
+  quantidadeMinima: number;
+  compraItemId?: string;
 }
 
 export interface EstoqueData {
@@ -40,6 +87,7 @@ export type EstoqueFeedback = FeedbackData;
 
 export interface EstoqueState {
   data: EstoqueData | null;
+  itensCompra: EstoqueCompraItemOption[];
   isLoading: boolean;
   filtros: EstoqueFiltros;
   modalAberto: boolean;
@@ -68,4 +116,5 @@ export interface EstoqueActions {
   abrirInfo: () => void;
   fecharInfo: () => void;
   fecharFeedback: () => void;
+  selecionarCompraItem: (compraItemId: string) => void;
 }

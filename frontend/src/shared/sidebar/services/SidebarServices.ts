@@ -31,11 +31,9 @@ const MOCK_SIDEBAR_DATA: SidebarData = {
       { label: 'Categorias', icon: 'squares-four', active: false, path: '/categorias' },
       { label: 'Notificações', icon: 'bell', active: false, path: '/notificacoes' },
       { label: 'Configurações', icon: 'gear', active: false, path: '/configuracoes' },
-      { label: 'Ajuda e Suporte', icon: 'question', active: false, path: '/ajuda' },
     ],
   },
   userName: 'Victor Lima',
-  userPlan: 'Plano Premium',
   userInitial: 'V',
 };
 

@@ -1,6 +1,7 @@
 import { useState, useMemo, useCallback } from 'react';
 import { useConfiguracoesService } from '../services/ConfiguracoesServices';
 import { useTheme } from '@/context/theme/ThemeContext';
+import type { FeedbackData } from '@/shared/feedback';
 import type { Configuracao, ConfiguracoesFiltros, ConfiguracoesFormData } from '../types/ConfiguracoesTypes';
 
 // ============================================
@@ -25,6 +26,7 @@ export function useConfiguracoes() {
   const [exclusaoPendente, setExclusaoPendente] = useState<Configuracao | null>(null);
   const [detalheConfiguracao, setDetalheConfiguracao] = useState<Configuracao | null>(null);
   const [modalInfoAberto, setModalInfoAberto] = useState(false);
+  const [feedback, setFeedback] = useState<FeedbackData | null>(null);
 
   // ============================================
   // 3️⃣ OBJETOS
@@ -79,13 +81,19 @@ export function useConfiguracoes() {
     setFormData(prev => ({ ...prev, [campo]: valor }));
   }, []);
 
-  const salvarConfiguracao = useCallback(() => {
-    if (editandoId) {
-      service.atualizar({ id: editandoId, formData });
-    } else {
-      service.criar(formData);
+  const salvarConfiguracao = useCallback(async () => {
+    try {
+      if (editandoId) {
+        await service.atualizar({ id: editandoId, formData });
+        setFeedback({ tipo: 'sucesso', titulo: 'Configuração atualizada', mensagem: 'A configuração foi atualizada com sucesso.' });
+      } else {
+        await service.criar(formData);
+        setFeedback({ tipo: 'sucesso', titulo: 'Configuração criada', mensagem: 'A configuração foi salva com sucesso.' });
+      }
+      fecharModal();
+    } catch {
+      setFeedback({ tipo: 'erro', titulo: 'Não foi possível salvar', mensagem: 'Ocorreu um erro ao salvar a configuração. Tente novamente.' });
     }
-    fecharModal();
   }, [editandoId, formData, service, fecharModal]);
 
   const confirmarExclusao = useCallback((item: Configuracao) => {
@@ -96,10 +104,16 @@ export function useConfiguracoes() {
     setExclusaoPendente(null);
   }, []);
 
-  const confirmarEExcluir = useCallback(() => {
+  const confirmarEExcluir = useCallback(async () => {
     if (exclusaoPendente) {
-      service.excluir(exclusaoPendente.id);
-      setExclusaoPendente(null);
+      try {
+        await service.excluir(exclusaoPendente.id);
+        setFeedback({ tipo: 'sucesso', titulo: 'Configuração excluída', mensagem: `A configuração "${exclusaoPendente.nome}" foi removida.` });
+      } catch {
+        setFeedback({ tipo: 'erro', titulo: 'Não foi possível excluir', mensagem: 'Ocorreu um erro ao excluir a configuração. Tente novamente.' });
+      } finally {
+        setExclusaoPendente(null);
+      }
     }
   }, [exclusaoPendente, service]);
 
@@ -118,6 +132,8 @@ export function useConfiguracoes() {
   const fecharInfo = useCallback(() => {
     setModalInfoAberto(false);
   }, []);
+
+  const fecharFeedback = useCallback(() => setFeedback(null), []);
 
   function formatarValor(valor: number): string {
     if (!valor) return '0,00';
@@ -155,6 +171,7 @@ export function useConfiguracoes() {
       exclusaoPendente,
       detalheConfiguracao,
       modalInfoAberto,
+      feedback,
     },
     actions: {
       abrirModalNovo,
@@ -171,6 +188,7 @@ export function useConfiguracoes() {
       fecharDetalhe,
       abrirInfo,
       fecharInfo,
+      fecharFeedback,
     },
     helpers: {
       formatarValor, formatarData, getStatusLabel, getStatusCor,

@@ -14,6 +14,7 @@ export const estoqueItemSchema = {
   preco: 'number',
   localCompra: 'string',
   quantidadeMinima: 'number',
+  compraItemId: 'uuid | null',
   dataAtualizacao: 'Date',
   createdAt: 'Date',
   updatedAt: 'Date',

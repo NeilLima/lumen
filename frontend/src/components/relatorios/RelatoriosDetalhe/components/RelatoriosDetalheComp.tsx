@@ -33,6 +33,7 @@ export default function RelatoriosDetalheComp({
 
   onFecharDetalhe,
   onEditar,
+  onGerarPdf,
 }: RelatoriosDetalheProps) {
   if (!detalheRelatorio) return null;
 
@@ -94,6 +95,9 @@ export default function RelatoriosDetalheComp({
             <StyledModalActions>
               <StyledButton $variant="secondary" onClick={onFecharDetalhe}>
                 Fechar
+              </StyledButton>
+              <StyledButton $variant="secondary" onClick={() => onGerarPdf(detalheRelatorio)}>
+                Baixar PDF
               </StyledButton>
               <StyledButton $variant="primary" onClick={() => onEditar(detalheRelatorio)}>
                 Editar

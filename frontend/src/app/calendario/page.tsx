@@ -1,7 +1,10 @@
-'use client';
-
-import { Calendar } from '@/components/calendario/Calendar';
+import CalendarioMainComp from '@/components/calendario/main';
+import { CalendarioProviders } from '@/components/calendario/main/Providers';
 
 export default function CalendarioPage() {
-  return <Calendar />;
+  return (
+    <CalendarioProviders>
+      <CalendarioMainComp />
+    </CalendarioProviders>
+  );
 }

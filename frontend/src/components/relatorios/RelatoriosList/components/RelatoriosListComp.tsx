@@ -41,6 +41,7 @@ export default function RelatoriosListComp({
   onAbrirDetalhe,
   onAbrirModalEditar,
   onConfirmarExclusao,
+  onGerarPdf,
 }: RelatoriosListProps) {
   const temFiltros = filtros.pesquisa || filtros.tipo || filtros.periodo;
 
@@ -126,6 +127,9 @@ export default function RelatoriosListComp({
                 </StyledValues>
 
                 <StyledActions>
+                  <StyledIconButton title="Baixar PDF" onClick={() => onGerarPdf(d)}>
+                    📄
+                  </StyledIconButton>
                   <StyledIconButton title="Ver detalhes" onClick={() => onAbrirDetalhe(d)}>
                     👁️
                   </StyledIconButton>

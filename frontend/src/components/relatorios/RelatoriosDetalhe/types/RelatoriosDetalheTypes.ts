@@ -8,4 +8,5 @@ export interface RelatoriosDetalheProps {
   getStatusCor: (s: string) => string;
   onFecharDetalhe: () => void;
   onEditar: (d: Relatorio) => void;
+  onGerarPdf: (d: Relatorio) => void;
 }
