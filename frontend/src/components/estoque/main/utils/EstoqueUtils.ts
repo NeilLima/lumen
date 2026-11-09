@@ -109,6 +109,10 @@ export function useEstoqueUtils() {
   }, []);
 
   const selecionarCompraItem = useCallback((compraItemId: string) => {
+    if (!compraItemId) {
+      setFormData(prev => ({ ...prev, compraItemId: '' }));
+      return;
+    }
     const item = service.itensCompra.find(i => i.id === compraItemId);
     if (!item) return;
     setFormData(prev => ({

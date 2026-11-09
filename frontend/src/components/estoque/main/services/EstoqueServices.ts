@@ -38,7 +38,13 @@ const qc = useQueryClient();
         (compra.itens || []).map(item => ({
           id: item.id,
           compraId: compra.id,
-          nome: item.nome,
+          nome: (() => {
+            const nomeItem = item.nome?.trim() || '';
+            const nomeProduto = item.product?.name?.trim() || '';
+            const nomeGenerico = /^item\s*\d*$/i.test(nomeItem);
+            if (nomeGenerico && nomeProduto) return nomeProduto;
+            return nomeItem || nomeProduto;
+          })(),
           categoria:
             item.product?.category ??
             (item.productId ? categoriaPorProdutoId.get(item.productId) : undefined) ??

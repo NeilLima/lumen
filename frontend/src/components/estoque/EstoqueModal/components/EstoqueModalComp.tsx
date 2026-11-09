@@ -1,6 +1,7 @@
 'use client';
 
-import type { EstoqueFormData } from '../../main/types/EstoqueTypes';
+import { useEffect, useMemo, useState } from 'react';
+import type { EstoqueFormData, EstoqueCompraItemOption } from '../../main/types/EstoqueTypes';
 import type { EstoqueModalProps } from '../types/EstoqueModalTypes';
 import { calcularCalculosModal } from '../utils/EstoqueModalUtils';
 import {
@@ -14,7 +15,14 @@ import {
   StyledFormRow,
   StyledLabel,
   StyledInput,
-  StyledFormSelect,
+  StyledBuscaWrap,
+  StyledBuscaInput,
+  StyledBuscaDropdown,
+  StyledBuscaOption,
+  StyledBuscaOptionNome,
+  StyledBuscaOptionMeta,
+  StyledBuscaEmpty,
+  StyledBuscaLimpar,
   StyledModalActions,
   StyledButton,
   StyledPreviewValor,
@@ -36,11 +44,54 @@ export default function EstoqueModalComp({
   // Calcula os valores do modal
   const { preco, quantidade, totalEstoque } = calcularCalculosModal(formData);
 
-  const formatarDataCurta = (iso: string) => {
-    if (!iso) return '';
-    const d = new Date(iso);
-    return Number.isNaN(d.getTime()) ? iso : d.toLocaleDateString('pt-BR');
+  const [buscaCompra, setBuscaCompra] = useState('');
+  const [buscaAberta, setBuscaAberta] = useState(false);
+
+  useEffect(() => {
+    if (modalAberto) {
+      setBuscaCompra('');
+      setBuscaAberta(false);
+    }
+  }, [modalAberto]);
+
+  const itemSelecionado = useMemo(
+    () => itensCompra.find(i => i.id === formData.compraItemId) || null,
+    [itensCompra, formData.compraItemId]
+  );
+
+  const itensCompraFiltrados = useMemo(() => {
+    const termo = buscaCompra.trim().toLowerCase();
+    if (!termo) return itensCompra;
+    return itensCompra.filter(item =>
+      [item.nome, item.categoria, item.localCompra]
+        .filter(Boolean)
+        .some(campo => campo.toLowerCase().includes(termo))
+    );
+  }, [itensCompra, buscaCompra]);
+
+  const nomeExibicao = (item: EstoqueCompraItemOption) => item.nome?.trim() || 'Item sem nome';
+
+  const selecionarItem = (item: EstoqueCompraItemOption) => {
+    onSelecionarCompraItem(item.id);
+    setBuscaCompra('');
+    setBuscaAberta(false);
   };
+
+  const limparSelecao = () => {
+    onSelecionarCompraItem('');
+    setBuscaCompra('');
+    setBuscaAberta(false);
+  };
+
+  const metaItem = (item: EstoqueCompraItemOption) =>
+    [
+      item.categoria || null,
+      `${item.quantidade} ${item.unidade}`,
+      `R$ ${formatarValor(item.preco)}`,
+      item.localCompra || null,
+    ]
+      .filter(Boolean)
+      .join(' • ');
 
   return (
     <StyledModalOverlay $visible={modalAberto} onClick={onFecharModal}>
@@ -53,26 +104,52 @@ export default function EstoqueModalComp({
         <StyledForm>
           <StyledFormGroup>
             <StyledLabel>Puxar item da compra (opcional)</StyledLabel>
-            <StyledFormSelect
-              value={formData.compraItemId}
-              onChange={e => onSelecionarCompraItem(e.target.value)}
-              data-testid="estoque-compra-item-select"
-            >
-              <option value="">Selecione um item comprado...</option>
-              {itensCompra.map(item => (
-                <option key={item.id} value={item.id}>
-                  {item.nome}
-                  {item.categoria ? ` — ${item.categoria}` : ''}
-                  {` • ${item.quantidade} ${item.unidade}`}
-                  {` • R$ ${formatarValor(item.preco)}`}
-                  {item.localCompra ? ` • ${item.localCompra}` : ''}
-                  {item.dataCompra ? ` • ${formatarDataCurta(item.dataCompra)}` : ''}
-                </option>
-              ))}
-            </StyledFormSelect>
-            {itensCompra.length === 0 && (
-              <small>Nenhum item de compra encontrado. Cadastre uma compra primeiro.</small>
-            )}
+            <StyledBuscaWrap>
+              <StyledBuscaInput
+                type="text"
+                placeholder="Buscar item comprado pelo nome..."
+                value={buscaAberta ? buscaCompra : itemSelecionado ? nomeExibicao(itemSelecionado) : buscaCompra}
+                onChange={e => {
+                  setBuscaCompra(e.target.value);
+                  setBuscaAberta(true);
+                }}
+                onFocus={() => setBuscaAberta(true)}
+                onBlur={() => setBuscaAberta(false)}
+                data-testid="estoque-compra-item-select"
+              />
+              {itemSelecionado && !buscaAberta && (
+                <StyledBuscaLimpar onClick={limparSelecao} title="Limpar seleção" data-testid="estoque-compra-item-limpar">
+                  ✕
+                </StyledBuscaLimpar>
+              )}
+              {buscaAberta && (
+                <StyledBuscaDropdown>
+                  {formData.compraItemId && (
+                    <StyledBuscaOption type="button" onMouseDown={limparSelecao} data-testid="estoque-compra-item-limpar-opcao">
+                      <StyledBuscaOptionMeta>— Nenhum (preencher manualmente) —</StyledBuscaOptionMeta>
+                    </StyledBuscaOption>
+                  )}
+                  {itensCompraFiltrados.length === 0 && (
+                    <StyledBuscaEmpty>
+                      {itensCompra.length === 0
+                        ? 'Nenhum item de compra encontrado. Cadastre uma compra primeiro.'
+                        : 'Nenhum item encontrado para essa busca.'}
+                    </StyledBuscaEmpty>
+                  )}
+                  {itensCompraFiltrados.map(item => (
+                    <StyledBuscaOption
+                      key={item.id}
+                      type="button"
+                      onMouseDown={() => selecionarItem(item)}
+                      data-testid={`estoque-compra-item-opcao-${item.id}`}
+                    >
+                      <StyledBuscaOptionNome>{nomeExibicao(item)}</StyledBuscaOptionNome>
+                      <StyledBuscaOptionMeta>{metaItem(item)}</StyledBuscaOptionMeta>
+                    </StyledBuscaOption>
+                  ))}
+                </StyledBuscaDropdown>
+              )}
+            </StyledBuscaWrap>
           </StyledFormGroup>
 
           <StyledFormRow>

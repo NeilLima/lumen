@@ -141,6 +141,87 @@ export const StyledFormSelect = styled.select`
   }
 `;
 
+// ============================================
+// SELECT COM BUSCA (combobox)
+// ============================================
+export const StyledBuscaWrap = styled.div`
+  position: relative;
+`;
+
+export const StyledBuscaInput = styled(StyledInput)`
+  width: 100%;
+`;
+
+export const StyledBuscaDropdown = styled.div`
+  position: absolute;
+  top: calc(100% + 6px);
+  left: 0;
+  right: 0;
+  max-height: 240px;
+  overflow-y: auto;
+  background: #1a1a2e;
+  border: 1px solid rgba(139, 92, 246, 0.35);
+  border-radius: 8px;
+  box-shadow: 0 12px 24px rgba(0, 0, 0, 0.5);
+  z-index: 1100;
+`;
+
+export const StyledBuscaOption = styled.button`
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+  gap: 2px;
+  width: 100%;
+  padding: 10px 14px;
+  background: transparent;
+  border: none;
+  border-bottom: 1px solid rgba(255, 255, 255, 0.05);
+  color: #ffffff;
+  font-size: 14px;
+  text-align: left;
+  cursor: pointer;
+  transition: background 120ms ease;
+
+  &:hover,
+  &:focus-visible {
+    background: rgba(139, 92, 246, 0.15);
+    outline: none;
+  }
+`;
+
+export const StyledBuscaOptionNome = styled.span`
+  font-weight: 600;
+  color: #ffffff;
+`;
+
+export const StyledBuscaOptionMeta = styled.span`
+  font-size: 12px;
+  color: #a0a0b0;
+`;
+
+export const StyledBuscaEmpty = styled.div`
+  padding: 12px 14px;
+  font-size: 13px;
+  color: #a0a0b0;
+`;
+
+export const StyledBuscaLimpar = styled.button`
+  position: absolute;
+  right: 10px;
+  top: 50%;
+  transform: translateY(-50%);
+  background: transparent;
+  border: none;
+  color: #a0a0b0;
+  font-size: 14px;
+  cursor: pointer;
+  padding: 4px;
+
+  &:hover {
+    color: #ef4444;
+  }
+`;
+
 export const StyledModalActions = styled.div`
   display: flex;
   gap: 12px;
