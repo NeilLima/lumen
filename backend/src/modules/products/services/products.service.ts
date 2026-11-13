@@ -41,14 +41,19 @@ export class ProductsService {
   async update(userId: string, id: string, dto: UpdateProductDto) {
     const existing = await this.productsRepository.findById(userId, id);
     if (!existing) throw new NotFoundException('Produto não encontrado');
-    await this.productsRepository.update(userId, id, {
+    const updateData = {
       ...(dto.name !== undefined ? { name: dto.name } : {}),
       ...(dto.category !== undefined ? { category: dto.category } : {}),
       ...(dto.unit !== undefined ? { unit: dto.unit } : {}),
       ...(dto.local !== undefined ? { local: dto.local } : {}),
       ...(dto.price !== undefined ? { price: dto.price } : {}),
       ...(dto.installments !== undefined ? { installments: dto.installments } : {}),
-    });
+    };
+    await this.productsRepository.update(userId, id, updateData);
+    /** 🔗 Sincroniza os vínculos: compras (nome/unidade/preço+subtotal+total)
+     *  e estoque (nome/categoria/unidade/local/preço) */
+    await this.productsRepository.syncCompraItems(userId, id, updateData);
+    await this.productsRepository.syncEstoqueItems(userId, id, updateData);
     const p = await this.productsRepository.findById(userId, id);
     if (!p) throw new NotFoundException('Produto não encontrado');
     return this.map(p);
@@ -57,6 +62,9 @@ export class ProductsService {
   async remove(userId: string, id: string) {
     const existing = await this.productsRepository.findById(userId, id);
     if (!existing) throw new NotFoundException('Produto não encontrado');
+    /** 🗑️ Remove itens de estoque vinculados; compras ficam no histórico
+     *  (productId vira null via onDelete:SetNull — não apaga registro financeiro) */
+    await this.productsRepository.removeLinkedEstoque(userId, id);
     await this.productsRepository.remove(userId, id);
     return { deleted: true };
   }
